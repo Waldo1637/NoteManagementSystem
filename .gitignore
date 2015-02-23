@@ -1,12 +1,15 @@
-*.class
+#ant specific
+*/build/
+*/dist/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+#NetBeans specific
+#ignore entire folder but make exceptions
+*/nbproject/*
+*/manifest.mf
 
-# Package Files #
-*.jar
-*.war
-*.ear
+#Project specific
+/ResearchManagementSystem/files/
+*/*.rms
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
