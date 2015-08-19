@@ -33,8 +33,8 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
      */
     public PanelAnyTextItem(TextItem itm) {
         initComponents();
-        UndoRedoProvider.addTo(jTextPaneDesc);
         jTextPaneDesc.setEditorKit(new TabSizeStyledEditorKit(36));
+        UndoRedoProvider.addTo(jTextPaneDesc);
         changeDescPaneColor(Color.LIGHT_GRAY);
         
         item = itm;

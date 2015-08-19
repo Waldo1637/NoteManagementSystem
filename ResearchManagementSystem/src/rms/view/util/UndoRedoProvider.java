@@ -3,6 +3,8 @@ package rms.view.util;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
@@ -22,6 +24,8 @@ import javax.swing.undo.UndoManager;
  * @author Timothy
  */
 public class UndoRedoProvider {
+    
+    private static final Logger thisLog = Logger.getLogger(UndoRedoProvider.class.getName());
 
     private final UndoManager manager;
     
@@ -84,5 +88,7 @@ public class UndoRedoProvider {
                 }
             }
         });
+        
+        thisLog.log(Level.CONFIG, "undo/redo functionality added to {0}", component);
     }
 }
