@@ -64,7 +64,7 @@ public class Prompts {
             case QUESTION:
                 return JOptionPane.QUESTION_MESSAGE;
             default:
-                thisLog.log(Level.WARNING, "Undefined enum value.");
+                thisLog.log(Level.SEVERE, "Undefined enum value.");
                 return JOptionPane.PLAIN_MESSAGE;
         }
     }

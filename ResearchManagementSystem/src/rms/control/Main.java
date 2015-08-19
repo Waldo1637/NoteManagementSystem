@@ -1,6 +1,11 @@
 package rms.control;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
@@ -24,6 +29,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        setupLogging();
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code ">
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -33,7 +40,7 @@ public class Main {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            thisLog.log(java.util.logging.Level.SEVERE, "Error setting L&F", ex);
+            thisLog.log(Level.SEVERE, "Error setting L&F", ex);
         }
         //</editor-fold>
         
@@ -49,7 +56,22 @@ public class Main {
             }
         });
     }
-    
+
+    private static void setupLogging() {
+        String logFileFromProperties = System.getProperty("java.util.logging.config.file");
+        if (logFileFromProperties == null) {
+            String logFileName = "logging.properties";
+            InputStream configStream = Main.class.getClassLoader().getResourceAsStream(logFileName);
+            try {
+                if (configStream == null) {
+                    configStream = new FileInputStream(logFileName);
+                }
+                LogManager.getLogManager().readConfiguration(configStream);
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
     /**
      * Load the data from file to State
      * @return true iff loading was successful

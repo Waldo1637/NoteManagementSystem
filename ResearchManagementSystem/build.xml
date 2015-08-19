@@ -47,11 +47,20 @@
         <echo message="Backup sources to ${store.src}"/>
         <zip destfile="${store.src}" basedir="${src.dir}"/>
         
+        <!-- Copy logging config template to the dist directory and add version number -->
+        <property name="log.config.template" value="logging.properties"/>
+        <property name="log.config" value="${dist.dir}/${log.config.template}"/>
+        <echo message="Generating logger config file to ${log.config}"/>
+        <copy file="${log.config.template}" tofile="${log.config}" />
+        <replace file="${log.config}" token="ResearchManagementSystem_null" value="${ant.project.name}_${build.version}"/>
+        
         <!-- Deploy new version: create the jar -->
         <echo message="Deploying ${application.title} to ${store.jar}"/>
-        <jar destfile="${store.dir}/temp_final.jar" filesetmanifest="skip">
-            <zipgroupfileset dir="dist" includes="*.jar"/>
-            <zipgroupfileset dir="dist/lib" includes="*.jar"/>
+        <property name="temp.jar" value="${store.dir}/temp_final.jar"/>
+        <jar destfile="${temp.jar}" filesetmanifest="skip">
+            <zipgroupfileset dir="${dist.dir}" includes="*.jar"/>
+            <zipgroupfileset dir="${dist.dir}/lib" includes="*.jar"/>
+            <file file="${log.config}"/>
             <manifest>
                 <attribute name="Main-Class" value="${main.class}"/>
                 <attribute name="Built-By" value="${user.name}"/>
@@ -64,8 +73,8 @@
         </jar>
 
         <zip destfile="${store.jar}">
-            <zipfileset excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA" src="${store.dir}/temp_final.jar"/>
+            <zipfileset excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA" src="${temp.jar}"/>
         </zip>
-        <delete file="${store.dir}/temp_final.jar"/>
+        <delete file="${temp.jar}"/>
     </target>
 </project>
