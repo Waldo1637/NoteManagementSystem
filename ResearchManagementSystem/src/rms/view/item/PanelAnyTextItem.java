@@ -8,6 +8,7 @@ import javax.swing.UIDefaults;
 import rms.model.item.TextItem;
 import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
+import rms.view.util.TabSizeStyledEditorKit;
 import rms.view.util.UndoRedoProvider;
 
 /**
@@ -33,6 +34,7 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
     public PanelAnyTextItem(TextItem itm) {
         initComponents();
         UndoRedoProvider.addTo(jTextPaneDesc);
+        jTextPaneDesc.setEditorKit(new TabSizeStyledEditorKit(36));
         changeDescPaneColor(Color.LIGHT_GRAY);
         
         item = itm;
