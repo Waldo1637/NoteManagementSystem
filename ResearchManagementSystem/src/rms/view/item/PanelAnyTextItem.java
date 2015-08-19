@@ -8,6 +8,7 @@ import javax.swing.UIDefaults;
 import rms.model.item.TextItem;
 import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
+import rms.view.util.UndoRedoProvider;
 
 /**
  * Generic panel for displaying a {@link TextItem}
@@ -31,6 +32,7 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
      */
     public PanelAnyTextItem(TextItem itm) {
         initComponents();
+        UndoRedoProvider.addTo(jTextPaneDesc);
         changeDescPaneColor(Color.LIGHT_GRAY);
         
         item = itm;
@@ -310,15 +312,14 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
     }
     
     private void editAction(){
-        jTextPaneDesc.setEditable(true);
         jTextPaneDesc.requestFocusInWindow();
         changeDescPaneColor(Color.WHITE);
         jButtonEdit.setText(SAVE);
         reflectItemChanges();
+        jTextPaneDesc.setEditable(true);
     }
     
     private void saveAction(){
-        jTextPaneDesc.setEditable(false);
         jButtonEdit.setText(EDIT);
         changeDescPaneColor(Color.LIGHT_GRAY);
 
@@ -329,6 +330,7 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
         }
 
         reflectItemChanges();
+        jTextPaneDesc.setEditable(false);
     }
     
     private void changeDescPaneColor(Color c){
