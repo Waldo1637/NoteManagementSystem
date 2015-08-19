@@ -89,6 +89,6 @@ public class UndoRedoProvider {
             }
         });
         
-        thisLog.log(Level.CONFIG, "undo/redo functionality added to {0}", component);
+        thisLog.log(Level.FINE, "undo/redo functionality added to {0}", component);
     }
 }
