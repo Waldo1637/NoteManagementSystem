@@ -1,8 +1,10 @@
 package rms.view.search;
 
+import java.util.Set;
 import rms.control.Main;
 import rms.control.search.AbstractFinder;
 import rms.control.search.TagFinder;
+import rms.model.Tag;
 import rms.view.util.JPanelTagSelection;
 
 /**
@@ -24,7 +26,8 @@ public class DialogSearchTags extends BaseSearchDialog {
     
     @Override
     protected AbstractFinder createFinder() {
-        return new TagFinder(tagSelectionPanel.getSelectedTags());
+        Set<Tag> selectedTags = tagSelectionPanel.getSelectedTags();
+        return selectedTags.isEmpty() ? null : new TagFinder(selectedTags);
     }
     
     private void initComponentsMore(){
