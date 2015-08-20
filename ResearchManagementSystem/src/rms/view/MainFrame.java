@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -50,12 +52,14 @@ import rms.view.util.WrapLayout;
  */
 public class MainFrame extends rms.view.util.NotificationFrame {
     
+    private static final Logger thisLog = Logger.getLogger(MainFrame.class.getName());
+    
     private final boolean DEBUG_WORKERS = false;
 
     private static MainFrame inst = null;
     
     /**
-     * Creates new form MainFrame2
+     * Creates new form MainFrame
      */
     private MainFrame() {
         initComponents();
@@ -96,6 +100,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jMenuBar = new javax.swing.JMenuBar();
         jMenuData = new javax.swing.JMenu();
         jMenuItemNewThread = new javax.swing.JMenuItem();
+        jMenuItemManageTags = new javax.swing.JMenuItem();
         jMenuFind = new javax.swing.JMenu();
         jMenuItemShowAll = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -325,6 +330,15 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         });
         jMenuData.add(jMenuItemNewThread);
 
+        jMenuItemManageTags.setText("Manage Tags");
+        jMenuItemManageTags.setEnabled(false);
+        jMenuItemManageTags.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemManageTagsActionPerformed(evt);
+            }
+        });
+        jMenuData.add(jMenuItemManageTags);
+
         jMenuBar.add(jMenuData);
 
         jMenuFind.setText("Find");
@@ -550,12 +564,9 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         String version = pack.getSpecificationVersion();
         String date = pack.getImplementationVersion();
 
-        if(version != null){
-            version = version.replace("_", ".");
-        }
-
+        version = version != null ? version.replace("_", ".") : version;
         String msg = String.format("%s%nby %s%n%nversion: %s%n%s%n", title, author, version, date);
-
+        
         JOptionPane.showMessageDialog(this, msg, "About", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
@@ -594,10 +605,13 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             System.out.println("Saving...");
             worker.get();
         } catch (InterruptedException | ExecutionException ex) {
-            //Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            //TODO: should probably log this
+            thisLog.log(Level.SEVERE, "Exception while saving", ex);
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void jMenuItemManageTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemManageTagsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemManageTagsActionPerformed
 
     private final Action ActionShowAll = new AbstractAction(){
         @Override
@@ -655,9 +669,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }
     
     private void enableThreadButtons(boolean b){
-        //jButtonNewNote.setEnabled(b);
-        //jButtonNewTask.setEnabled(b);
-        //jButtoNewFile.setEnabled(b);
         jButtonDeleteThread.setEnabled(b);
     }
     
@@ -953,6 +964,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JMenuItem jMenuItemFindPending;
     private javax.swing.JMenuItem jMenuItemFindTag;
     private javax.swing.JMenuItem jMenuItemFindText;
+    private javax.swing.JMenuItem jMenuItemManageTags;
     private javax.swing.JMenuItem jMenuItemNewFile;
     private javax.swing.JMenuItem jMenuItemNewNote;
     private javax.swing.JMenuItem jMenuItemNewTask;
