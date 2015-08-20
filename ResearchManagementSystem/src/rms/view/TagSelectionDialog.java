@@ -11,7 +11,7 @@ import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
 
 /**
- * Dialog for selecting a {@link Tag} from those available or creating a new one
+ * Dialog for selecting a {@link Tag} from those available or creating a new one.
  * 
  * @author Timothy
  */
@@ -20,7 +20,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
     private Set<Tag> selection;
 
     /**
-     * Creates new form TagsDialog
+     * Creates new TagSelectionDialog
      * @param parent
      */
     public TagSelectionDialog(Frame parent) {

@@ -48,6 +48,13 @@ public class State implements Serializable {
         return tags;
     }
     
+    /**
+     * Creates a new {@link Tag} with the given name, adds it to the State, and
+     * returns the new Tag.
+     * 
+     * @param name
+     * @return 
+     */
     public Tag newTag(String name){
         Tag t = new Tag(name);
         tags.add(t);

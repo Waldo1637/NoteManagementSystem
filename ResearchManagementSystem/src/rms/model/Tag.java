@@ -13,6 +13,13 @@ public class Tag implements Serializable, Comparable<Tag> {
     
     private final String name;
     
+    /**
+     * Creates a new Tag with the given name.
+     * 
+     * NOTE: must use {@link State#newTag(java.lang.String)} to create a new Tag.
+     * 
+     * @param name 
+     */
     protected Tag(String name){
         this.name = name;
     }
