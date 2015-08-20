@@ -29,7 +29,7 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanelTagSelection" alignment="0" max="32767" attributes="0"/>
+                  <Component id="tagSelectionPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButtonNewTag" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
@@ -46,7 +46,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-              <Component id="jPanelTagSelection" max="32767" attributes="0"/>
+              <Component id="tagSelectionPanel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButtonNewTag" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -83,10 +83,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonNewTagActionPerformed"/>
       </Events>
     </Component>
-    <Component class="rms.view.util.JPanelTagSelection" name="jPanelTagSelection">
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jPanelTagSelectionMouseClicked"/>
-      </Events>
+    <Component class="rms.view.util.JPanelTagSelection" name="tagSelectionPanel">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new rms.view.util.JPanelTagSelection(Main.getState().getTags())"/>
       </AuxValues>

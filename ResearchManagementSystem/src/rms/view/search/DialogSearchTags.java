@@ -6,47 +6,34 @@ import rms.control.search.TagFinder;
 import rms.view.util.JPanelTagSelection;
 
 /**
- * Dialog for selecting a {@link Tag} (for searching)
+ * Dialog for selecting one or more {@link Tag}s (for searching)
  * 
  * @author Timothy
  */
-public class DialogSearchTags extends BaseDialog {
+public class DialogSearchTags extends BaseSearchDialog {
 
-    private boolean tagChosenSpecial;
-    
     /**
      * Creates new form DialogSearchTags
      * @param parent
      */
     public DialogSearchTags(java.awt.Frame parent) {
         super(parent, true);
-        tagChosenSpecial = false;
         initComponents();
         initComponentsMore();
     }
     
     @Override
     protected AbstractFinder createFinder() {
-        return new TagFinder(jPanelTagSelection.getResult());
+        return new TagFinder(tagSelectionPanel.getSelectedTags());
     }
     
     private void initComponentsMore(){
-        jPanelTagSelection.addItemChosenListener(new JPanelTagSelection.ItemChosenListener(){
+        tagSelectionPanel.addDoubleClickSelectionListener(new JPanelTagSelection.DoubleClickSelectionListener(){
             @Override
-            public void itemChosen(JPanelTagSelection.ItemChosenEvent m) {
-                tagChosenSpecial = true;
-                setVisible(false);
+            public void itemsSelected(JPanelTagSelection.SelectedTags m) {
+                hideDialog(false);
             }
         });
-    }
-    
-    @Override
-    public AbstractFinder getResult(){
-        if(tagChosenSpecial){
-            return createFinder();
-        }else{
-            return super.getResult();
-        }
     }
 
     /**
@@ -58,7 +45,7 @@ public class DialogSearchTags extends BaseDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelTagSelection = new rms.view.util.JPanelTagSelection(Main.getState().getTags());
+        tagSelectionPanel = new rms.view.util.JPanelTagSelection(Main.getState().getTags());
 
         setMinimumSize(new java.awt.Dimension(332, 295));
 
@@ -66,16 +53,16 @@ public class DialogSearchTags extends BaseDialog {
         getInnerContentPanel().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelTagSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tagSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelTagSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tagSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private rms.view.util.JPanelTagSelection jPanelTagSelection;
+    private rms.view.util.JPanelTagSelection tagSelectionPanel;
     // End of variables declaration//GEN-END:variables
 }

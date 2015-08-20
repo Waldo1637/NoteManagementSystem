@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -31,7 +33,7 @@ import rms.model.item.TaskItem;
 import rms.view.item.PanelFileItem;
 import rms.view.item.PanelNoteItem;
 import rms.view.item.PanelTaskItem;
-import rms.view.search.BaseDialog;
+import rms.view.search.BaseSearchDialog;
 import rms.view.search.DialogDateRange;
 import rms.view.search.DialogDeadline;
 import rms.view.search.DialogSearchTags;
@@ -469,9 +471,9 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private void jButtonAddTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTagActionPerformed
         TagSelectionDialog dialog = new TagSelectionDialog(this);
         dialog.showDialog();
-        Tag result = dialog.getResult();
-        if(result != null){
-            getSelectedThread().getTags().add(result);
+        Set<Tag> selectedTags = dialog.getResult();
+        if(selectedTags != null){
+            getSelectedThread().getTags().addAll(selectedTags);
             new WorkerDisplayThreadTags(getSelectedThread()).execute();
         }
     }//GEN-LAST:event_jButtonAddTagActionPerformed
@@ -637,7 +639,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
     }
     
-    private void useDialog(BaseDialog dialog){
+    private void useDialog(BaseSearchDialog dialog){
         dialog.showDialog();
         AbstractFinder result = dialog.getResult();
         if(result != null){
@@ -689,7 +691,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             this.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    refreshThreadListAndDisplay(new TagFinder(tag), null);
+                    refreshThreadListAndDisplay(new TagFinder(Collections.singleton(tag)), null);
                 }
             });
             

@@ -12,10 +12,10 @@ import javax.swing.JDialog;
  *
  * @author Timothy
  */
-public class BaseDialogBeanInfo extends SimpleBeanInfo {
+public class BaseSearchDialogBeanInfo extends SimpleBeanInfo {
     @Override
     public BeanDescriptor getBeanDescriptor() {
-        BeanDescriptor desc = new BeanDescriptor(BaseDialog.class);
+        BeanDescriptor desc = new BeanDescriptor(BaseSearchDialog.class);
         desc.setValue("containerDelegate", "getInnerContentPanel");
         return desc;
     }

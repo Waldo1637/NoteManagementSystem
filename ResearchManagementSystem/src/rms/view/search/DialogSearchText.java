@@ -8,7 +8,7 @@ import rms.control.search.TextFinder;
  * 
  * @author Timothy
  */
-public class DialogSearchText extends BaseDialog {
+public class DialogSearchText extends BaseSearchDialog {
 
     /**
      * Creates new form DialogSearchText

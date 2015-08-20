@@ -2,6 +2,8 @@ package rms.util;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,5 +40,19 @@ public final class Helpers {
                 thisLog.log(Level.WARNING, "Error closing resource", ex);
             }
         }
+    }
+    
+    /**
+     * Return a new Set containing the set intersection of the two given
+     * 
+     * @param <N>
+     * @param s1
+     * @param s2
+     * @return 
+     */
+    public static <N> Set<N> intersection(Set<N> s1, Set<N> s2){
+        HashSet<N> retVal = new HashSet<>(s1);
+        retVal.retainAll(s2);
+        return retVal;
     }
 }

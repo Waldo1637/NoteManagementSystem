@@ -1,8 +1,10 @@
 package rms.control.search;
 
+import java.util.Set;
 import rms.model.Tag;
 import rms.model.item.Item;
 import rms.model.item.ItemThread;
+import rms.util.Helpers;
 
 /**
  * Finds {@link ItemThread}s with the given {@link Tag}
@@ -11,18 +13,20 @@ import rms.model.item.ItemThread;
  */
 public class TagFinder extends AbstractFinder {
     
-    private final Tag tag;
+    private final Set<Tag> tag;
     
     /**
      * 
      * @param tag   {@link Tag} to search {@link ItemThread}s for
      */
-    public TagFinder(Tag tag){
+    public TagFinder(Set<Tag> tag){
         this.tag = tag;
     }
 
     /**
-     * There is no {@link Tag} associated with an {@link Item}
+     * This method always returns false because there is no {@link Tag}
+     * associated with an {@link Item}.
+     * 
      * @param i
      * @return {@code false}
      */
@@ -33,6 +37,6 @@ public class TagFinder extends AbstractFinder {
 
     @Override
     protected boolean accept(ItemThread t) {
-        return t.getTags().contains(tag);
+        return !Helpers.intersection(t.getTags(), tag).isEmpty();
     }
 }

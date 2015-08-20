@@ -1,10 +1,12 @@
 package rms.view;
 
 import java.awt.Frame;
+import java.util.Collections;
+import java.util.Set;
 import rms.control.Main;
 import rms.model.Tag;
 import rms.view.util.JPanelTagSelection;
-import rms.view.util.JPanelTagSelection.ItemChosenListener;
+import rms.view.util.JPanelTagSelection.DoubleClickSelectionListener;
 import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
 
@@ -15,7 +17,7 @@ import rms.view.util.Prompts.PromptType;
  */
 public class TagSelectionDialog extends javax.swing.JDialog {
     
-    private Tag selection = null;
+    private Set<Tag> selection;
 
     /**
      * Creates new form TagsDialog
@@ -27,8 +29,12 @@ public class TagSelectionDialog extends javax.swing.JDialog {
         initComponentsMore();
         setLocationRelativeTo(parent);
         getRootPane().setDefaultButton(jButtonOk);
+        selection = null;
     }
 
+    /**
+     * Display the dialog.
+     */
     public void showDialog(){
         setVisible(true);
     }
@@ -36,19 +42,19 @@ public class TagSelectionDialog extends javax.swing.JDialog {
     /**
      * @return  the {@link Tag} selected in the UI
      */
-    public Tag getResult(){
+    public Set<Tag> getResult(){
         return selection;
     }
     
-    private void close(Tag t){
-        selection = t;
+    private void close(Set<Tag> selectedTags){
+        selection = selectedTags;
         setVisible(false);
     }
     
     private void initComponentsMore(){
-        jPanelTagSelection.addItemChosenListener(new ItemChosenListener(){
+        tagSelectionPanel.addDoubleClickSelectionListener(new DoubleClickSelectionListener(){
             @Override
-            public void itemChosen(JPanelTagSelection.ItemChosenEvent m) {
+            public void itemsSelected(JPanelTagSelection.SelectedTags m) {
                 close(m.getSelection());
             }
         });
@@ -66,7 +72,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
         jButtonOk = new javax.swing.JButton();
         jButtonNewTag = new javax.swing.JButton();
-        jPanelTagSelection = new rms.view.util.JPanelTagSelection(Main.getState().getTags());
+        tagSelectionPanel = new rms.view.util.JPanelTagSelection(Main.getState().getTags());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(250, 250));
@@ -92,12 +98,6 @@ public class TagSelectionDialog extends javax.swing.JDialog {
             }
         });
 
-        jPanelTagSelection.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanelTagSelectionMouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,7 +105,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelTagSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tagSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonNewTag)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -118,7 +118,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(jPanelTagSelection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tagSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonNewTag)
@@ -131,7 +131,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        close(jPanelTagSelection.getResult());
+        close(tagSelectionPanel.getSelectedTags());
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
@@ -144,18 +144,14 @@ public class TagSelectionDialog extends javax.swing.JDialog {
             //create new tag and add it globally
             Tag newTag = Main.getState().newTag(newName);
             //close the list marking the new tag as selected
-            close(newTag);
+            close(Collections.singleton(newTag));
         }
     }//GEN-LAST:event_jButtonNewTagActionPerformed
-
-    private void jPanelTagSelectionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelTagSelectionMouseClicked
-        System.out.println("CLICK");
-    }//GEN-LAST:event_jPanelTagSelectionMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonNewTag;
     private javax.swing.JButton jButtonOk;
-    private rms.view.util.JPanelTagSelection jPanelTagSelection;
+    private rms.view.util.JPanelTagSelection tagSelectionPanel;
     // End of variables declaration//GEN-END:variables
 }

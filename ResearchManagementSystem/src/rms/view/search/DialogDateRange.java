@@ -11,7 +11,7 @@ import rms.util.DateRangeType;
  * 
  * @author Timothy
  */
-public class DialogDateRange extends BaseDialog {
+public class DialogDateRange extends BaseSearchDialog {
 
     /**
      * Creates new form DialogDateRange

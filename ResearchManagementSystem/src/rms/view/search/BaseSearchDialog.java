@@ -6,54 +6,79 @@ import rms.control.search.AbstractFinder;
 
 /**
  * Generic dialog box providing Ok and Cancel functionality
- * 
+ *
  * @author Timothy
  */
-public class BaseDialog extends javax.swing.JDialog {
-    
+public class BaseSearchDialog extends javax.swing.JDialog {
+
     private boolean approved;
 
     /**
      * No-arg constructor for Bean creation
      */
-    public BaseDialog() {
+    public BaseSearchDialog() {
         this(null, true);
     }
-    
+
     /**
      * Creates new form DialogDateRange
+     *
      * @param parent
      * @param modal
      */
-    public BaseDialog(Frame parent, boolean modal) {
+    public BaseSearchDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(parent);
         getRootPane().setDefaultButton(jButtonOk);
         approved = false;
     }
-    
-    public void showDialog(){
+
+    /**
+     * Display the dialog.
+     */
+    public void showDialog() {
         setVisible(true);
     }
-    
+
     /**
-     * NOTE: you must override this method or <code>getResult()</code> will
-     *      always return <code>null</code>
-     * @return 
+     * Close the dialog.
+     *
+     * @param isCancelled denotes if the user has cancelled the action or ok'd
+     * the action
      */
-    protected AbstractFinder createFinder(){
+    protected void hideDialog(boolean isCancelled) {
+        approved = !isCancelled;
+        setVisible(false);
+    }
+
+    /**
+     * Subclass implementations should create and return an
+     * {@link AbstractFinder} based on what the user entered in the dialog.
+     *
+     * NOTE: You must override this method or {@link #getResult()} will always
+     * return {@code null}.
+     *
+     * @return {@code null}
+     */
+    protected AbstractFinder createFinder() {
         return null;
     }
-    
-    public AbstractFinder getResult(){
-        AbstractFinder retVal = null;
-        if(approved){
-            retVal = createFinder();
-        }
-        return retVal;
+
+    /**
+     *
+     * @return the {@link AbstractFinder} created by this dialog or null if the
+     * dialog was canceled.
+     */
+    public AbstractFinder getResult() {
+        return approved ? createFinder() : null;
     }
-    
+
+    /**
+     * For Bean implementation.
+     *
+     * @return the {@link Container} where content can be placed by subclasses.
+     */
     public Container getInnerContentPanel() {
         return jPanelContent;
     }
@@ -121,13 +146,11 @@ public class BaseDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        approved = true;
-        setVisible(false);
+        hideDialog(false);
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        approved = false;
-        setVisible(false);
+        hideDialog(true);
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

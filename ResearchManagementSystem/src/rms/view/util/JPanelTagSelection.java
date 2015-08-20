@@ -2,6 +2,9 @@ package rms.view.util;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EventListener;
+import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.DocumentEvent;
@@ -9,43 +12,20 @@ import javax.swing.event.DocumentListener;
 import rms.model.Tag;
 
 /**
- * Generic panel for listing tags and instantly searching the list
- * 
+ * Generic JPanel for displaying a list of {@link Tag}s and allowing the user to
+ * instantly filter the displayed list.
+ *
  * @author Timothy
  */
 public class JPanelTagSelection extends javax.swing.JPanel {
-    
-    private final ArrayList<ItemChosenListener> listeners;
-    private final Set<Tag> tagList;
-    
+
+    private final ArrayList<DoubleClickSelectionListener> listeners;
+    private final Set<Tag> completeTagList;
+
     /**
-     * Creates new form TagSelectionPanel
+     * Listener for the search box to provide filtering when text is changed.
      */
-    public JPanelTagSelection() {
-        this(new HashSet<Tag>());
-    }
-    
-    public JPanelTagSelection(Set<Tag> existingTags){
-        this.tagList = existingTags;
-        this.listeners = new ArrayList<>();
-        initComponents();
-        jTextFieldSearch.getDocument().addDocumentListener(searchTextListener);
-        displayList();
-    }
-    
-        /**
-     * Show only items containing the given string (case insensitive)
-     * @param searchVal 
-     */
-    private void displayListFiltered(String searchVal){
-        jListTags.setModel(new SearchTagsListModel(tagList, searchVal));
-    }
-    
-    private void displayList(){
-        displayListFiltered("");
-    }
-    
-    private final DocumentListener searchTextListener = new DocumentListener(){
+    private final DocumentListener searchTextListener = new DocumentListener() {
         @Override
         public void insertUpdate(DocumentEvent e) {
             displayListFiltered(jTextFieldSearch.getText());
@@ -61,9 +41,40 @@ public class JPanelTagSelection extends javax.swing.JPanel {
             displayListFiltered(jTextFieldSearch.getText());
         }
     };
-    
-    public Tag getResult(){
-        return (Tag)jListTags.getSelectedValue();
+
+    /**
+     * Create an empty TagSelectionPanel.
+     */
+    public JPanelTagSelection() {
+        this(Collections.EMPTY_SET);
+    }
+
+    /**
+     * Create a TagSelectionPanel with the given set of {@link Tag}s.
+     * @param existingTags 
+     */
+    public JPanelTagSelection(Set<Tag> existingTags) {
+        this.completeTagList = existingTags;
+        this.listeners = new ArrayList<>();
+        initComponents();
+        jTextFieldSearch.getDocument().addDocumentListener(searchTextListener);
+        displayList();
+    }
+
+    /**
+     * Show only items containing the given string (case insensitive).
+     *
+     * @param searchVal
+     */
+    private void displayListFiltered(String searchVal) {
+        jListTags.setModel(new SearchTagsListModel(completeTagList, searchVal));
+    }
+
+    /**
+     * Show all items.
+     */
+    private void displayList() {
+        displayListFiltered("");
     }
 
     /**
@@ -76,10 +87,9 @@ public class JPanelTagSelection extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListTags = new javax.swing.JList();
+        jListTags = new javax.swing.JList<Tag>();
         jTextFieldSearch = new javax.swing.JTextField();
 
-        jListTags.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListTags.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jListTagsMouseClicked(evt);
@@ -104,53 +114,74 @@ public class JPanelTagSelection extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jListTagsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListTagsMouseClicked
+        // Capture double-click event on a list item and notify all listeners.
+        // Include all currently selected items.
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
-            /*
-            System.out.println("Double click on " + evt);
-            System.out.println(jListTags.locationToIndex(evt.getPoint()));
-            
-            System.out.println(getResult());
-            */
-            ItemChosenEvent newEvent = new ItemChosenEvent(evt.getSource(), getResult());
+            SelectedTags selection = new SelectedTags(evt.getSource(), getSelectedTags());
             synchronized (this) {
-                for (ItemChosenListener l : listeners) {
-                    l.itemChosen(newEvent); // fire the event to this listener
+                for (DoubleClickSelectionListener l : listeners) {
+                    l.itemsSelected(selection); // fire the event to this listener
                 }
             }
-
         }
     }//GEN-LAST:event_jListTagsMouseClicked
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList jListTags;
+    private javax.swing.JList<Tag> jListTags;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
 
-    public synchronized void addItemChosenListener(ItemChosenListener hearer) {
+    /**
+     *
+     * @return the Set of {@link Tag}s currently selected
+     */
+    public Set<Tag> getSelectedTags() {
+        return new HashSet<>(jListTags.getSelectedValuesList());
+    }
+
+    /**
+     * Registers the given DoubleClickSelectionListener to handle selection of
+     * items via double-click on an item.
+     *
+     * @param hearer
+     */
+    public synchronized void addDoubleClickSelectionListener(DoubleClickSelectionListener hearer) {
         listeners.add(hearer);
     }
 
-    public synchronized void removeItemChosenListener(ItemChosenListener hearer) {
+    /**
+     * Unregisters the given DoubleClickSelectionListener.
+     *
+     * @param hearer
+     */
+    public synchronized void removeDoubleClickSelectionListener(DoubleClickSelectionListener hearer) {
         listeners.remove(hearer);
     }
-    
-    public static class ItemChosenEvent extends java.util.EventObject {
-        
-        private final Tag selection;
-        
-        public ItemChosenEvent(Object source, Tag selection) {
+
+    /**
+     * An {@link EventObject} containing a Set of {@link Tag}s chosen.
+     */
+    public static class SelectedTags extends java.util.EventObject {
+
+        private final Set<Tag> selection;
+
+        private SelectedTags(Object source, Set<Tag> selection) {
             super(source);
             this.selection = selection;
         }
-        
-        public Tag getSelection(){
+
+        public Set<Tag> getSelection() {
             return selection;
         }
     }
-    
-    public interface ItemChosenListener extends java.util.EventListener {
-        void itemChosen(ItemChosenEvent m);
+
+    /**
+     * An {@link EventListener} that is fired when items from the list are
+     * selected via a double-click on an item in the list.
+     */
+    public interface DoubleClickSelectionListener extends java.util.EventListener {
+
+        void itemsSelected(SelectedTags m);
     }
 }
