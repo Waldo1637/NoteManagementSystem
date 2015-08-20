@@ -9,7 +9,7 @@ import rms.model.Tag;
 import rms.util.Helpers;
 
 /**
- * AbstractListModel used for displaying only a subset of a {@link Tag} set
+ * AbstractListModel used for displaying a subset of a {@link Tag} set
  * 
  * @author Timothy
  */
