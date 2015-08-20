@@ -20,7 +20,9 @@ public class TagSelectionDialog extends javax.swing.JDialog {
     private Set<Tag> selection;
 
     /**
-     * Creates new TagSelectionDialog
+     * Creates new TagSelectionDialog containing the set of {@link Tag}s
+     * belonging to the current {@link rms.model.State State}.
+     * 
      * @param parent
      */
     public TagSelectionDialog(Frame parent) {
