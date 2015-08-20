@@ -28,17 +28,17 @@ public class JPanelTagSelection extends javax.swing.JPanel {
     private final DocumentListener searchTextListener = new DocumentListener() {
         @Override
         public void insertUpdate(DocumentEvent e) {
-            displayListFiltered(jTextFieldSearch.getText());
+            updateListItemsShown();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            displayListFiltered(jTextFieldSearch.getText());
+            updateListItemsShown();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            displayListFiltered(jTextFieldSearch.getText());
+            updateListItemsShown();
         }
     };
 
@@ -51,30 +51,24 @@ public class JPanelTagSelection extends javax.swing.JPanel {
 
     /**
      * Create a TagSelectionPanel with the given set of {@link Tag}s.
-     * @param existingTags 
+     *
+     * @param existingTags
      */
     public JPanelTagSelection(Set<Tag> existingTags) {
         this.completeTagList = existingTags;
         this.listeners = new ArrayList<>();
         initComponents();
         jTextFieldSearch.getDocument().addDocumentListener(searchTextListener);
-        displayList();
+        updateListItemsShown();
     }
 
     /**
-     * Show only items containing the given string (case insensitive).
-     *
-     * @param searchVal
+     * Update the displayed {@link Tag} list to show all items that contain the
+     * text currently in the search bar.
      */
-    private void displayListFiltered(String searchVal) {
-        jListTags.setModel(new SearchTagsListModel(completeTagList, searchVal));
-    }
-
-    /**
-     * Show all items.
-     */
-    private void displayList() {
-        displayListFiltered("");
+    public final void updateListItemsShown() {
+        String filterText = jTextFieldSearch.getText();
+        jListTags.setModel(new SearchTagsListModel(completeTagList, filterText));
     }
 
     /**
