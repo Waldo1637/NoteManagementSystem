@@ -94,11 +94,8 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jButtonNewNote = new javax.swing.JButton();
         jLabelThreadName = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
-        jMenuNew = new javax.swing.JMenu();
-        jMenuItemNewThread = new javax.swing.JMenuItem();
         jMenuData = new javax.swing.JMenu();
-        jMenuItemSave = new javax.swing.JMenuItem();
-        jMenuItemReload = new javax.swing.JMenuItem();
+        jMenuItemNewThread = new javax.swing.JMenuItem();
         jMenuFind = new javax.swing.JMenu();
         jMenuItemShowAll = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
@@ -109,6 +106,9 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jMenuItemFindDeadline = new javax.swing.JMenuItem();
         jMenuItemFindPending = new javax.swing.JMenuItem();
         jMenuItemFindLateTasks = new javax.swing.JMenuItem();
+        jMenuDatabase = new javax.swing.JMenu();
+        jMenuItemSave = new javax.swing.JMenuItem();
+        jMenuItemReload = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemAbout = new javax.swing.JMenuItem();
 
@@ -314,37 +314,16 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
         jSplitPaneHoriz.setRightComponent(jPanelThreadInfo);
 
-        jMenuNew.setText("New");
+        jMenuData.setText("Data");
 
         jMenuItemNewThread.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemNewThread.setText("Thread");
+        jMenuItemNewThread.setText("New Thread");
         jMenuItemNewThread.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemNewThreadActionPerformed(evt);
             }
         });
-        jMenuNew.add(jMenuItemNewThread);
-
-        jMenuBar.add(jMenuNew);
-
-        jMenuData.setText("Data");
-
-        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemSave.setText("Save");
-        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemSaveActionPerformed(evt);
-            }
-        });
-        jMenuData.add(jMenuItemSave);
-
-        jMenuItemReload.setText("Reload");
-        jMenuItemReload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemReloadActionPerformed(evt);
-            }
-        });
-        jMenuData.add(jMenuItemReload);
+        jMenuData.add(jMenuItemNewThread);
 
         jMenuBar.add(jMenuData);
 
@@ -411,6 +390,27 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jMenuFind.add(jMenuItemFindLateTasks);
 
         jMenuBar.add(jMenuFind);
+
+        jMenuDatabase.setText("Database");
+
+        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSave.setText("Save");
+        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSaveActionPerformed(evt);
+            }
+        });
+        jMenuDatabase.add(jMenuItemSave);
+
+        jMenuItemReload.setText("Reload");
+        jMenuItemReload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemReloadActionPerformed(evt);
+            }
+        });
+        jMenuDatabase.add(jMenuItemReload);
+
+        jMenuBar.add(jMenuDatabase);
 
         jMenuHelp.setText("Help");
 
@@ -942,6 +942,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JList jListThreads;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuData;
+    private javax.swing.JMenu jMenuDatabase;
     private javax.swing.JMenu jMenuFind;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuItemAbout;
@@ -959,7 +960,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JMenuItem jMenuItemReload;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenuItem jMenuItemShowAll;
-    private javax.swing.JMenu jMenuNew;
     private javax.swing.JMenu jMenuNewItem;
     private javax.swing.JPanel jPanelEmptyThread;
     private javax.swing.JPanel jPanelHeader;
