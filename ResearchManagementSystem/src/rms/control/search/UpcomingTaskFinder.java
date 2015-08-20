@@ -55,7 +55,7 @@ public class UpcomingTaskFinder extends AbstractFinder {
                     finalDate = DateHelpers.addMonths(today, increment);
                     break;
                 default:
-                    //TODO
+                    throw new UnsupportedOperationException("Option " + unit + " is not yet supported.");
             }
             
             if(finalDate == null) return false;

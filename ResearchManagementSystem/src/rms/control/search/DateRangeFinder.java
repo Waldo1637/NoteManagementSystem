@@ -48,7 +48,7 @@ public class DateRangeFinder extends AbstractFinder {
                 }
                 break;
             default:
-                //TODO
+                throw new UnsupportedOperationException("Option " + type + " is not yet supported.");
         }        
         
         if(itemDate == null) return false;
