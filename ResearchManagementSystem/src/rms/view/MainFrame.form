@@ -91,12 +91,12 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemDeleteTag">
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemRemoveTag">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Delete"/>
+            <Property name="text" type="java.lang.String" value="Remove"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemDeleteTagActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemRemoveTagActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>
@@ -157,7 +157,6 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemManageTags">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Manage Tags"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemManageTagsActionPerformed"/>

@@ -76,7 +76,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jLabel3 = new javax.swing.JLabel();
         jButtonAddTag = new javax.swing.JButton();
         jPopupMenuTag = new javax.swing.JPopupMenu();
-        jMenuItemDeleteTag = new javax.swing.JMenuItem();
+        jMenuItemRemoveTag = new javax.swing.JMenuItem();
         jMenuNewItem = new javax.swing.JMenu();
         jMenuItemNewTask = new javax.swing.JMenuItem();
         jMenuItemNewNote = new javax.swing.JMenuItem();
@@ -161,13 +161,13 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             }
         });
 
-        jMenuItemDeleteTag.setText("Delete");
-        jMenuItemDeleteTag.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemRemoveTag.setText("Remove");
+        jMenuItemRemoveTag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemDeleteTagActionPerformed(evt);
+                jMenuItemRemoveTagActionPerformed(evt);
             }
         });
-        jPopupMenuTag.add(jMenuItemDeleteTag);
+        jPopupMenuTag.add(jMenuItemRemoveTag);
 
         jMenuNewItem.setText("Item");
 
@@ -331,7 +331,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jMenuData.add(jMenuItemNewThread);
 
         jMenuItemManageTags.setText("Manage Tags");
-        jMenuItemManageTags.setEnabled(false);
         jMenuItemManageTags.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemManageTagsActionPerformed(evt);
@@ -492,7 +491,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
     }//GEN-LAST:event_jButtonAddTagActionPerformed
 
-    private void jMenuItemDeleteTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDeleteTagActionPerformed
+    private void jMenuItemRemoveTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRemoveTagActionPerformed
         try{
             JMenuItem source = (JMenuItem)evt.getSource();
             JPopupMenu parent = (JPopupMenu)source.getParent();
@@ -500,7 +499,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             getSelectedThread().getTags().remove(invoker.tag);
             new WorkerDisplayThreadTags(getSelectedThread()).execute();
         }catch (ClassCastException ex){}
-    }//GEN-LAST:event_jMenuItemDeleteTagActionPerformed
+    }//GEN-LAST:event_jMenuItemRemoveTagActionPerformed
 
     private void jMenuItemNewTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewTaskActionPerformed
         Main.newTask();
@@ -610,7 +609,10 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jMenuItemManageTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemManageTagsActionPerformed
-        // TODO add your handling code here:
+        // Create new TagManagementDialog and show it
+        new TagManagementDialog(inst).showDialog();
+        // Update the tags for the selected thread in case any were deleted
+        new WorkerDisplayThreadTags(getSelectedThread()).execute();
     }//GEN-LAST:event_jMenuItemManageTagsActionPerformed
 
     private final Action ActionShowAll = new AbstractAction(){
@@ -902,7 +904,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }
     
     /**
-     * Loads the items in the given thread to the GUI
+     * Loads the {@link Tag}s for the given thread to the GUI
      */
     private class WorkerDisplayThreadTags extends SwingWorker<Void, Void>{
         
@@ -957,7 +959,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JMenu jMenuFind;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenuItem jMenuItemAbout;
-    private javax.swing.JMenuItem jMenuItemDeleteTag;
     private javax.swing.JMenuItem jMenuItemFindDate;
     private javax.swing.JMenuItem jMenuItemFindDeadline;
     private javax.swing.JMenuItem jMenuItemFindLateTasks;
@@ -970,6 +971,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JMenuItem jMenuItemNewTask;
     private javax.swing.JMenuItem jMenuItemNewThread;
     private javax.swing.JMenuItem jMenuItemReload;
+    private javax.swing.JMenuItem jMenuItemRemoveTag;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenuItem jMenuItemShowAll;
     private javax.swing.JMenu jMenuNewItem;
