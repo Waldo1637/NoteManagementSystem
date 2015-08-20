@@ -53,9 +53,8 @@ import rms.view.util.WrapLayout;
 public class MainFrame extends rms.view.util.NotificationFrame {
     
     private static final Logger thisLog = Logger.getLogger(MainFrame.class.getName());
+    private static final Logger workerLog = Logger.getLogger("workers");
     
-    private final boolean DEBUG_WORKERS = false;
-
     private static MainFrame inst = null;
     
     /**
@@ -601,7 +600,8 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         worker.execute();
         setVisible(false);
         try {
-            System.out.println("Saving...");
+            System.out.println("Saving and exiting...");
+            thisLog.log(Level.FINE, "Saving and exiting.");
             worker.get();
         } catch (InterruptedException | ExecutionException ex) {
             thisLog.log(Level.SEVERE, "Exception while saving", ex);
@@ -785,16 +785,16 @@ public class MainFrame extends rms.view.util.NotificationFrame {
                 displayNotification("Data loaded successfully");
             }else{
                 Prompts.informUser("Error!", "Unrecoverable error: unable to load data.\nSee log files.", PromptType.ERROR);
-                System.exit(1);//TODO: is this the correct way to handle this?
+                System.exit(1);
             }
             
             hideLoader();
-            if(DEBUG_WORKERS)System.out.println("Stopping " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            if(DEBUG_WORKERS)System.out.println("Starting " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
             result = Main.loadStateFromFile();
             return null;
@@ -814,14 +814,13 @@ public class MainFrame extends rms.view.util.NotificationFrame {
                 displayNotification("Data saved successfully");
             }else{
                 Prompts.informUser("Error!", "Unrecoverable error: unable to save data.\nSee log files.", PromptType.ERROR);
-                System.exit(1);//TODO: is this the correct way to handle this?
             }
-            if(DEBUG_WORKERS)System.out.println("Stopping " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            if(DEBUG_WORKERS)System.out.println("Starting " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             //no loader necessary for saving
             result = Main.storeStateToFile();
             return null;
@@ -846,12 +845,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             clearDisplayedThread();
             setSelectedThread(toDisplay);
             hideLoader();
-            if(DEBUG_WORKERS)System.out.println("Stopping " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            if(DEBUG_WORKERS)System.out.println("Starting " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
             jListThreads.setModel(new SearchSortItemThreadListModel(true, finder));
             return null;
@@ -879,12 +878,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             sb.setValue( sb.getMaximum() );
             
             hideLoader();
-            if(DEBUG_WORKERS)System.out.println("Stopping " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            if(DEBUG_WORKERS)System.out.println("Starting " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
             
             //clear existing content
@@ -920,12 +919,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             jScrollPaneTags.updateUI();
             
             hideLoader();
-            if(DEBUG_WORKERS)System.out.println("Stopping " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            if(DEBUG_WORKERS)System.out.println("Starting " + this.getClass().getName());
+            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
             
             //clear existing content
