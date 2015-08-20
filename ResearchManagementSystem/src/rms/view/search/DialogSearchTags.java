@@ -9,13 +9,14 @@ import rms.view.util.JPanelTagSelection;
 
 /**
  * Dialog for selecting one or more {@link Tag}s (for searching)
- * 
+ *
  * @author Timothy
  */
 public class DialogSearchTags extends BaseSearchDialog {
 
     /**
      * Creates new form DialogSearchTags
+     *
      * @param parent
      */
     public DialogSearchTags(java.awt.Frame parent) {
@@ -23,15 +24,15 @@ public class DialogSearchTags extends BaseSearchDialog {
         initComponents();
         initComponentsMore();
     }
-    
+
     @Override
     protected AbstractFinder createFinder() {
         Set<Tag> selectedTags = tagSelectionPanel.getSelectedTags();
         return selectedTags.isEmpty() ? null : new TagFinder(selectedTags);
     }
-    
-    private void initComponentsMore(){
-        tagSelectionPanel.addDoubleClickSelectionListener(new JPanelTagSelection.DoubleClickSelectionListener(){
+
+    private void initComponentsMore() {
+        tagSelectionPanel.addDoubleClickSelectionListener(new JPanelTagSelection.DoubleClickSelectionListener() {
             @Override
             public void itemsSelected(JPanelTagSelection.SelectedTags m) {
                 hideDialog(false);

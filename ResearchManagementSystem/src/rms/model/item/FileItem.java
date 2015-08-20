@@ -13,18 +13,15 @@ import java.util.logging.Logger;
  * @author Timothy
  */
 public class FileItem extends Item implements Serializable {
-    
+
     private static final long serialVersionUID = 01L;
     private static final Logger thisLog = Logger.getLogger(FileItem.class.getName());
-    
 
-    //TODO: do we care about if and when the file content itself was modified??
-    
     private final File localFile;
-    
-    protected FileItem(ItemThread parentThread, File sourceFile){
+
+    protected FileItem(ItemThread parentThread, File sourceFile) {
         super(parentThread);
-        
+
         localFile = new File(parentThread.getDataFolder(), sourceFile.getName());
 
         try {
@@ -34,8 +31,8 @@ public class FileItem extends Item implements Serializable {
         }
 
     }
-    
-    public File getFile(){
+
+    public File getFile() {
         return localFile;
     }
 

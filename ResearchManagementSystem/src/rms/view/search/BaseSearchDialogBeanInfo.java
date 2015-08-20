@@ -13,6 +13,7 @@ import javax.swing.JDialog;
  * @author Timothy
  */
 public class BaseSearchDialogBeanInfo extends SimpleBeanInfo {
+
     @Override
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor desc = new BeanDescriptor(BaseSearchDialog.class);
@@ -24,11 +25,11 @@ public class BaseSearchDialogBeanInfo extends SimpleBeanInfo {
     public PropertyDescriptor[] getPropertyDescriptors() {
         return super.getPropertyDescriptors();
     }
-    
+
     @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
-            return new BeanInfo[] { Introspector.getBeanInfo(JDialog.class) };
+            return new BeanInfo[]{Introspector.getBeanInfo(JDialog.class)};
         } catch (IntrospectionException ex) {
             return super.getAdditionalBeanInfo();
         }

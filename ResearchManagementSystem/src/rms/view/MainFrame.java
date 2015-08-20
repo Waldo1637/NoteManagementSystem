@@ -47,16 +47,16 @@ import rms.view.util.WrapLayout;
 
 /**
  * The main UI window (singleton)
- * 
+ *
  * @author Timothy
  */
 public class MainFrame extends rms.view.util.NotificationFrame {
-    
+
     private static final Logger thisLog = Logger.getLogger(MainFrame.class.getName());
     private static final Logger workerLog = Logger.getLogger("workers");
-    
+
     private static MainFrame inst = null;
-    
+
     /**
      * Creates new form MainFrame
      */
@@ -458,9 +458,9 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initComponentsMore(){
+    private void initComponentsMore() {
         jPanelTags.setLayout(new WrapLayout(WrapLayout.LEFT, 1, 1));
-        
+
         //global keyboard shortcut for "Save"
         jSplitPaneHoriz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(jMenuItemSave.getAccelerator(), "actionSave");
         jSplitPaneHoriz.getActionMap().put("actionSave", ActionSave);
@@ -474,30 +474,30 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         //global keyboard shortcut for "Search All"
         jSplitPaneHoriz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(jMenuItemFindText.getAccelerator(), "actionFindAll");
         jSplitPaneHoriz.getActionMap().put("actionFindAll", ActionFindAll);
-        
-        
+
         //set the loading panel as the glass pane
         setGlassPane(LoadingPanel.instance());
     }
-    
+
     private void jButtonAddTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTagActionPerformed
         TagSelectionDialog dialog = new TagSelectionDialog(this);
         dialog.showDialog();
         Set<Tag> selectedTags = dialog.getResult();
-        if(selectedTags != null){
+        if (selectedTags != null) {
             getSelectedThread().getTags().addAll(selectedTags);
             new WorkerDisplayThreadTags(getSelectedThread()).execute();
         }
     }//GEN-LAST:event_jButtonAddTagActionPerformed
 
     private void jMenuItemRemoveTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRemoveTagActionPerformed
-        try{
-            JMenuItem source = (JMenuItem)evt.getSource();
-            JPopupMenu parent = (JPopupMenu)source.getParent();
-            TagButton invoker = (TagButton)parent.getInvoker();
+        try {
+            JMenuItem source = (JMenuItem) evt.getSource();
+            JPopupMenu parent = (JPopupMenu) source.getParent();
+            TagButton invoker = (TagButton) parent.getInvoker();
             getSelectedThread().getTags().remove(invoker.tag);
             new WorkerDisplayThreadTags(getSelectedThread()).execute();
-        }catch (ClassCastException ex){}
+        } catch (ClassCastException ignored) {
+        }
     }//GEN-LAST:event_jMenuItemRemoveTagActionPerformed
 
     private void jMenuItemNewTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewTaskActionPerformed
@@ -522,7 +522,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
     private void jMenuItemReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemReloadActionPerformed
         String message = "Reloading will cuase you to lose any data added since the last time you saved.\nAre you sure you want to proceed?";
-        if(Prompts.getUserApproval(message, PromptType.WARNING)){
+        if (Prompts.getUserApproval(message, PromptType.WARNING)) {
             loadStateAndPopulate();
         }
     }//GEN-LAST:event_jMenuItemReloadActionPerformed
@@ -564,12 +564,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
         version = version != null ? version.replace("_", ".") : version;
         String msg = String.format("%s%nby %s%n%nversion: %s%n%s%n", title, author, version, date);
-        
+
         JOptionPane.showMessageDialog(this, msg, "About", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
 
     private void jListThreadsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListThreadsValueChanged
-        if(!evt.getValueIsAdjusting()){
+        if (!evt.getValueIsAdjusting()) {
             refreshSelectedThread();
         }
     }//GEN-LAST:event_jListThreadsValueChanged
@@ -615,81 +615,81 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         new WorkerDisplayThreadTags(getSelectedThread()).execute();
     }//GEN-LAST:event_jMenuItemManageTagsActionPerformed
 
-    private final Action ActionShowAll = new AbstractAction(){
+    private final Action ActionShowAll = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent evt) {
             refreshThreadListAndDisplay();
         }
     };
-    
-    private final Action ActionSave = new AbstractAction(){
+
+    private final Action ActionSave = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent evt) {
             new WorkerSaveData().execute();
         }
     };
-    
-    private final Action ActionNewThread = new AbstractAction(){
+
+    private final Action ActionNewThread = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent evt) {
             createAndShowNewThread();
         }
     };
-    
-    private final Action ActionFindAll = new AbstractAction(){
+
+    private final Action ActionFindAll = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent evt) {
             useSearchDialog(new DialogSearchText(MainFrame.instance()));
         }
     };
-    
-    private void promptToNameThread(ItemThread sel, boolean isNewThread){
-        String prompt = isNewThread ?
-                "Enter a name for the new thread" :
-                "Enter new name for the thread (or cancel to keep name)";
-        
+
+    private void promptToNameThread(ItemThread sel, boolean isNewThread) {
+        String prompt = isNewThread
+                ? "Enter a name for the new thread"
+                : "Enter new name for the thread (or cancel to keep name)";
+
         String resp = Prompts.getUserInput(prompt, PromptType.PLAIN);
-        if(resp != null){
+        if (resp != null) {
             sel.setName(resp);
             refreshThreadListAndDisplay(null, sel);
         }
     }
-    
-    private void useSearchDialog(BaseSearchDialog dialog){
+
+    private void useSearchDialog(BaseSearchDialog dialog) {
         dialog.showDialog();
         AbstractFinder result = dialog.getResult();
-        if(result != null){
+        if (result != null) {
             refreshThreadListAndDisplay(result, null);
         }
     }
-    
-    private void promptDelete(){
+
+    private void promptDelete() {
         String message = "Deleting this thread cannot be undone.\nAre you sure you want to proceed?";
-        if(Prompts.getUserApproval(message, PromptType.WARNING)){
+        if (Prompts.getUserApproval(message, PromptType.WARNING)) {
             Main.deleteThread();
         }
     }
-    
-    private void enableThreadButtons(boolean b){
+
+    private void enableThreadButtons(boolean b) {
         jButtonDeleteThread.setEnabled(b);
     }
-    
-    private JPanel createPanelForItem(Item i){
-        if(i instanceof NoteItem){
-            return new PanelNoteItem((NoteItem)i);
-        }else if(i instanceof TaskItem){
-            return new PanelTaskItem((TaskItem)i);
-        }else if(i instanceof FileItem){
-            return new PanelFileItem((FileItem)i);
+
+    private JPanel createPanelForItem(Item i) {
+        if (i instanceof NoteItem) {
+            return new PanelNoteItem((NoteItem) i);
+        } else if (i instanceof TaskItem) {
+            return new PanelTaskItem((TaskItem) i);
+        } else if (i instanceof FileItem) {
+            return new PanelFileItem((FileItem) i);
         }
         throw new UnsupportedOperationException("Not implemented");
     }
-    
+
     /**
      * JButton representing a {@link Tag}.
      */
     private class TagButton extends JButton {
-        
+
         public final Tag tag;
 
         public TagButton(final Tag tag) {
@@ -698,8 +698,8 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5), BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             this.setText(tag.toString());
-            
-            this.setMinimumSize(new Dimension(40,40));
+
+            this.setMinimumSize(new Dimension(40, 40));
 
             this.addActionListener(new java.awt.event.ActionListener() {
                 @Override
@@ -707,11 +707,11 @@ public class MainFrame extends rms.view.util.NotificationFrame {
                     refreshThreadListAndDisplay(new TagFinder(Collections.singleton(tag)), null);
                 }
             });
-            
+
             this.addMouseListener(new PopClickListener());
         }
     }
-    
+
     /**
      * MouseAdapter for displaying the popup menu on tags
      */
@@ -735,16 +735,16 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             jPopupMenuTag.show(e.getComponent(), e.getX(), e.getY());
         }
     }
-    
-    private void displayThread(ItemThread toLoad){
-        if(toLoad != null){
+
+    private void displayThread(ItemThread toLoad) {
+        if (toLoad != null) {
             //set name and enable buttons
             jLabelThreadName.setText(toLoad.getName());
             enableThreadButtons(true);
-            
+
             new WorkerDisplayThreadItems(toLoad).execute();
             new WorkerDisplayThreadTags(toLoad).execute();
-        }else{
+        } else {
             //clear existing content
             jXPanelContent.removeAll();
             jPanelTags.removeAll();
@@ -755,39 +755,39 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         revalidate();
         repaint();
     }
-    
+
     private int numLoaders = 0;
-    
-    private synchronized void showLoader(){
+
+    private synchronized void showLoader() {
         numLoaders++;
         getGlassPane().setVisible(true);
     }
-    
-    private synchronized void hideLoader(){
+
+    private synchronized void hideLoader() {
         numLoaders--;
-        if(numLoaders <= 0){
+        if (numLoaders <= 0) {
             getGlassPane().setVisible(false);
         }
     }
-    
+
     //<editor-fold defaultstate="collapsed" desc=" Workers ">
     /**
      * Task of loading State from file and populating the GUI with information
      */
-    private class WorkerLoadData extends SwingWorker<Void, Void>{
-        
+    private class WorkerLoadData extends SwingWorker<Void, Void> {
+
         private boolean result;
 
         @Override
         protected void done() {
-            if(result){
+            if (result) {
                 refreshThreadListAndDisplay();
                 displayNotification("Data loaded successfully");
-            }else{
+            } else {
                 Prompts.informUser("Error!", "Unrecoverable error: unable to load data.\nSee log files.", PromptType.ERROR);
                 System.exit(1);
             }
-            
+
             hideLoader();
             workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
@@ -800,19 +800,19 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             return null;
         }
     }
-    
+
     /**
      * Task of saving data from State to file
      */
     private class WorkerSaveData extends SwingWorker<Void, Void> {
-        
+
         private boolean result;
 
         @Override
         protected void done() {
-            if(result){
+            if (result) {
                 displayNotification("Data saved successfully");
-            }else{
+            } else {
                 Prompts.informUser("Error!", "Unrecoverable error: unable to save data.\nSee log files.", PromptType.ERROR);
             }
             workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
@@ -826,16 +826,16 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             return null;
         }
     }
-    
+
     /**
      * Task of refreshing the list of threads in the GUI
      */
-    private class WorkerRefreshThreadList extends SwingWorker<Void, Void>{
-        
+    private class WorkerRefreshThreadList extends SwingWorker<Void, Void> {
+
         private final AbstractFinder finder;
         private final ItemThread toDisplay;
-        
-        public WorkerRefreshThreadList(AbstractFinder finder, ItemThread toDisplay){
+
+        public WorkerRefreshThreadList(AbstractFinder finder, ItemThread toDisplay) {
             this.finder = finder;
             this.toDisplay = toDisplay;
         }
@@ -856,15 +856,15 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             return null;
         }
     }
-    
+
     /**
      * Loads the items in the given thread to the GUI
      */
-    private class WorkerDisplayThreadItems extends SwingWorker<Void, Void>{
-        
+    private class WorkerDisplayThreadItems extends SwingWorker<Void, Void> {
+
         private final ItemThread toLoad;
-        
-        public WorkerDisplayThreadItems(ItemThread toLoad){
+
+        public WorkerDisplayThreadItems(ItemThread toLoad) {
             this.toLoad = toLoad;
         }
 
@@ -872,11 +872,11 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         protected void done() {
             //relayout the UI
             jPanelThreadContent.updateUI();
-            
+
             //update the scroll bar position
             JScrollBar sb = jScrollPaneContent.getVerticalScrollBar();
-            sb.setValue( sb.getMaximum() );
-            
+            sb.setValue(sb.getMaximum());
+
             hideLoader();
             workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
@@ -885,15 +885,15 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
-            
+
             //clear existing content
             jXPanelContent.removeAll();
-            
+
             //load items
-            if(toLoad.size() == 0){
+            if (toLoad.size() == 0) {
                 jXPanelContent.add(jPanelEmptyThread);
-            }else{
-                for(Item i : toLoad){
+            } else {
+                for (Item i : toLoad) {
                     jXPanelContent.add(createPanelForItem(i));
                 }
             }
@@ -901,15 +901,15 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             return null;
         }
     }
-    
+
     /**
      * Loads the {@link Tag}s for the given thread to the GUI
      */
-    private class WorkerDisplayThreadTags extends SwingWorker<Void, Void>{
-        
+    private class WorkerDisplayThreadTags extends SwingWorker<Void, Void> {
+
         private final ItemThread toLoad;
-        
-        public WorkerDisplayThreadTags(ItemThread toLoad){
+
+        public WorkerDisplayThreadTags(ItemThread toLoad) {
             this.toLoad = toLoad;
         }
 
@@ -917,7 +917,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         protected void done() {
             //relayout the UI
             jScrollPaneTags.updateUI();
-            
+
             hideLoader();
             workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
@@ -926,16 +926,16 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
-            
+
             //clear existing content
             jPanelTags.removeAll();
-            
+
             //load tags
-            for(Tag t : toLoad.getTags()){
+            for (Tag t : toLoad.getTags()) {
                 jPanelTags.add(new TagButton(t));
             }
             jPanelTags.add(jButtonAddTag);
-            
+
             return null;
         }
     }
@@ -990,81 +990,84 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private org.jdesktop.swingx.JXPanel jXPanelContent;
     // End of variables declaration//GEN-END:variables
 
-    public static MainFrame instance(){
-        if(inst == null){
+    public static MainFrame instance() {
+        if (inst == null) {
             inst = new MainFrame();
         }
         return inst;
     }
-    
+
     /**
      * Creates a new {@link ItemThread} and displays it in the UI
-     * @return 
+     *
+     * @return
      */
-    public ItemThread createAndShowNewThread(){
+    public ItemThread createAndShowNewThread() {
         ItemThread thread = Main.getState().createNewThread();
         promptToNameThread(thread, true);
         return thread;
     }
-    
+
     /**
-     * 
-     * @return  the {@link ItemThread} currently selected in the thread list
+     *
+     * @return the {@link ItemThread} currently selected in the thread list
      */
-    public ItemThread getSelectedThread(){
-        return (ItemThread)jListThreads.getSelectedValue();
+    public ItemThread getSelectedThread() {
+        return (ItemThread) jListThreads.getSelectedValue();
     }
-    
+
     /**
      * Select the given {@link ItemThread} in the thread list
-     * @param thread 
+     *
+     * @param thread
      */
-    public void setSelectedThread(ItemThread thread){
+    public void setSelectedThread(ItemThread thread) {
         jListThreads.setSelectedValue(thread, true);
     }
-    
+
     /**
      * Clear the selected thread in the thread list
      */
-    public void clearSelectedThread(){
+    public void clearSelectedThread() {
         jListThreads.clearSelection();
     }
-    
+
     /**
-     * Clear the thread currently 
+     * Clear the thread currently
      */
-    public void clearDisplayedThread(){
+    public void clearDisplayedThread() {
         displayThread(null);
     }
-    
+
     /**
      * Reload the display for the currently selected thread
      */
-    public void refreshSelectedThread(){
+    public void refreshSelectedThread() {
         displayThread(getSelectedThread());
     }
-    
+
     /**
      * Refresh the thread list, showing all item threads, without selecting one.
      */
-    public void refreshThreadListAndDisplay(){
+    public void refreshThreadListAndDisplay() {
         refreshThreadListAndDisplay(null, null);
     }
-    
+
     /**
      * Refresh the thread list, showing only threads that match the given filter
-     *  and selecting the item given
-     * @param filter    the thread filter to apply
+     * and selecting the item given
+     *
+     * @param filter the thread filter to apply
      * @param toDisplay the item to select after refreshing (may be null)
      */
-    public void refreshThreadListAndDisplay(AbstractFinder filter, ItemThread toDisplay){
+    public void refreshThreadListAndDisplay(AbstractFinder filter, ItemThread toDisplay) {
         new WorkerRefreshThreadList(filter, toDisplay).execute();
     }
-    
+
     /**
      * Load the state from file and display it in the GUI
      */
-    public void loadStateAndPopulate(){
+    public void loadStateAndPopulate() {
         new WorkerLoadData().execute();
     }
 }

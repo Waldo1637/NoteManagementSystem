@@ -5,21 +5,18 @@ import rms.model.item.ItemThread;
 import rms.model.item.TaskItem;
 
 /**
- * Finds {@link TaskItem}s which are overdue, i.e. their deadline is in the past.
- * 
+ * Finds {@link TaskItem}s which are overdue, i.e. their deadline is in the
+ * past.
+ *
  * @author Timothy
  */
 public class LateTaskFinder extends AbstractFinder {
 
     @Override
     protected boolean accept(Item i) {
-        if(i instanceof TaskItem){
-            TaskItem ti = (TaskItem)i;
-            return ti.isOverdue();
-        }
-        return false;
+        return (i instanceof TaskItem) ? ((TaskItem) i).isOverdue() : false;
     }
-    
+
     @Override
     protected boolean accept(ItemThread t) {
         return false;

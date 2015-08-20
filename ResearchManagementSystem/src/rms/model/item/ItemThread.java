@@ -15,21 +15,21 @@ import rms.control.Main;
  * @author Timothy
  */
 public class ItemThread implements Iterable<Item>, Serializable, Comparable<ItemThread> {
-    
+
     private static final long serialVersionUID = 01L;
-    
+
     private final ArrayList<Item> data;
     private final int threadID;
     private File dataFolder;
     protected Date modified;
     protected final Set<Tag> tags;
     protected String name;
-    
-    public ItemThread(){
+
+    public ItemThread() {
         this(null);
     }
-    
-    public ItemThread(String name){
+
+    public ItemThread(String name) {
         this.data = new ArrayList<>();
         this.threadID = Main.getState().getNextThreadNumber();
         this.dataFolder = null;
@@ -37,69 +37,66 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
         setName(name);
         touch();
     }
-    
-    protected void add(Item i){
+
+    protected void add(Item i) {
         data.add(i);
         touch();
     }
-    
-    public int indexOf(Item i){
+
+    public int indexOf(Item i) {
         return data.indexOf(i);
     }
-    
-    public Item get(int index){
+
+    public Item get(int index) {
         return data.get(index);
     }
-    
-    public void remove(Item i){
+
+    public void remove(Item i) {
         data.remove(i);
         touch();
     }
-    
-    public int size(){
+
+    public int size() {
         return data.size();
     }
-    
-    public File getDataFolder(){
-        if(dataFolder == null){
+
+    public File getDataFolder() {
+        if (dataFolder == null) {
             File root = new File("files");
             dataFolder = new File(root, String.format("%09d", this.threadID));
             dataFolder.mkdirs();
         }
-        
+
         return dataFolder;
     }
-    
-    public final void touch(){
+
+    public final void touch() {
         this.modified = new Date();
     }
-    
-    public Date getModificationTime(){
+
+    public Date getModificationTime() {
         return modified;
     }
-    
-    public Set<Tag> getTags(){
+
+    public Set<Tag> getTags() {
         return tags;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    
-    public final void setName(String newName){
-        if(newName == null || newName.isEmpty()){
-            newName = "<untitled>";
-        }
-        name = newName;
+
+    public final void setName(String newName) {
+        name = (newName == null || newName.isEmpty()) ? "<untitled>" : newName;
     }
 
     @Override
     public Iterator<Item> iterator() {
         return data.iterator();
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("%s [%2$tm/%2$te/%2$ty %2$tR]", name, modified);
     }
 

@@ -11,29 +11,25 @@ import rms.control.Main;
 
 /**
  * List model that supports filtering and sorting
- * 
+ *
  * @author Timothy
  */
 public class SearchSortItemThreadListModel extends AbstractListModel {
+
     private final List<ItemThread> items;
 
     public SearchSortItemThreadListModel(boolean sorted, AbstractFinder finder) {
         Set<ItemThread> itemThreads = Main.getState().getThreads();
-        
-        //optionally, apply a filter
-        if(finder != null){
-            itemThreads = finder.find(itemThreads);
-        }
-        
-        //create the list of items
-        items = new ArrayList<>(itemThreads);
-        
+
+        //create the list of items, applying the filter if available
+        items = new ArrayList<>(finder == null ? itemThreads : finder.find(itemThreads));
+
         //optionally, sort the list
-        if(sorted){
+        if (sorted) {
             Collections.sort(items);
         }
     }
-    
+
     @Override
     public int getSize() {
         return items.size();

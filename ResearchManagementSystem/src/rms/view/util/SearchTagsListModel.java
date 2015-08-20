@@ -10,23 +10,24 @@ import rms.util.Helpers;
 
 /**
  * AbstractListModel used for displaying a subset of a {@link Tag} set
- * 
+ *
  * @author Timothy
  */
 public class SearchTagsListModel extends AbstractListModel {
+
     private final List<Tag> items;
 
     public SearchTagsListModel(Set<Tag> allTags, String searchString) {
         items = new ArrayList<>();
-        
-        for(Tag t : allTags){
-            if(Helpers.containsIgnoreCase(t.toString(), searchString)){
+
+        for (Tag t : allTags) {
+            if (Helpers.containsIgnoreCase(t.toString(), searchString)) {
                 items.add(t);
             }
         }
         Collections.sort(items);
     }
-    
+
     @Override
     public int getSize() {
         return items.size();

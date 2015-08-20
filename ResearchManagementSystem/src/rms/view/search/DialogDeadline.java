@@ -6,13 +6,14 @@ import rms.util.DateUnit;
 
 /**
  * Dialog for selecting a date unit and increment (for searching)
- * 
+ *
  * @author Timothy
  */
 public class DialogDeadline extends BaseSearchDialog {
 
     /**
      * Creates new form DialogDeadline
+     *
      * @param parent
      */
     public DialogDeadline(java.awt.Frame parent) {
@@ -22,8 +23,8 @@ public class DialogDeadline extends BaseSearchDialog {
 
     @Override
     protected AbstractFinder createFinder() {
-        int increment = Integer.valueOf((String)jComboBoxIncrement.getSelectedItem());
-        DateUnit unit = (DateUnit)jComboBoxUnit.getSelectedItem();
+        int increment = Integer.valueOf((String) jComboBoxIncrement.getSelectedItem());
+        DateUnit unit = (DateUnit) jComboBoxUnit.getSelectedItem();
         return new UpcomingTaskFinder(increment, unit);
     }
 

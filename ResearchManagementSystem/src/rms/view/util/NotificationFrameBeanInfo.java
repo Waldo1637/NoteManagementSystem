@@ -13,6 +13,7 @@ import javax.swing.JFrame;
  * @author Timothy
  */
 public class NotificationFrameBeanInfo extends SimpleBeanInfo {
+
     @Override
     public BeanDescriptor getBeanDescriptor() {
         BeanDescriptor desc = new BeanDescriptor(NotificationFrame.class);
@@ -24,11 +25,11 @@ public class NotificationFrameBeanInfo extends SimpleBeanInfo {
     public PropertyDescriptor[] getPropertyDescriptors() {
         return super.getPropertyDescriptors();
     }
-     
+
     @Override
     public BeanInfo[] getAdditionalBeanInfo() {
         try {
-            return new BeanInfo[] { Introspector.getBeanInfo(JFrame.class) };
+            return new BeanInfo[]{Introspector.getBeanInfo(JFrame.class)};
         } catch (IntrospectionException ex) {
             return super.getAdditionalBeanInfo();
         }

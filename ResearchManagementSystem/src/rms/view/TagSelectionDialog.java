@@ -11,18 +11,19 @@ import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
 
 /**
- * Dialog for selecting a {@link Tag} from those available or creating a new one.
- * 
+ * Dialog for selecting a {@link Tag} from those available or creating a new
+ * one.
+ *
  * @author Timothy
  */
 public class TagSelectionDialog extends javax.swing.JDialog {
-    
+
     private Set<Tag> selection;
 
     /**
      * Creates new TagSelectionDialog containing the set of {@link Tag}s
      * belonging to the current {@link rms.model.State State}.
-     * 
+     *
      * @param parent
      */
     public TagSelectionDialog(Frame parent) {
@@ -37,31 +38,31 @@ public class TagSelectionDialog extends javax.swing.JDialog {
     /**
      * Display the dialog.
      */
-    public void showDialog(){
+    public void showDialog() {
         setVisible(true);
     }
-    
+
     /**
-     * @return  the {@link Tag} selected in the UI
+     * @return the {@link Tag} selected in the UI
      */
-    public Set<Tag> getResult(){
+    public Set<Tag> getResult() {
         return selection;
     }
-    
-    private void close(Set<Tag> selectedTags){
+
+    private void close(Set<Tag> selectedTags) {
         selection = selectedTags;
         setVisible(false);
     }
-    
-    private void initComponentsMore(){
-        tagSelectionPanel.addDoubleClickSelectionListener(new DoubleClickSelectionListener(){
+
+    private void initComponentsMore() {
+        tagSelectionPanel.addDoubleClickSelectionListener(new DoubleClickSelectionListener() {
             @Override
             public void itemsSelected(JPanelTagSelection.SelectedTags m) {
                 close(m.getSelection());
             }
         });
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -142,11 +143,9 @@ public class TagSelectionDialog extends javax.swing.JDialog {
 
     private void jButtonNewTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewTagActionPerformed
         String newName = Prompts.getUserInput("Enter new tag name", PromptType.PLAIN);
-        if(newName != null && !newName.isEmpty()){
-            //create new tag and add it globally
-            Tag newTag = Main.getState().newTag(newName);
-            //close the list marking the new tag as selected
-            close(Collections.singleton(newTag));
+        if (newName != null && !newName.isEmpty()) {
+            //create new tag, and close the window with the new tag selected
+            close(Collections.singleton(Main.getState().newTag(newName)));
         }
     }//GEN-LAST:event_jButtonNewTagActionPerformed
 

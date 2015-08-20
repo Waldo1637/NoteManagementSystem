@@ -7,30 +7,30 @@ import rms.model.item.Item;
 import rms.model.item.ItemThread;
 
 /**
- * An AbstractFinder takes a Collection of {@link ItemThread} and returns the 
- *  subset which matches the criteria defined for the specific implementation.
- * 
+ * An AbstractFinder takes a Collection of {@link ItemThread} and returns the
+ * subset which matches the criteria defined for the specific implementation.
+ *
  * @author Timothy
  */
 public abstract class AbstractFinder {
-    
+
     /**
      * Searches the {@code input} Collection for {@link ItemThread}s which match
-     *  the criteria of the subclass implementation.
-     * 
+     * the criteria of the subclass implementation.
+     *
      * @param input
-     * @return      Set of {@link ItemThread}s which match the criteria
+     * @return Set of {@link ItemThread}s which match the criteria
      */
-    public Set<ItemThread> find(Collection<ItemThread> input){
+    public Set<ItemThread> find(Collection<ItemThread> input) {
         HashSet<ItemThread> retVal = new HashSet<>();
-        for(ItemThread t : input){
-            if(accept(t)){
+        for (ItemThread t : input) {
+            if (accept(t)) {
                 retVal.add(t);
                 continue; //continue with the next thread
             }
-            
-            for(Item i : t){
-                if(accept(i)){
+
+            for (Item i : t) {
+                if (accept(i)) {
                     retVal.add(t);
                     break; //skip remaining items in thread
                 }
@@ -38,19 +38,21 @@ public abstract class AbstractFinder {
         }
         return retVal;
     }
-    
+
     /**
-     * 
-     * @param item  
-     * @return      {@code true} iff the given {@link Item} should be returned by this AbstractFinder
+     *
+     * @param item
+     * @return {@code true} iff the given {@link Item} should be returned by
+     * this AbstractFinder
      */
     protected abstract boolean accept(Item item);
-    
+
     /**
-     * 
+     *
      * @param thread
-     * @return       {@code true} iff the given {@link ItemThread} should be returned by this AbstractFinder
+     * @return {@code true} iff the given {@link ItemThread} should be returned
+     * by this AbstractFinder
      */
-    protected abstract boolean accept(ItemThread thread); 
-    
+    protected abstract boolean accept(ItemThread thread);
+
 }

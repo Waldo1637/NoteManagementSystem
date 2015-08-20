@@ -19,18 +19,18 @@ import rms.view.MainFrame;
  * @author Timothy
  */
 public class Main {
-    
+
     private static final Logger thisLog = Logger.getLogger(Main.class.getName());
-    
+
     private static MainFrame gui;
     private static State state;
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         setupLogging();
-        
+
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code ">
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -43,10 +43,10 @@ public class Main {
             thisLog.log(Level.SEVERE, "Error setting L&F", ex);
         }
         //</editor-fold>
-        
+
         //create the view
         gui = MainFrame.instance();
-        
+
         // display the UI
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
@@ -74,78 +74,82 @@ public class Main {
 
     /**
      * Load the data from file to State
+     *
      * @return true iff loading was successful
      */
-    public static boolean loadStateFromFile(){
+    public static boolean loadStateFromFile() {
         state = Loader.loadFromFile();
         return state != null;
     }
-    
+
     /**
      * Store the current state to file
-     * @return 
+     *
+     * @return
      */
-    public static boolean storeStateToFile(){
+    public static boolean storeStateToFile() {
         return Loader.storeToFile(state);
     }
-    
-    public static void deleteThread(){
+
+    public static void deleteThread() {
         state.getThreads().remove(gui.getSelectedThread());
         gui.refreshThreadListAndDisplay();
         gui.clearSelectedThread();
     }
-    
+
     /**
-     * Create a new task on the current thread. If there is no current thread, 
+     * Create a new task on the current thread. If there is no current thread,
      * create one.
      */
-    public static void newTask() {                                                 
+    public static void newTask() {
         ItemThread td = getSelectedThreadOrCreate();
         ItemFactory.newTaskItem(td);
         gui.refreshSelectedThread();
     }
-    
+
     /**
-     * Create a new file on the current thread. If there is no current thread, 
+     * Create a new file on the current thread. If there is no current thread,
      * create one.
      */
-    public static void newFile() {                                                 
+    public static void newFile() {
         ItemThread td = getSelectedThreadOrCreate();
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(true);
-        if(chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
-            for(File f : chooser.getSelectedFiles()){
+        if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
+            for (File f : chooser.getSelectedFiles()) {
                 ItemFactory.newFileItem(td, f);
             }
         }
         gui.refreshSelectedThread();
     }
-    
+
     /**
-     * Create a new note on the current thread. If there is no current thread, 
+     * Create a new note on the current thread. If there is no current thread,
      * create one.
      */
-    public static void newNote() {                                                 
+    public static void newNote() {
         ItemThread td = getSelectedThreadOrCreate();
         ItemFactory.newNoteItem(td);
         gui.refreshSelectedThread();
     }
-    
+
     /**
-     * 
-     * @return the current {@link State} 
+     *
+     * @return the current {@link State}
      */
-    public static State getState(){
+    public static State getState() {
         return state;
     }
-    
+
     /**
-     * Gets the currently selected thread. If none is selected, then creates new.
-     * @return 
+     * Returns the currently selected thread. If none is selected, then creates
+     * a new thread, sets it as the current thread, and returns it.
+     *
+     * @return
      */
-    private static ItemThread getSelectedThreadOrCreate(){
+    private static ItemThread getSelectedThreadOrCreate() {
         ItemThread td = gui.getSelectedThread();
-        if(td == null){
+        if (td == null) {
             td = gui.createAndShowNewThread();
         }
         return td;

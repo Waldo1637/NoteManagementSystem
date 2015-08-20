@@ -7,7 +7,9 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 /**
- * Panel showing a loading gif and blocking all input to the underlying components
+ * Panel showing a loading gif and blocking all input to the underlying
+ * components
+ *
  * @author Timothy
  */
 public class LoadingPanel extends JPanel implements FocusListener, MouseListener {
@@ -17,16 +19,16 @@ public class LoadingPanel extends JPanel implements FocusListener, MouseListener
     private LoadingPanel() {
         initComponents();
     }
-    
-    public static LoadingPanel instance(){
-        if(inst == null){
+
+    public static LoadingPanel instance() {
+        if (inst == null) {
             inst = new LoadingPanel();
             inst.addFocusListener(inst);
             inst.addMouseListener(inst);
         }
         return inst;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,20 +54,20 @@ public class LoadingPanel extends JPanel implements FocusListener, MouseListener
     @Override
     public void setVisible(boolean aFlag) {
         if (aFlag) {
-            //grab the focus to capture all key events
+            // Grab the focus to capture all key events
             requestFocus();
         }
         super.setVisible(aFlag);
     }
-    
+
     @Override
     public void focusGained(FocusEvent e) {
-        //Nothing
+        // Do nothing
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        //make sure focus is not lost while visible
+        // Make sure focus is not lost while visible
         if (isVisible()) {
             requestFocus();
         }
@@ -73,26 +75,26 @@ public class LoadingPanel extends JPanel implements FocusListener, MouseListener
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //Just ignore all mouse events
+        // Capture but ignore all mouse events
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //Just ignore all mouse events
+        // Capture but ignore all mouse events
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //Just ignore all mouse events
+        // Capture but ignore all mouse events
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //Just ignore all mouse events
+        // Capture but ignore all mouse events
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //Just ignore all mouse events
+        // Capture but ignore all mouse events
     }
 }

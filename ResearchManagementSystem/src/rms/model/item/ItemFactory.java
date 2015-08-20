@@ -32,7 +32,7 @@ public class ItemFactory {
         return i;
     }
 
-     public static FileItem newFileItem(ItemThread parentThread, File srcFile) {
+    public static FileItem newFileItem(ItemThread parentThread, File srcFile) {
         FileItem i = new FileItem(parentThread, srcFile);
         parentThread.add(i);
         return i;

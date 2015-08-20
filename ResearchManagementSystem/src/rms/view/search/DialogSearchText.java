@@ -5,24 +5,25 @@ import rms.control.search.TextFinder;
 
 /**
  * Dialog for entering a string of text (for searching)
- * 
+ *
  * @author Timothy
  */
 public class DialogSearchText extends BaseSearchDialog {
 
     /**
      * Creates new form DialogSearchText
+     *
      * @param parent
      */
     public DialogSearchText(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
     }
-    
+
     @Override
     protected AbstractFinder createFinder() {
         String searchText = jTextFieldSearchText.getText();
-        if(searchText != null && !searchText.isEmpty()){
+        if (searchText != null && !searchText.isEmpty()) {
             return new TextFinder(searchText);
         }
         return null;

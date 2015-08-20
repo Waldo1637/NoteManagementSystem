@@ -8,28 +8,29 @@ import rms.util.DateRangeType;
 
 /**
  * Dialog for selecting a start and end date (for searching)
- * 
+ *
  * @author Timothy
  */
 public class DialogDateRange extends BaseSearchDialog {
 
     /**
      * Creates new form DialogDateRange
+     *
      * @param parent
      */
     public DialogDateRange(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
     }
-    
+
     @Override
     protected AbstractFinder createFinder() {
-        DateRangeType selectionType = (DateRangeType)jComboBoxType.getSelectedItem();
+        DateRangeType selectionType = (DateRangeType) jComboBoxType.getSelectedItem();
         Date startDate = jXDatePickerStart.getDate();
         Date endDate = jXDatePickerEnd.getDate();
         return new DateRangeFinder(selectionType, startDate, endDate);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

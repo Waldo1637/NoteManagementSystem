@@ -70,7 +70,7 @@ public class State implements Serializable {
      */
     public void deleteTags(Set<Tag> tagsToDelete) {
         tags.removeAll(tagsToDelete);
-        for(ItemThread t : threads){
+        for (ItemThread t : threads) {
             t.getTags().removeAll(tagsToDelete);
         }
     }

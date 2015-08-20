@@ -17,24 +17,24 @@ import javax.swing.undo.UndoManager;
 
 /**
  * Utility class to add undo/redo functionality to a {@link JTextComponent}.
- * 
- * If the {@link JTextComponent} is made uneditable, the undo/redo buffer is 
+ *
+ * If the {@link JTextComponent} is made uneditable, the undo/redo buffer is
  * cleared.
- * 
+ *
  * @author Timothy
  */
 public class UndoRedoProvider {
-    
+
     private static final Logger thisLog = Logger.getLogger(UndoRedoProvider.class.getName());
 
     private final UndoManager manager;
-    
+
     /**
      * Add undo/redo functionality to the given {@link JTextComponent}.
-     * 
+     *
      * @param component
      */
-    public static void addTo(JTextComponent component){
+    public static void addTo(JTextComponent component) {
         new UndoRedoProvider(component);
     }
 
@@ -88,7 +88,7 @@ public class UndoRedoProvider {
                 }
             }
         });
-        
+
         thisLog.log(Level.FINE, "undo/redo functionality added to {0}", component);
     }
 }

@@ -7,7 +7,7 @@ import javax.swing.JButton;
 
 /**
  * Generic frame for displaying notification messages over the main content
- * 
+ *
  * @author Timothy
  */
 public class NotificationFrame extends javax.swing.JFrame {
@@ -19,20 +19,21 @@ public class NotificationFrame extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
     }
-    
+
     /**
-     * 
-     * @return  the Container to which content should be added
+     *
+     * @return the Container to which content should be added
      */
     public Container getInnerContentPanel() {
         return jPanelMainContent;
     }
-    
+
     /**
      * Displays a notification with the given string for a short period of time
-     * @param message 
+     *
+     * @param message
      */
-    public void displayNotification(String message){
+    public void displayNotification(String message) {
         new Notification(message).display();
     }
 
@@ -89,7 +90,7 @@ public class NotificationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private class Notification extends JButton {
-        
+
         public Notification(String message) {
             this.setText(formatText(message));
             this.setBackground(Color.gray);
@@ -101,13 +102,13 @@ public class NotificationFrame extends javax.swing.JFrame {
             this.setRolloverEnabled(false);
             this.setFocusable(false);
         }
-        
-        private String formatText(String input){
+
+        private String formatText(String input) {
             final int LL = 30;
 
             StringBuffer sb_in = new StringBuffer(input);
             StringBuilder sb_out = new StringBuilder("<html>");
-            while(sb_in.length() > LL){
+            while (sb_in.length() > LL) {
                 sb_out.append(sb_in.substring(0, LL)).append("<br>");
                 sb_in.delete(0, LL);
             }
@@ -117,20 +118,19 @@ public class NotificationFrame extends javax.swing.JFrame {
             return sb_out.toString();
         }
 
-        public void display(){
+        public void display() {
             new NoteLifetime(this).start();
         }
     }
-    
-    
-    private class NoteLifetime extends Thread{
-        
+
+    private class NoteLifetime extends Thread {
+
         private final Notification note;
 
         public NoteLifetime(Notification note) {
             this.note = note;
         }
-        
+
         @Override
         public void run() {
             try {
@@ -139,7 +139,7 @@ public class NotificationFrame extends javax.swing.JFrame {
                 repaint();
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-            }finally{
+            } finally {
                 jPanelNotifications.remove(note);
                 revalidate();
                 repaint();

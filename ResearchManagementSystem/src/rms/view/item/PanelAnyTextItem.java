@@ -24,11 +24,12 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
     
     private static final String SAVE = "Save";
     private static final String EDIT = "Edit";
-    
+
     protected final TextItem item;
-    
+
     /**
-     * Creates new form PanelNoteItem
+     * Creates new PanelNoteItem with the given {@link TextItem}
+     *
      * @param itm
      */
     public PanelAnyTextItem(TextItem itm) {
@@ -36,27 +37,27 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
         jTextPaneDesc.setEditorKit(new TabSizeStyledEditorKit(36));
         UndoRedoProvider.addTo(jTextPaneDesc);
         changeDescPaneColor(Color.LIGHT_GRAY);
-        
+
         item = itm;
-        
+
         reflectItemChanges();
     }
-    
-    private void reflectItemChanges(){
+
+    private void reflectItemChanges() {
         jLabelType.setText(item.getItemTypeName());
         jLabelID.setText(String.format("%05d", item.getID()));
         jLabelDateCreated.setText(item.getCreationTime().toString());
         jLabelDateModified.setText(item.getModificationTime().toString());
         jTextPaneDesc.setText(item.getText());
-        
-        switch(getStatus()){
+
+        switch (getStatus()) {
             case PENDING:
                 jLabelStatus.setText("Pending");
                 jLabelStatus.setForeground(Color.yellow);
                 break;
             case COMPLETE:
                 jLabelStatus.setText("Completed");
-                jLabelStatus.setForeground(new Color(0,175,0));
+                jLabelStatus.setForeground(new Color(0, 175, 0));
                 break;
             case OVERDUE:
                 jLabelStatus.setText("Overdue");
@@ -67,24 +68,23 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
                 jLabelStatus.setForeground(Color.black);
         }
     }
-    
-    protected final void showStatusPanel(boolean b){
-        jPanelStatus.setVisible(b);   
+
+    protected final void showStatusPanel(boolean b) {
+        jPanelStatus.setVisible(b);
     }
-    
+
     //NOTE: The 3 abstract methods here exist because the UI was created to 
     //      support one of two subtypes of TextItem. This is a misuse of inheritance.
-    
     protected abstract StatusIndicator getStatus();
-    
+
     protected abstract void togglePressed();
-    
+
     protected abstract void deadlineUpdated(Date newDate);
-    
-    protected void setDeadline(Date newDate){
+
+    protected void setDeadline(Date newDate) {
         jXDatePickerDeadline.setDate(newDate);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -283,7 +283,7 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonEditActionPerformed
 
     private void jTextPaneDescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneDescFocusLost
-        if(evt.getOppositeComponent() != jButtonEdit){
+        if (evt.getOppositeComponent() != jButtonEdit) {
             saveAction();
         }
     }//GEN-LAST:event_jTextPaneDescFocusLost
@@ -294,7 +294,7 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonToggleStatusActionPerformed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
-        if(Prompts.getUserApproval("Are you sure you want to delete this item?", PromptType.QUESTION)){
+        if (Prompts.getUserApproval("Are you sure you want to delete this item?", PromptType.QUESTION)) {
             deleteItem();
         }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
@@ -304,7 +304,7 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
         reflectItemChanges();
     }//GEN-LAST:event_jXDatePickerDeadlineActionPerformed
 
-    private void deleteItem(){
+    private void deleteItem() {
         item.getThread().remove(item);
         //cheap way to update UI
         Container p = this.getParent();
@@ -312,30 +312,30 @@ public abstract class PanelAnyTextItem extends javax.swing.JPanel {
         p.revalidate();
         p.repaint();
     }
-    
-    private void editAction(){
+
+    private void editAction() {
         jTextPaneDesc.requestFocusInWindow();
         changeDescPaneColor(Color.WHITE);
         jButtonEdit.setText(SAVE);
         reflectItemChanges();
         jTextPaneDesc.setEditable(true);
     }
-    
-    private void saveAction(){
+
+    private void saveAction() {
         jButtonEdit.setText(EDIT);
         changeDescPaneColor(Color.LIGHT_GRAY);
 
         String oldText = item.getText();
         String newText = jTextPaneDesc.getText();
-        if(!newText.equals(oldText)){
+        if (!newText.equals(oldText)) {
             item.replaceText(newText);
         }
 
         reflectItemChanges();
         jTextPaneDesc.setEditable(false);
     }
-    
-    private void changeDescPaneColor(Color c){
+
+    private void changeDescPaneColor(Color c) {
         UIDefaults defaults = new UIDefaults();
         defaults.put("TextPane[Enabled].backgroundPainter", c);
         jTextPaneDesc.putClientProperty("Nimbus.Overrides", defaults);

@@ -8,25 +8,25 @@ import rms.util.Helpers;
 
 /**
  * Finds {@link ItemThread}s with the given {@link Tag}
- * 
+ *
  * @author Timothy
  */
 public class TagFinder extends AbstractFinder {
-    
+
     private final Set<Tag> tag;
-    
+
     /**
-     * 
-     * @param tag   {@link Tag} to search {@link ItemThread}s for
+     *
+     * @param tag {@link Tag} to search {@link ItemThread}s for
      */
-    public TagFinder(Set<Tag> tag){
+    public TagFinder(Set<Tag> tag) {
         this.tag = tag;
     }
 
     /**
      * This method always returns false because there is no {@link Tag}
      * associated with an {@link Item}.
-     * 
+     *
      * @param i
      * @return {@code false}
      */
