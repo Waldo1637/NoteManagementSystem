@@ -10,7 +10,7 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class TextFinder extends AbstractFinder {
+public class TextFinder extends AbstractThreadFinder {
 
     private final String searchText;
 

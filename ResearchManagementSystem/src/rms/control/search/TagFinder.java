@@ -11,7 +11,7 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class TagFinder extends AbstractFinder {
+public class TagFinder extends AbstractThreadFinder {
 
     private final Set<Tag> tag;
 

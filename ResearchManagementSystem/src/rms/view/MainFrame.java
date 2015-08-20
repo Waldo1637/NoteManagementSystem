@@ -22,7 +22,7 @@ import javax.swing.JScrollBar;
 import javax.swing.SwingWorker;
 import javax.swing.border.EtchedBorder;
 import rms.control.Main;
-import rms.control.search.AbstractFinder;
+import rms.control.search.AbstractThreadFinder;
 import rms.control.search.LateTaskFinder;
 import rms.control.search.PendingTaskFinder;
 import rms.control.search.TagFinder;
@@ -657,7 +657,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
     private void useSearchDialog(BaseSearchDialog dialog) {
         dialog.showDialog();
-        AbstractFinder result = dialog.getResult();
+        AbstractThreadFinder result = dialog.getResult();
         if (result != null) {
             refreshThreadListAndDisplay(result, null);
         }
@@ -832,10 +832,10 @@ public class MainFrame extends rms.view.util.NotificationFrame {
      */
     private class WorkerRefreshThreadList extends SwingWorker<Void, Void> {
 
-        private final AbstractFinder finder;
+        private final AbstractThreadFinder finder;
         private final ItemThread toDisplay;
 
-        public WorkerRefreshThreadList(AbstractFinder finder, ItemThread toDisplay) {
+        public WorkerRefreshThreadList(AbstractThreadFinder finder, ItemThread toDisplay) {
             this.finder = finder;
             this.toDisplay = toDisplay;
         }
@@ -1060,7 +1060,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
      * @param filter the thread filter to apply
      * @param toDisplay the item to select after refreshing (may be null)
      */
-    public void refreshThreadListAndDisplay(AbstractFinder filter, ItemThread toDisplay) {
+    public void refreshThreadListAndDisplay(AbstractThreadFinder filter, ItemThread toDisplay) {
         new WorkerRefreshThreadList(filter, toDisplay).execute();
     }
 

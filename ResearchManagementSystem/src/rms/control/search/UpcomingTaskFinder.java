@@ -12,7 +12,7 @@ import rms.util.DateUnit;
  *
  * @author Timothy
  */
-public class UpcomingTaskFinder extends AbstractFinder {
+public class UpcomingTaskFinder extends AbstractThreadFinder {
 
     private final int increment;
     private final DateUnit unit;

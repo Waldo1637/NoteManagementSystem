@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.AbstractListModel;
 import rms.model.item.ItemThread;
-import rms.control.search.AbstractFinder;
+import rms.control.search.AbstractThreadFinder;
 import rms.control.Main;
 
 /**
@@ -18,7 +18,7 @@ public class SearchSortItemThreadListModel extends AbstractListModel {
 
     private final List<ItemThread> items;
 
-    public SearchSortItemThreadListModel(boolean sorted, AbstractFinder finder) {
+    public SearchSortItemThreadListModel(boolean sorted, AbstractThreadFinder finder) {
         Set<ItemThread> itemThreads = Main.getState().getThreads();
 
         //create the list of items, applying the filter if available

@@ -1,6 +1,6 @@
 package rms.view.search;
 
-import rms.control.search.AbstractFinder;
+import rms.control.search.AbstractThreadFinder;
 import rms.control.search.UpcomingTaskFinder;
 import rms.util.DateUnit;
 
@@ -22,7 +22,7 @@ public class DialogDeadline extends BaseSearchDialog {
     }
 
     @Override
-    protected AbstractFinder createFinder() {
+    protected AbstractThreadFinder createFinder() {
         int increment = Integer.valueOf((String) jComboBoxIncrement.getSelectedItem());
         DateUnit unit = (DateUnit) jComboBoxUnit.getSelectedItem();
         return new UpcomingTaskFinder(increment, unit);

@@ -10,7 +10,7 @@ import rms.model.item.TaskItem;
  *
  * @author Timothy
  */
-public class LateTaskFinder extends AbstractFinder {
+public class LateTaskFinder extends AbstractThreadFinder {
 
     @Override
     protected boolean accept(Item i) {

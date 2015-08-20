@@ -1,7 +1,7 @@
 package rms.view.search;
 
 import java.util.Date;
-import rms.control.search.AbstractFinder;
+import rms.control.search.AbstractThreadFinder;
 import rms.control.search.DateRangeFinder;
 import rms.util.DateHelpers;
 import rms.util.DateRangeType;
@@ -24,7 +24,7 @@ public class DialogDateRange extends BaseSearchDialog {
     }
 
     @Override
-    protected AbstractFinder createFinder() {
+    protected AbstractThreadFinder createFinder() {
         DateRangeType selectionType = (DateRangeType) jComboBoxType.getSelectedItem();
         Date startDate = jXDatePickerStart.getDate();
         Date endDate = jXDatePickerEnd.getDate();

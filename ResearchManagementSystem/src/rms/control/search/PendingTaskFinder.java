@@ -9,7 +9,7 @@ import rms.model.item.TaskItem;
  *
  * @author Timothy
  */
-public class PendingTaskFinder extends AbstractFinder {
+public class PendingTaskFinder extends AbstractThreadFinder {
 
     @Override
     protected boolean accept(Item i) {

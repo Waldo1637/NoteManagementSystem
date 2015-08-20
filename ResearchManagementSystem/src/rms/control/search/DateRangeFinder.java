@@ -13,7 +13,7 @@ import rms.util.DateRangeType;
  *
  * @author Timothy
  */
-public class DateRangeFinder extends AbstractFinder {
+public class DateRangeFinder extends AbstractThreadFinder {
 
     private final DateRangeType type;
     private final Date start;

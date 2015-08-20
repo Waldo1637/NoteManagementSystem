@@ -1,6 +1,6 @@
 package rms.view.search;
 
-import rms.control.search.AbstractFinder;
+import rms.control.search.AbstractThreadFinder;
 import rms.control.search.TextFinder;
 
 /**
@@ -21,7 +21,7 @@ public class DialogSearchText extends BaseSearchDialog {
     }
 
     @Override
-    protected AbstractFinder createFinder() {
+    protected AbstractThreadFinder createFinder() {
         String searchText = jTextFieldSearchText.getText();
         if (searchText != null && !searchText.isEmpty()) {
             return new TextFinder(searchText);

@@ -7,12 +7,12 @@ import rms.model.item.Item;
 import rms.model.item.ItemThread;
 
 /**
- * An AbstractFinder takes a Collection of {@link ItemThread} and returns the
+ * An AbstractThreadFinder takes a Collection of {@link ItemThread} and returns the
  * subset which matches the criteria defined for the specific implementation.
  *
  * @author Timothy
  */
-public abstract class AbstractFinder {
+public abstract class AbstractThreadFinder {
 
     /**
      * Searches the {@code input} Collection for {@link ItemThread}s which match
@@ -43,7 +43,7 @@ public abstract class AbstractFinder {
      *
      * @param item
      * @return {@code true} iff the given {@link Item} should be returned by
-     * this AbstractFinder
+ this AbstractThreadFinder
      */
     protected abstract boolean accept(Item item);
 
@@ -51,7 +51,7 @@ public abstract class AbstractFinder {
      *
      * @param thread
      * @return {@code true} iff the given {@link ItemThread} should be returned
-     * by this AbstractFinder
+ by this AbstractThreadFinder
      */
     protected abstract boolean accept(ItemThread thread);
 
