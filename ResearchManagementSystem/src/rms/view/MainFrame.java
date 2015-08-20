@@ -534,19 +534,19 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }//GEN-LAST:event_jMenuItemShowAllActionPerformed
 
     private void jMenuItemFindTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindTagActionPerformed
-        useDialog(new DialogSearchTags(this));
+        useSearchDialog(new DialogSearchTags(this));
     }//GEN-LAST:event_jMenuItemFindTagActionPerformed
 
     private void jMenuItemFindDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindDateActionPerformed
-        useDialog(new DialogDateRange(this));
+        useSearchDialog(new DialogDateRange(this));
     }//GEN-LAST:event_jMenuItemFindDateActionPerformed
 
     private void jMenuItemFindTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindTextActionPerformed
-        useDialog(new DialogSearchText(this));
+        useSearchDialog(new DialogSearchText(this));
     }//GEN-LAST:event_jMenuItemFindTextActionPerformed
 
     private void jMenuItemFindDeadlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindDeadlineActionPerformed
-        useDialog(new DialogDeadline(this));
+        useSearchDialog(new DialogDeadline(this));
     }//GEN-LAST:event_jMenuItemFindDeadlineActionPerformed
 
     private void jMenuItemFindPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindPendingActionPerformed
@@ -637,7 +637,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private final Action ActionFindAll = new AbstractAction(){
         @Override
         public void actionPerformed(ActionEvent evt) {
-            useDialog(new DialogSearchText(MainFrame.instance()));
+            useSearchDialog(new DialogSearchText(MainFrame.instance()));
         }
     };
     
@@ -653,7 +653,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
     }
     
-    private void useDialog(BaseSearchDialog dialog){
+    private void useSearchDialog(BaseSearchDialog dialog){
         dialog.showDialog();
         AbstractFinder result = dialog.getResult();
         if(result != null){
@@ -684,7 +684,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }
     
     /**
-     * 
+     * JButton representing a {@link Tag}.
      */
     private class TagButton extends JButton {
         

@@ -7,8 +7,10 @@ import java.util.Set;
 import javax.swing.AbstractListModel;
 import rms.model.Tag;
 import rms.util.Helpers;
+
 /**
- *
+ * AbstractListModel used for displaying only a subset of a {@link Tag} set
+ * 
  * @author Timothy
  */
 public class SearchTagsListModel extends AbstractListModel {
