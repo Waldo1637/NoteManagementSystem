@@ -85,7 +85,7 @@
     </Component>
     <Component class="rms.view.util.JPanelTagSelection" name="tagSelectionPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new rms.view.util.JPanelTagSelection(Main.getState().getTags())"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new rms.view.util.JPanelTagSelection(Main.getState().getTagsUnmodifiable())"/>
       </AuxValues>
     </Component>
   </SubComponents>

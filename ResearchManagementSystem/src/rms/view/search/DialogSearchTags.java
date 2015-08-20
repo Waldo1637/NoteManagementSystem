@@ -48,7 +48,7 @@ public class DialogSearchTags extends BaseSearchDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tagSelectionPanel = new rms.view.util.JPanelTagSelection(Main.getState().getTags());
+        tagSelectionPanel = new rms.view.util.JPanelTagSelection(Main.getState().getTagsUnmodifiable());
 
         setMinimumSize(new java.awt.Dimension(332, 295));
 

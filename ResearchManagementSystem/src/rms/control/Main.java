@@ -131,6 +131,10 @@ public class Main {
         gui.refreshSelectedThread();
     }
     
+    /**
+     * 
+     * @return the current {@link State} 
+     */
     public static State getState(){
         return state;
     }

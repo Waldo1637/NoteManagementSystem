@@ -74,7 +74,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
         jButtonOk = new javax.swing.JButton();
         jButtonNewTag = new javax.swing.JButton();
-        tagSelectionPanel = new rms.view.util.JPanelTagSelection(Main.getState().getTags());
+        tagSelectionPanel = new rms.view.util.JPanelTagSelection(Main.getState().getTagsUnmodifiable());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(250, 250));
