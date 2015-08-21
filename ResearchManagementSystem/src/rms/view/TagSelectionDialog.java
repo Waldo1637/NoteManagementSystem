@@ -145,7 +145,7 @@ public class TagSelectionDialog extends javax.swing.JDialog {
         String newName = Prompts.getUserInput("Enter new tag name", PromptType.PLAIN);
         if (newName != null && !newName.isEmpty()) {
             //create new tag, and close the window with the new tag selected
-            close(Collections.singleton(Main.getState().newTag(newName)));
+            close(Collections.singleton(Main.getState().createNewTag(newName)));
         }
     }//GEN-LAST:event_jButtonNewTagActionPerformed
 

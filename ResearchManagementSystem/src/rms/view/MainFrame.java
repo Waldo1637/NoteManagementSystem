@@ -484,7 +484,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         dialog.showDialog();
         Set<Tag> selectedTags = dialog.getResult();
         if (selectedTags != null) {
-            getSelectedThread().getTags().addAll(selectedTags);
+            getSelectedThread().addTags(selectedTags);
             new WorkerDisplayThreadTags(getSelectedThread()).execute();
         }
     }//GEN-LAST:event_jButtonAddTagActionPerformed
@@ -494,7 +494,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             JMenuItem source = (JMenuItem) evt.getSource();
             JPopupMenu parent = (JPopupMenu) source.getParent();
             TagButton invoker = (TagButton) parent.getInvoker();
-            getSelectedThread().getTags().remove(invoker.tag);
+            getSelectedThread().removeTags(Collections.singleton(invoker.tag));
             new WorkerDisplayThreadTags(getSelectedThread()).execute();
         } catch (ClassCastException ignored) {
         }
@@ -931,7 +931,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             jPanelTags.removeAll();
 
             //load tags
-            for (Tag t : toLoad.getTags()) {
+            for (Tag t : toLoad.getTagsUnmodifible()) {
                 jPanelTags.add(new TagButton(t));
             }
             jPanelTags.add(jButtonAddTag);

@@ -124,7 +124,7 @@ public class TagManagementDialog extends javax.swing.JDialog {
         String newName = Prompts.getUserInput("Enter new tag name", PromptType.PLAIN);
         if (newName != null && !newName.isEmpty()) {
             //create new tag and add it globally
-            Main.getState().newTag(newName);
+            Main.getState().createNewTag(newName);
             //refresh the list
             tagSelectionPanel.updateListItemsShown();
         }

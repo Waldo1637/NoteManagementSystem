@@ -51,7 +51,7 @@ public class Loader {
             in = new ObjectInputStream(new FileInputStream(stateFileFullPath));
             retVal = (State) in.readObject();
             thisLog.log(Level.FINE, "State loaded from file {0}", stateFileFullPath);
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (Exception ex) {    //catch any exception
             thisLog.log(Level.INFO, "Unable to load state. Creating new.", ex);
             retVal = new State();
         } finally {

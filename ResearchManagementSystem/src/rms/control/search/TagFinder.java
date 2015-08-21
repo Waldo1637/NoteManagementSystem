@@ -37,6 +37,6 @@ public class TagFinder extends AbstractThreadFinder {
 
     @Override
     protected boolean accept(ItemThread t) {
-        return !Helpers.intersection(t.getTags(), tag).isEmpty();
+        return !Helpers.intersection(t.getTagsUnmodifible(), tag).isEmpty();
     }
 }

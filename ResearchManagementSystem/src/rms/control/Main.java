@@ -92,7 +92,7 @@ public class Main {
     }
 
     public static void deleteThread() {
-        state.getThreads().remove(gui.getSelectedThread());
+        state.deleteThread(gui.getSelectedThread());
         gui.refreshThreadListAndDisplay();
         gui.clearSelectedThread();
     }
