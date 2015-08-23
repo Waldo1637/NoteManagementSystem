@@ -134,7 +134,7 @@ public class State implements Serializable {
         // Check for revision number. If no revision number, assume 1
         ObjectStreamField revisionField = serializedFields.getObjectStreamClass().getField("classSerializationVersion");
         byte serialVersionNumber = revisionField == null ? 1 : serializedFields.get("classSerializationVersion", (byte) 0);
-        //NOTE: 1 -> field does not exist, 0 -> default value
+        //NOTE: 1 -> field does not exist (i.e. version 1), 0 -> default value
 
         // Take the appropriate action based on revision number
         switch (serialVersionNumber) {
