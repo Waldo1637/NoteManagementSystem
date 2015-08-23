@@ -19,7 +19,7 @@ public class SearchSortItemThreadListModel extends AbstractListModel {
     private final List<ItemThread> items;
 
     public SearchSortItemThreadListModel(boolean sorted, AbstractThreadFinder finder) {
-        Set<ItemThread> itemThreads = Main.getState().getThreads();
+        Set<ItemThread> itemThreads = Main.getState().getThreadsUnmodifiable();
 
         //create the list of items, applying the filter if available
         items = new ArrayList<>(finder == null ? itemThreads : finder.find(itemThreads));

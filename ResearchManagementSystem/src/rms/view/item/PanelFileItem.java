@@ -162,7 +162,7 @@ public class PanelFileItem extends javax.swing.JPanel {
     private void jButtonFileLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileLinkActionPerformed
         try {
             Desktop.getDesktop().open(item.getFile());
-        } catch (IOException ex) {
+        } catch (IllegalArgumentException | IOException ex) {
             thisLog.log(Level.SEVERE, "Unable to open file.", ex);
         }
     }//GEN-LAST:event_jButtonFileLinkActionPerformed

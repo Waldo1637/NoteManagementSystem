@@ -13,6 +13,7 @@ import rms.model.State;
 import rms.model.item.ItemFactory;
 import rms.model.item.ItemThread;
 import rms.view.MainFrame;
+import rms.view.util.Prompts;
 
 /**
  *
@@ -78,7 +79,15 @@ public class Main {
      * @return true iff loading was successful
      */
     public static boolean loadStateFromFile() {
-        state = Loader.loadFromFile();
+        try {
+            state = Loader.attemptLoadDefaultFromFile();
+        } catch (Loader.SerializedStateOutdatedException ex) {
+            Prompts.informUser("Data file not found", "The data file cannot be found. This may be the result of a recent program update. Please select a data file to load.", Prompts.PromptType.WARNING);
+            JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+            if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
+                state = Loader.loadFromFile(chooser.getSelectedFile());
+            }
+        }
         return state != null;
     }
 
@@ -92,7 +101,7 @@ public class Main {
     }
 
     public static void deleteThread() {
-        state.getThreads().remove(gui.getSelectedThread());
+        state.deleteThread(gui.getSelectedThread());
         gui.refreshThreadListAndDisplay();
         gui.clearSelectedThread();
     }

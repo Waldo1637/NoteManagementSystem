@@ -55,4 +55,18 @@ public final class Helpers {
         retVal.retainAll(s2);
         return retVal;
     }
+    
+    /**
+     * Return a new Set containing the set difference {@code s1 - s2}
+     * 
+     * @param <N>
+     * @param s1
+     * @param s2
+     * @return 
+     */
+    public static <N> Set<N> difference(Set<N> s1, Set<N> s2){
+        HashSet<N> retVal = new HashSet<>(s1);
+        retVal.removeAll(s2);
+        return retVal;
+    }
 }

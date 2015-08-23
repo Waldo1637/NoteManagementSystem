@@ -1,5 +1,6 @@
 package rms.control;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,45 +20,58 @@ public class Loader {
 
     private static final Logger thisLog = Logger.getLogger(Loader.class.getName());
 
-    private static final String stateFileFullPath;
+    private static final String currentVersionStateFileFullPath;
 
     static {
+        // setup the currentVersionStateFileFullPath variable
         String baseDir = System.getProperty("user.dir");
         String fileName = String.format("index_%s.rms", Loader.class.getPackage().getSpecificationVersion());
         if (baseDir == null) {
             thisLog.log(Level.SEVERE, "Unable to determine user directory.");
-            stateFileFullPath = null;
+            currentVersionStateFileFullPath = null;
         } else {
-            stateFileFullPath = baseDir.concat("/").concat(fileName);
+            currentVersionStateFileFullPath = baseDir.concat("/").concat(fileName);
         }
     }
 
     /**
-     * Attempts to deserialize the stored {@code State} from file
+     * Attempts to deserialize the stored {@code State} from the default path
+     * for the current version. Exception is thrown if the file does not exist.
      *
      * @return the {@code State} object stored in file or null if unable to
      * deserialize
-     *
+     * @throws rms.control.Loader.SerializedStateOutdatedException
      * @see rms.model.State
      */
-    public static synchronized State loadFromFile() {
-        if (stateFileFullPath == null) {
-            return null;
+    public static synchronized State attemptLoadDefaultFromFile() throws SerializedStateOutdatedException {
+        File stateFile = new File(currentVersionStateFileFullPath);
+        if (currentVersionStateFileFullPath == null || !stateFile.exists()) {
+            throw new SerializedStateOutdatedException();
         }
 
-        State retVal;
+        return loadFromFile(stateFile);
+    }
+
+    /**
+     * Deserializes the stored {@code State} from the given path migrating the
+     * given State to the newest version if it is outdated.
+     * 
+     * @param stateFile
+     * @return 
+     */
+    public static synchronized State loadFromFile(File stateFile) {
+        State retVal = null;
         ObjectInputStream in = null;
         try {
-            in = new ObjectInputStream(new FileInputStream(stateFileFullPath));
+            in = new ObjectInputStream(new FileInputStream(stateFile));
             retVal = (State) in.readObject();
-            thisLog.log(Level.FINE, "State loaded from file {0}", stateFileFullPath);
-        } catch (IOException | ClassNotFoundException ex) {
-            thisLog.log(Level.INFO, "Unable to load state. Creating new.", ex);
+            thisLog.log(Level.FINE, "State loaded from file {0}", stateFile.getAbsolutePath());
+        } catch (Exception ex) {    //catch any exception
+            thisLog.log(Level.INFO, "Unable to load state from " + stateFile.getAbsolutePath() + ". Creating new.", ex);
             retVal = new State();
         } finally {
             Helpers.closeResource(in);
         }
-
         return retVal;
     }
 
@@ -71,22 +85,25 @@ public class Loader {
      * @see rms.model.State
      */
     public static synchronized boolean storeToFile(State state) {
-        if (stateFileFullPath == null) {
-            return false;
-        }
+        boolean success = false;
 
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(new FileOutputStream(stateFileFullPath));
-            out.writeObject(state);
-        } catch (IOException ex) {
-            thisLog.log(Level.SEVERE, "Unable to store state.", ex);
-            return false;
-        } finally {
-            Helpers.closeResource(out);
+        if (currentVersionStateFileFullPath != null) {
+            ObjectOutputStream out = null;
+            try {
+                out = new ObjectOutputStream(new FileOutputStream(currentVersionStateFileFullPath));
+                out.writeObject(state);
+                thisLog.log(Level.FINE, "State saved to file {0}", currentVersionStateFileFullPath);
+                success = true;
+            } catch (IOException ex) {
+                thisLog.log(Level.SEVERE, "Unable to store state.", ex);
+            } finally {
+                Helpers.closeResource(out);
+            }
         }
+        return success;
+    }
 
-        thisLog.log(Level.FINE, "State saved to file {0}", stateFileFullPath);
-        return true;
+    public static class SerializedStateOutdatedException extends Exception {
+
     }
 }

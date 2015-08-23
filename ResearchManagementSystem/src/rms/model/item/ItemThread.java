@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import rms.model.Tag;
@@ -22,8 +21,9 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
     private final int threadID;
     private File dataFolder;
     protected Date modified;
-    protected final Set<Tag> tags;
     protected String name;
+    
+    @Deprecated protected final Set<Tag> tags;
 
     public ItemThread() {
         this(null);
@@ -33,8 +33,8 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
         this.data = new ArrayList<>();
         this.threadID = Main.getState().getNextThreadNumber();
         this.dataFolder = null;
-        this.tags = new HashSet<>();
         setName(name);
+        tags = null;
         touch();
     }
 
@@ -78,8 +78,20 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
         return modified;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
+    public void addTags(Set<Tag> tags) {
+        for (Tag t : tags) {
+            Main.getState().addTagToThread(this, t);
+        }
+    }
+
+    public void removeTags(Set<Tag> tags) {
+        for (Tag t : tags) {
+            Main.getState().removeTagFromThread(this,t);
+        }
+    }
+
+    public Set<Tag> getTagsUnmodifible() {
+        return Main.getState().getTagsForThread(this);
     }
 
     public String getName() {
@@ -103,5 +115,10 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
     @Override
     public int compareTo(ItemThread other) {
         return other.getModificationTime().compareTo(this.getModificationTime());
+    }
+    
+    @Deprecated
+    public Set<Tag> getTagsForClassSerializationRevision0(){
+        return tags;
     }
 }
