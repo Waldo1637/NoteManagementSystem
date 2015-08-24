@@ -70,7 +70,7 @@ public class PanelFileItem extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(345, 95));
 
         jLabelType.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabelType.setText("File Import:");
+        jLabelType.setText("File:");
 
         jLabelDateCreated.setText("Date");
 
