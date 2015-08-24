@@ -10,11 +10,11 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class TextFinder extends AbstractThreadFinder {
+public class TextFilter extends AbstractFilter {
 
     private final String searchText;
 
-    public TextFinder(String searchText) {
+    public TextFilter(String searchText) {
         this.searchText = searchText;
     }
 
@@ -43,10 +43,10 @@ public class TextFinder extends AbstractThreadFinder {
      *
      * @param t
      * @return {@code true} iff the name of the {@code ItemThread} contains
-     * (case insensitive) the search text
+     * the search text (case insensitive comparison) or any item is accepted
      */
     @Override
     protected boolean accept(ItemThread t) {
-        return Helpers.containsIgnoreCase(t.getName(), searchText);
+        return Helpers.containsIgnoreCase(t.getName(), searchText) || isAnyItemAccepted(t);
     }
 }

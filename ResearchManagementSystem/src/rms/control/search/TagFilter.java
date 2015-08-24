@@ -11,7 +11,7 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class TagFinder extends AbstractThreadFinder {
+public class TagFilter extends AbstractFilter {
 
     private final Set<Tag> tag;
 
@@ -19,20 +19,14 @@ public class TagFinder extends AbstractThreadFinder {
      *
      * @param tag {@link Tag} to search {@link ItemThread}s for
      */
-    public TagFinder(Set<Tag> tag) {
+    public TagFilter(Set<Tag> tag) {
         this.tag = tag;
     }
 
-    /**
-     * This method always returns false because there is no {@link Tag}
-     * associated with an {@link Item}.
-     *
-     * @param i
-     * @return {@code false}
-     */
     @Override
     protected boolean accept(Item i) {
-        return false;
+        //An item is accepted if its owning thread is accepted
+        return accept(i.getThread());
     }
 
     @Override

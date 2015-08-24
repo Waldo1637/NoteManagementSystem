@@ -2,7 +2,7 @@ package rms.view.search;
 
 import java.awt.Container;
 import java.awt.Frame;
-import rms.control.search.AbstractThreadFinder;
+import rms.control.search.AbstractFilter;
 
 /**
  * Generic dialog box providing Ok and Cancel functionality
@@ -54,24 +54,24 @@ public class BaseSearchDialog extends javax.swing.JDialog {
 
     /**
      * Subclass implementations should create and return an
-     * {@link AbstractThreadFinder} based on what the user entered in the dialog.
+     * {@link AbstractFilter} based on what the user entered in the dialog.
      *
      * NOTE: You must override this method or {@link #getResult()} will always
      * return {@code null}.
      *
      * @return {@code null}
      */
-    protected AbstractThreadFinder createFinder() {
+    protected AbstractFilter createFilter() {
         return null;
     }
 
     /**
      *
-     * @return the {@link AbstractThreadFinder} created by this dialog or null if the
+     * @return the {@link AbstractFilter} created by this dialog or null if the
      * dialog was canceled.
      */
-    public AbstractThreadFinder getResult() {
-        return approved ? createFinder() : null;
+    public AbstractFilter getResult() {
+        return approved ? createFilter() : null;
     }
 
     /**

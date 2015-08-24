@@ -22,10 +22,10 @@ import javax.swing.JScrollBar;
 import javax.swing.SwingWorker;
 import javax.swing.border.EtchedBorder;
 import rms.control.Main;
-import rms.control.search.AbstractThreadFinder;
-import rms.control.search.LateTaskFinder;
-import rms.control.search.PendingTaskFinder;
-import rms.control.search.TagFinder;
+import rms.control.search.AbstractFilter;
+import rms.control.search.LateTaskFilter;
+import rms.control.search.PendingTaskFilter;
+import rms.control.search.TagFilter;
 import rms.model.Tag;
 import rms.model.item.FileItem;
 import rms.model.item.Item;
@@ -56,6 +56,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private static final Logger workerLog = Logger.getLogger("workers");
 
     private static MainFrame inst = null;
+    private AbstractFilter cachedFilter;
 
     /**
      * Creates new form MainFrame
@@ -63,6 +64,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private MainFrame() {
         initComponents();
         initComponentsMore();
+        cachedFilter = null;
     }
 
     @SuppressWarnings("unchecked")
@@ -548,11 +550,11 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }//GEN-LAST:event_jMenuItemFindDeadlineActionPerformed
 
     private void jMenuItemFindPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindPendingActionPerformed
-        refreshThreadListAndDisplay(new PendingTaskFinder(), null);
+        refreshThreadListAndDisplay(new PendingTaskFilter(), null);
     }//GEN-LAST:event_jMenuItemFindPendingActionPerformed
 
     private void jMenuItemFindLateTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindLateTasksActionPerformed
-        refreshThreadListAndDisplay(new LateTaskFinder(), null);
+        refreshThreadListAndDisplay(new LateTaskFilter(), null);
     }//GEN-LAST:event_jMenuItemFindLateTasksActionPerformed
 
     private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
@@ -657,9 +659,9 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
     private void useSearchDialog(BaseSearchDialog dialog) {
         dialog.showDialog();
-        AbstractThreadFinder result = dialog.getResult();
-        if (result != null) {
-            refreshThreadListAndDisplay(result, null);
+        AbstractFilter filter = dialog.getResult();
+        if (filter != null) {
+            refreshThreadListAndDisplay(filter, null);
         }
     }
 
@@ -704,7 +706,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             this.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    refreshThreadListAndDisplay(new TagFinder(Collections.singleton(tag)), null);
+                    refreshThreadListAndDisplay(new TagFilter(Collections.singleton(tag)), null);
                 }
             });
 
@@ -736,6 +738,11 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
     }
 
+    /**
+     * Loads the given ItemThread into the GUI
+     *
+     * @param toLoad
+     */
     private void displayThread(ItemThread toLoad) {
         if (toLoad != null) {
             //set name and enable buttons
@@ -832,11 +839,11 @@ public class MainFrame extends rms.view.util.NotificationFrame {
      */
     private class WorkerRefreshThreadList extends SwingWorker<Void, Void> {
 
-        private final AbstractThreadFinder finder;
+        private final AbstractFilter filter;
         private final ItemThread toDisplay;
 
-        public WorkerRefreshThreadList(AbstractThreadFinder finder, ItemThread toDisplay) {
-            this.finder = finder;
+        public WorkerRefreshThreadList(AbstractFilter filter, ItemThread toDisplay) {
+            this.filter = filter;
             this.toDisplay = toDisplay;
         }
 
@@ -851,8 +858,9 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         @Override
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            cachedFilter = filter;
             showLoader();
-            jListThreads.setModel(new SearchSortItemThreadListModel(true, finder));
+            jListThreads.setModel(new SearchSortItemThreadListModel(true, filter));
             return null;
         }
     }
@@ -1060,7 +1068,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
      * @param filter the thread filter to apply
      * @param toDisplay the item to select after refreshing (may be null)
      */
-    public void refreshThreadListAndDisplay(AbstractThreadFinder filter, ItemThread toDisplay) {
+    public void refreshThreadListAndDisplay(AbstractFilter filter, ItemThread toDisplay) {
         new WorkerRefreshThreadList(filter, toDisplay).execute();
     }
 

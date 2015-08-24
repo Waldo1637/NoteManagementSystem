@@ -12,7 +12,7 @@ import rms.util.DateUnit;
  *
  * @author Timothy
  */
-public class UpcomingTaskFinder extends AbstractThreadFinder {
+public class UpcomingTaskFilter extends AbstractFilter {
 
     private final int increment;
     private final DateUnit unit;
@@ -21,7 +21,7 @@ public class UpcomingTaskFinder extends AbstractThreadFinder {
      * @param increment number of {@code DateUnit}s into the future to search
      * @param unit unit type associated with the increment
      */
-    public UpcomingTaskFinder(int increment, DateUnit unit) {
+    public UpcomingTaskFilter(int increment, DateUnit unit) {
         this.increment = increment;
         this.unit = unit;
     }
@@ -66,14 +66,9 @@ public class UpcomingTaskFinder extends AbstractThreadFinder {
         return false;
     }
 
-    /**
-     * Task deadlines are not directly associated with the {@link ItemThread}
-     *
-     * @param t [ignored]
-     * @return {@code false}
-     */
     @Override
     protected boolean accept(ItemThread t) {
-        return false;
+        //the entire thread is accepted if any item is accepted
+        return isAnyItemAccepted(t);
     }
 }

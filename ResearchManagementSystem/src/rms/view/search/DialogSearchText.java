@@ -1,7 +1,7 @@
 package rms.view.search;
 
-import rms.control.search.AbstractThreadFinder;
-import rms.control.search.TextFinder;
+import rms.control.search.AbstractFilter;
+import rms.control.search.TextFilter;
 
 /**
  * Dialog for entering a string of text (for searching)
@@ -21,10 +21,10 @@ public class DialogSearchText extends BaseSearchDialog {
     }
 
     @Override
-    protected AbstractThreadFinder createFinder() {
+    protected AbstractFilter createFilter() {
         String searchText = jTextFieldSearchText.getText();
         if (searchText != null && !searchText.isEmpty()) {
-            return new TextFinder(searchText);
+            return new TextFilter(searchText);
         }
         return null;
     }

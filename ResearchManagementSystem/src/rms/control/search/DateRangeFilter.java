@@ -13,7 +13,7 @@ import rms.util.DateRangeType;
  *
  * @author Timothy
  */
-public class DateRangeFinder extends AbstractThreadFinder {
+public class DateRangeFilter extends AbstractFilter {
 
     private final DateRangeType type;
     private final Date start;
@@ -25,7 +25,7 @@ public class DateRangeFinder extends AbstractThreadFinder {
      * @param start inclusive start date of the range
      * @param end inclusive end date of the range
      */
-    public DateRangeFinder(DateRangeType type, Date start, Date end) {
+    public DateRangeFilter(DateRangeType type, Date start, Date end) {
         this.type = type;
         this.start = DateHelpers.removeTime(start);
         this.end = DateHelpers.removeTime(end);
@@ -59,7 +59,7 @@ public class DateRangeFinder extends AbstractThreadFinder {
 
     @Override
     protected boolean accept(ItemThread t) {
-        //NOTE: I could implement this one to shortcut the search
-        return false;
+        //the entire thread is accepted if any item is accepted
+        return isAnyItemAccepted(t);
     }
 }

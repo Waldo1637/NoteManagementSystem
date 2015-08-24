@@ -9,7 +9,7 @@ import rms.model.item.TaskItem;
  *
  * @author Timothy
  */
-public class PendingTaskFinder extends AbstractThreadFinder {
+public class PendingTaskFilter extends AbstractFilter {
 
     @Override
     protected boolean accept(Item i) {
@@ -18,6 +18,7 @@ public class PendingTaskFinder extends AbstractThreadFinder {
 
     @Override
     protected boolean accept(ItemThread t) {
-        return false;
+        //the entire thread is accepted if any item is accepted
+        return isAnyItemAccepted(t);
     }
 }

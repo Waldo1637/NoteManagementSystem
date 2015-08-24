@@ -2,8 +2,8 @@ package rms.view.search;
 
 import java.util.Set;
 import rms.control.Main;
-import rms.control.search.AbstractThreadFinder;
-import rms.control.search.TagFinder;
+import rms.control.search.AbstractFilter;
+import rms.control.search.TagFilter;
 import rms.model.Tag;
 import rms.view.util.JPanelTagSelection;
 
@@ -26,9 +26,9 @@ public class DialogSearchTags extends BaseSearchDialog {
     }
 
     @Override
-    protected AbstractThreadFinder createFinder() {
+    protected AbstractFilter createFilter() {
         Set<Tag> selectedTags = tagSelectionPanel.getSelectedTags();
-        return selectedTags.isEmpty() ? null : new TagFinder(selectedTags);
+        return selectedTags.isEmpty() ? null : new TagFilter(selectedTags);
     }
 
     private void initComponentsMore() {
