@@ -5,7 +5,7 @@ package rms.util;
  * @author Timothy
  */
 public enum DateRangeType {
-    CREATED("completed"), MODIFIED("modified"), DEADLINE("with deadline");
+    CREATED("created"), MODIFIED("modified"), DEADLINE("with deadline");
     
     private final String text;
 
