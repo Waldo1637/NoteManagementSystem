@@ -38,6 +38,7 @@ public class TaskItemPanel extends BaseItemPanel {
 
     @Override
     protected void reflectItemChangesInUI_Additional() {
+        jXDatePickerDeadline.setDate(getTaskItem().getDeadline());
         itemTextField.updateViewFromItem();
         updateStatusIndicator();
     }
