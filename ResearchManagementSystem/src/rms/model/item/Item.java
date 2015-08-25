@@ -73,5 +73,10 @@ public abstract class Item implements Serializable {
         this.getThread().touch();
     }
 
+    @Override
+    public String toString(){
+        return String.format("{ID=%s,name=%s,type=%s,parentID=%s}", itemID, name, getItemTypeName(), parentThread.getID());
+    }
+    
     public abstract String getItemTypeName();
 }

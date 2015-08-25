@@ -32,20 +32,12 @@ public abstract class AbstractFilter {
     }
 
     /**
-     * Searches the {@code input} for {@link Item}s which match the criteria of
-     * the subclass implementation.
      *
-     * @param input
-     * @return
+     * @param item
+     * @return  true iff the given item is accepted by the Filter
      */
-    public Set<Item> filterItems(Iterable<Item> input) {
-        HashSet<Item> retVal = new HashSet<>();
-        for (Item i : input) {
-            if (accept(i)) {
-                retVal.add(i);
-            }
-        }
-        return retVal;
+    public boolean includesItem(Item item) {
+        return accept(item);
     }
 
     /**

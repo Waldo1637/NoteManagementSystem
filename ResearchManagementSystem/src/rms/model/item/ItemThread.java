@@ -98,6 +98,10 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
         return name;
     }
 
+    public int getID(){
+        return threadID;
+    }
+    
     public final void setName(String newName) {
         name = (newName == null || newName.isEmpty()) ? "<untitled>" : newName;
     }

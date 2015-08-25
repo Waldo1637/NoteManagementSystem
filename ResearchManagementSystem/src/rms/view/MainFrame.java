@@ -32,9 +32,9 @@ import rms.model.item.Item;
 import rms.model.item.ItemThread;
 import rms.model.item.NoteItem;
 import rms.model.item.TaskItem;
-import rms.view.item.PanelFileItem;
-import rms.view.item.PanelNoteItem;
-import rms.view.item.PanelTaskItem;
+import rms.view.item.FileItemPanel;
+import rms.view.item.NoteItemPanel;
+import rms.view.item.TaskItemPanel;
 import rms.view.search.BaseSearchDialog;
 import rms.view.search.DialogDateRange;
 import rms.view.search.DialogDeadline;
@@ -677,14 +677,21 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }
 
     private JPanel createPanelForItem(Item i) {
-        if (i instanceof NoteItem) {
-            return new PanelNoteItem((NoteItem) i);
-        } else if (i instanceof TaskItem) {
-            return new PanelTaskItem((TaskItem) i);
-        } else if (i instanceof FileItem) {
-            return new PanelFileItem((FileItem) i);
+        boolean collapse = cachedFilter == null ? false : !cachedFilter.includesItem(i);
+
+        try {
+            if (i instanceof NoteItem) {
+                return new NoteItemPanel((NoteItem) i, collapse);
+            } else if (i instanceof TaskItem) {
+                return new TaskItemPanel((TaskItem) i, collapse);
+            } else if (i instanceof FileItem) {
+                return new FileItemPanel((FileItem) i, collapse);
+            }
+            throw new UnsupportedOperationException("Not implemented: " + i);
+        } catch (Exception ex) {
+            thisLog.log(Level.SEVERE, "Error creating panel for Item " + i, ex);
+            throw ex;
         }
-        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
@@ -802,8 +809,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         @Override
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            showLoader();
-            result = Main.loadStateFromFile();
+            try {
+                showLoader();
+                result = Main.loadStateFromFile();
+            } catch (Exception ex) {
+                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+            }
             return null;
         }
     }
@@ -828,8 +839,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         @Override
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            //no loader necessary for saving
-            result = Main.storeStateToFile();
+            try {
+                //no need to show loader for saving
+                result = Main.storeStateToFile();
+            } catch (Exception ex) {
+                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+            }
             return null;
         }
     }
@@ -858,9 +873,13 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         @Override
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            cachedFilter = filter;
-            showLoader();
-            jListThreads.setModel(new SearchSortItemThreadListModel(true, filter));
+            try {
+                cachedFilter = filter;
+                showLoader();
+                jListThreads.setModel(new SearchSortItemThreadListModel(true, filter));
+            } catch (Exception ex) {
+                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+            }
             return null;
         }
     }
@@ -892,20 +911,21 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         @Override
         protected Void doInBackground() throws Exception {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            showLoader();
-
-            //clear existing content
-            jXPanelContent.removeAll();
-
-            //load items
-            if (toLoad.size() == 0) {
-                jXPanelContent.add(jPanelEmptyThread);
-            } else {
-                for (Item i : toLoad) {
-                    jXPanelContent.add(createPanelForItem(i));
+            try {
+                showLoader();
+                //clear existing content
+                jXPanelContent.removeAll();
+                //load items
+                if (toLoad.size() == 0) {
+                    jXPanelContent.add(jPanelEmptyThread);
+                } else {
+                    for (Item i : toLoad) {
+                        jXPanelContent.add(createPanelForItem(i));
+                    }
                 }
+            } catch (Exception ex) {
+                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
-
             return null;
         }
     }
@@ -931,7 +951,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
 
