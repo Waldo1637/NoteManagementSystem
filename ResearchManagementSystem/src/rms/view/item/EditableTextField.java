@@ -98,6 +98,11 @@ public class EditableTextField extends javax.swing.JPanel {
                 jTextPaneDescFocusLost(evt);
             }
         });
+        jTextPaneDesc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextPaneDescKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -116,6 +121,10 @@ public class EditableTextField extends javax.swing.JPanel {
             saveAction();
         }
     }//GEN-LAST:event_jTextPaneDescFocusLost
+
+    private void jTextPaneDescKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneDescKeyTyped
+        preserveSize();
+    }//GEN-LAST:event_jTextPaneDescKeyTyped
 
     private void editAction() {
         saveEditButton.setText(SAVE);
