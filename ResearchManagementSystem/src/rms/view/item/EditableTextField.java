@@ -10,7 +10,7 @@ import javax.swing.JButton;
 import javax.swing.Timer;
 import javax.swing.UIDefaults;
 import rms.model.item.TextItem;
-import rms.view.util.TabSizeStyledEditorKit;
+import rms.view.util.CustomEditorKit;
 import rms.view.util.UndoRedoProvider;
 
 /**
@@ -92,7 +92,7 @@ public class EditableTextField extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(6, 22));
 
         jTextPaneDesc.setEditable(false);
-        jTextPaneDesc.setEditorKit(new TabSizeStyledEditorKit(36));
+        jTextPaneDesc.setEditorKit(new CustomEditorKit(36));
         jTextPaneDesc.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextPaneDescFocusLost(evt);
@@ -167,13 +167,13 @@ public class EditableTextField extends javax.swing.JPanel {
         jTextPaneDesc.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
         jTextPaneDesc.setBackground(c);
     }
-    
+
     /**
      * There is a bug which causes the textPane to be redrawn at default size
-     * unless getPreferredSize is called immediately after actions that cause
-     * a repaint.
+     * unless getPreferredSize is called immediately after actions that cause a
+     * repaint.
      */
-    private void preserveSize(){
+    private void preserveSize() {
         jTextPaneDesc.getPreferredSize();
     }
 

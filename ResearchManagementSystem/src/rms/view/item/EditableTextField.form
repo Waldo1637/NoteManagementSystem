@@ -35,7 +35,7 @@
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="editorKit" type="javax.swing.text.EditorKit" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new TabSizeStyledEditorKit(36)" type="code"/>
+          <Connection code="new rms.view.util.CustomEditorKit(36)" type="code"/>
         </Property>
       </Properties>
       <Events>
