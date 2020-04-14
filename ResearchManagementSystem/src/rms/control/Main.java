@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -118,18 +119,17 @@ public class Main {
 
     /**
      * Create a new file on the current thread. If there is no current thread,
-     * create one.
+     * create one (as long as the user actually selected a file).
      */
     public static void newFile() {
-        ItemThread td = getSelectedThreadOrCreate();
-        JFileChooser chooser = new JFileChooser();
-        chooser.setMultiSelectionEnabled(true);
-        if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
-            for (File f : chooser.getSelectedFiles()) {
+        List<File> selection = gui.promptFileSelection();
+        if (!selection.isEmpty()) {
+            ItemThread td = getSelectedThreadOrCreate();
+            for (File f : selection) {
                 ItemFactory.createAndAddFileItem(td, f);
             }
+            gui.refreshSelectedThread();//no need to refresh if no selection
         }
-        gui.refreshSelectedThread();
     }
 
     /**

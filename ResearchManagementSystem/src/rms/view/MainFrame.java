@@ -4,22 +4,15 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import rms.control.Main;
 import rms.control.search.AbstractFilter;
@@ -27,19 +20,11 @@ import rms.control.search.LateTaskFilter;
 import rms.control.search.PendingTaskFilter;
 import rms.control.search.TagFilter;
 import rms.model.Tag;
-import rms.model.item.FileItem;
-import rms.model.item.Item;
-import rms.model.item.ItemThread;
-import rms.model.item.NoteItem;
-import rms.model.item.TaskItem;
+import rms.model.item.*;
 import rms.view.item.FileItemPanel;
 import rms.view.item.NoteItemPanel;
 import rms.view.item.TaskItemPanel;
-import rms.view.search.BaseSearchDialog;
-import rms.view.search.DialogDateRange;
-import rms.view.search.DialogDeadline;
-import rms.view.search.DialogSearchTags;
-import rms.view.search.DialogSearchText;
+import rms.view.search.*;
 import rms.view.util.LoadingPanel;
 import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
@@ -55,8 +40,22 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private static final Logger THIS_LOG = Logger.getLogger(MainFrame.class.getName());
     private static final Logger WORKER_LOG = Logger.getLogger("workers");
 
-    private static MainFrame inst = null;
-    private AbstractFilter cachedFilter;
+    // thread-safe lazy singleton pattern
+    private static class InstanceHolder {
+
+        static final MainFrame INSTANCE = new MainFrame();
+
+        private InstanceHolder() {
+        }
+    }
+
+    // thread-safe lazy singleton pattern
+    public static MainFrame instance() {
+        return InstanceHolder.INSTANCE;
+    }
+
+    private AbstractFilter cachedFilter = null;
+    private JFileChooser cachedFileChooser = null;
 
     /**
      * Creates new form MainFrame
@@ -64,7 +63,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private MainFrame() {
         initComponents();
         initComponentsMore();
-        cachedFilter = null;
     }
 
     @SuppressWarnings("unchecked")
@@ -612,7 +610,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
     private void jMenuItemManageTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemManageTagsActionPerformed
         // Create new TagManagementDialog and show it
-        new TagManagementDialog(inst).showDialog();
+        new TagManagementDialog(instance()).showDialog();
         // Update the tags for the selected thread in case any were deleted
         new WorkerDisplayThreadTags(getSelectedThread()).execute();
     }//GEN-LAST:event_jMenuItemManageTagsActionPerformed
@@ -644,6 +642,29 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             useSearchDialog(new DialogSearchText(MainFrame.instance()));
         }
     };
+
+    private static JFileChooser createFileChooser() {
+        JFileChooser ret = new JFileChooser();
+        ret.setMultiSelectionEnabled(true);
+        return ret;
+    }
+
+    public List<File> promptFileSelection() {
+        JFileChooser chooser = this.cachedFileChooser;
+        if (chooser == null) {
+            this.cachedFileChooser = chooser = createFileChooser();
+        }
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File[] ret = chooser.getSelectedFiles();
+            {//NOTE: simply using setSelectedFiles(null) is ineffective
+                File[] clear = {new File("")};
+                chooser.setSelectedFiles(clear);
+            }
+            return Collections.unmodifiableList(Arrays.asList(ret));
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
     private void promptToNameThread(ItemThread sel, boolean isNewThread) {
         String prompt = isNewThread
@@ -1017,13 +1038,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JSplitPane jSplitPaneVert;
     private org.jdesktop.swingx.JXPanel jXPanelContent;
     // End of variables declaration//GEN-END:variables
-
-    public static MainFrame instance() {
-        if (inst == null) {
-            inst = new MainFrame();
-        }
-        return inst;
-    }
 
     /**
      * Creates a new {@link ItemThread} and displays it in the UI
