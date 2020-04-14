@@ -14,6 +14,16 @@ public class NoteItem extends TextItem implements Serializable {
         super(parentThread, text);
     }
 
+    //copy constructor
+    protected NoteItem(ItemThread parentThreadForCopy, NoteItem toCopy) {
+        super(parentThreadForCopy, toCopy);
+    }
+
+    @Override
+    public NoteItem duplicateInThread(ItemThread parentThreadForCopy, CopyOptions opts) {
+        return new NoteItem(parentThreadForCopy, this);
+    }
+
     @Override
     public String getItemTypeName() {
         return "Note";

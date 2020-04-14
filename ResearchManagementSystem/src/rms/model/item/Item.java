@@ -2,9 +2,11 @@ package rms.model.item;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rms.control.Main;
+import rms.util.DateHelpers;
 
 /**
  *
@@ -29,14 +31,37 @@ public abstract class Item implements Serializable {
 
         this.itemID = Main.getState().getNextItemNumber();
         this.parentThread = parentThread;
-        this.created = new Date();
-        this.modified = (Date) created.clone();
+        this.created = DateHelpers.now();
+        this.modified = DateHelpers.clone(created);
         this.name = name;
     }
 
     protected Item(ItemThread parentThread) {
         this(parentThread, "");
     }
+
+    //copy constructor
+    protected Item(ItemThread parentThreadForCopy, Item toCopy) {
+        this(parentThreadForCopy, toCopy.name);//it's assigned a new ID and new Dates
+    }
+
+    public static class CopyOptions {
+
+        /**
+         * NOTE: package access to internal structure to allow only subclasses
+         * of Item (in the current package) to add/remove/check the contents.
+         */
+        /*package*/ HashMap<String, String> data = new HashMap<>();
+    }
+
+    /**
+     *
+     * @param parentThreadForCopy
+     * @param opts                Map of options for copying (may be 'null')
+     *
+     * @return
+     */
+    public abstract Item duplicateInThread(ItemThread parentThreadForCopy, CopyOptions opts);
 
     public int getID() {
         return itemID;
@@ -73,7 +98,7 @@ public abstract class Item implements Serializable {
     }
 
     public void touch() {
-        this.modified = new Date();
+        this.modified = DateHelpers.now();
         this.getThread().touch();
     }
 

@@ -42,7 +42,7 @@ public class UpcomingTaskFilter extends AbstractFilter {
                 return false;
             }
 
-            Date today = DateHelpers.Today();
+            Date today = DateHelpers.today();
             if (deadline.before(today)) {
                 return false;
             }

@@ -2,12 +2,10 @@ package rms.model.item;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import rms.control.Main;
 import rms.model.Tag;
+import rms.util.DateHelpers;
 
 /**
  *
@@ -36,6 +34,25 @@ public class ItemThread implements Iterable<Item>, Serializable {
         this.dataFolder = null;
         setName(name);
         tags = null;
+        touch();
+    }
+
+    //copy constructor
+    public ItemThread(ItemThread existing, boolean changeFileToPlaceholder) {
+        this.data = new ArrayList<>(existing.data.size());//same size
+        this.threadID = Main.getState().getNextThreadNumber();//new number
+        this.dataFolder = null;//new folder will be generated on-demand
+        setName(existing.name);//copy the name of the existing thread
+        tags = existing.tags == null ? null : new HashSet<>(existing.tags);
+        //After everything else is setup, copy all items into the new thread
+        Item.CopyOptions opts = new Item.CopyOptions();
+        FileItem.setUsePlaceholder(opts, changeFileToPlaceholder);
+        for (Item i : existing.data) {
+            this.data.add(i.duplicateInThread(this, opts));
+        }
+        //Add the tags from the original thread
+        this.addTags(existing.getTagsUnmodifible());
+        //And finally, set the modification time
         touch();
     }
 
@@ -89,7 +106,7 @@ public class ItemThread implements Iterable<Item>, Serializable {
     }
 
     public final void touch() {
-        this.modified = new Date();
+        this.modified = DateHelpers.now();
     }
 
     public Date getModificationTime() {

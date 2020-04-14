@@ -30,6 +30,32 @@ public class FileItem extends Item implements Serializable {
         this.localFile = localFile;
     }
 
+    //copy constructor
+    //NOTE: must only call via duplicateInThread(..)
+    private FileItem(ItemThread parentThreadForCopy, FileItem toCopy) {
+        super(parentThreadForCopy, toCopy);
+        this.localFile = toCopy.localFile;//NOTE: file is immutable
+    }
+
+    @Override
+    public Item duplicateInThread(ItemThread parentThreadForCopy, CopyOptions opts) {
+        if (getUsePlaceholder(opts)) {
+            //Return a new EmptyFileItem instead of copying the current FileItem
+            return new EmptyFileItem(parentThreadForCopy);
+        } else {
+            //Use create(..) to copy the physical file to the new thread directory
+            CreateResult create = create(parentThreadForCopy, this.localFile);
+            if (create.success()) {
+                //Then call the copy constructor to perform deep copy of new item
+                return new FileItem(parentThreadForCopy, create.item);
+            } else {
+                //If the file failed to copy, just use an empty placeholder
+                LOG.log(Level.WARNING, "Could not copy file: {0}", create.error);
+                return new EmptyFileItem(parentThreadForCopy);
+            }
+        }
+    }
+
     public File getFile() {
         return localFile;
     }
@@ -114,5 +140,13 @@ public class FileItem extends Item implements Serializable {
             }
         }
         return i;
+    }
+
+    public static void setUsePlaceholder(CopyOptions opts, boolean usePlaceholder) {
+        opts.data.put("FileItem.usePlaceholder", Boolean.toString(usePlaceholder));
+    }
+
+    public static boolean getUsePlaceholder(CopyOptions opts) {
+        return Boolean.parseBoolean(opts.data.get("FileItem.usePlaceholder"));
     }
 }

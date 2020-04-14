@@ -14,6 +14,16 @@ public class EmptyFileItem extends Item implements Serializable {
         super(parentThread);
     }
 
+    //copy constructor
+    protected EmptyFileItem(ItemThread parentThreadForCopy, EmptyFileItem toCopy) {
+        super(parentThreadForCopy, toCopy);
+    }
+
+    @Override
+    public EmptyFileItem duplicateInThread(ItemThread parentThreadForCopy, CopyOptions opts) {
+        return new EmptyFileItem(parentThreadForCopy, this);
+    }
+
     @Override
     public String getItemTypeName() {
         return "File Holder";

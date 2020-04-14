@@ -85,7 +85,7 @@
     <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePickerStart">
       <Properties>
         <Property name="date" type="java.util.Date" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="DateHelpers.Today()" type="code"/>
+          <Connection code="DateHelpers.today()" type="code"/>
         </Property>
       </Properties>
     </Component>
@@ -97,7 +97,7 @@
     <Component class="org.jdesktop.swingx.JXDatePicker" name="jXDatePickerEnd">
       <Properties>
         <Property name="date" type="java.util.Date" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="DateHelpers.Today()" type="code"/>
+          <Connection code="DateHelpers.today()" type="code"/>
         </Property>
       </Properties>
     </Component>

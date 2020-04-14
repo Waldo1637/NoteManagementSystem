@@ -14,14 +14,14 @@ public final class DateHelpers {
     /**
      * @return {@link Date} object representing midnight of the current day
      */
-    public static Date Today() {
-        return removeTime(new Date());
+    public static Date today() {
+        return removeTime(now());
     }
 
     /**
      * @return {@link Date} object representing the current date and time
      */
-    public static Date Now() {
+    public static Date now() {
         return GregorianCalendar.getInstance().getTime();
     }
 
@@ -108,6 +108,16 @@ public final class DateHelpers {
      */
     public static boolean afterEqual(Date one, Date two) {
         return one.getTime() >= two.getTime();
+    }
+
+    /**
+     *
+     * @param existing
+     *
+     * @return
+     */
+    public static Date clone(Date existing) {
+        return existing == null ? null : (Date) existing.clone();
     }
 
     private DateHelpers() {

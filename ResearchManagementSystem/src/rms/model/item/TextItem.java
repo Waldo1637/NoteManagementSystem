@@ -10,9 +10,15 @@ public abstract class TextItem extends Item {
 
     private String text;
 
-    public TextItem(ItemThread parentThread, String text) {
+    protected TextItem(ItemThread parentThread, String text) {
         super(parentThread);
         this.text = text;
+    }
+
+    //copy constructor
+    protected TextItem(ItemThread parentThreadForCopy, TextItem toCopy) {
+        super(parentThreadForCopy, toCopy);
+        this.text = toCopy.text;//String is immutable
     }
 
     public String getText() {

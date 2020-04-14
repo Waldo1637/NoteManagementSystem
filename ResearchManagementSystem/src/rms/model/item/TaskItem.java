@@ -21,7 +21,20 @@ public class TaskItem extends TextItem implements Serializable {
 
     protected TaskItem(ItemThread parentThread, String text) {
         super(parentThread, text);
+        this.deadline = null;
         this.completed = false;
+    }
+
+    //copy constructor
+    protected TaskItem(ItemThread parentThreadForCopy, TaskItem toCopy) {
+        super(parentThreadForCopy, toCopy);
+        this.deadline = DateHelpers.clone(toCopy.deadline);//Date is mutable
+        this.completed = toCopy.completed;
+    }
+
+    @Override
+    public TaskItem duplicateInThread(ItemThread parentThreadForCopy, CopyOptions opts) {
+        return new TaskItem(parentThreadForCopy, this);
     }
 
     public void setDeadline(Date newDeadline) {
@@ -37,7 +50,7 @@ public class TaskItem extends TextItem implements Serializable {
     }
 
     public boolean isOverdue() {
-        return !completed && deadline != null && deadline.before(DateHelpers.Today());
+        return !completed && deadline != null && deadline.before(DateHelpers.today());
     }
 
     public void markCompleted() {

@@ -55,11 +55,11 @@ public class DialogDateRange extends BaseSearchDialog {
 
         jLabel2.setText("between");
 
-        jXDatePickerStart.setDate(DateHelpers.Today());
+        jXDatePickerStart.setDate(DateHelpers.today());
 
         jLabel3.setText("and");
 
-        jXDatePickerEnd.setDate(DateHelpers.Today());
+        jXDatePickerEnd.setDate(DateHelpers.today());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getInnerContentPanel());
         getInnerContentPanel().setLayout(layout);

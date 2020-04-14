@@ -53,6 +53,21 @@ public class State implements Serializable {
     }
 
     /**
+     * Creates a new {@link ItemThread} as a copy of the one given, adds it to
+     * the State, and returns it.
+     *
+     * @param toCopy
+     * @param changeFileToPlaceholder
+     *
+     * @return
+     */
+    public ItemThread createNewThread(ItemThread toCopy, boolean changeFileToPlaceholder) {
+        ItemThread t = new ItemThread(toCopy, changeFileToPlaceholder);
+        threadsAndTags.addNewThread(t);
+        return t;
+    }
+
+    /**
      * Permanently delete the given {@link ItemThread} from the State.
      *
      * @param threadToRemove
