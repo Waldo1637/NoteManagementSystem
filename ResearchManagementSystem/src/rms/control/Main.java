@@ -11,8 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import rms.model.State;
-import rms.model.item.ItemFactory;
-import rms.model.item.ItemThread;
+import rms.model.item.*;
 import rms.view.MainFrame;
 import rms.view.util.Prompts;
 
@@ -113,7 +112,7 @@ public class Main {
      */
     public static void newTask() {
         ItemThread td = getSelectedThreadOrCreate();
-        ItemFactory.createAndAddTaskItem(td);
+        TaskItem.createAndAddTaskItem(td);
         gui.refreshSelectedThread();
     }
 
@@ -126,7 +125,7 @@ public class Main {
         if (!selection.isEmpty()) {
             ItemThread td = getSelectedThreadOrCreate();
             for (File f : selection) {
-                ItemFactory.createAndAddFileItem(td, f);
+                FileItem.createAndAddFileItem(td, f);
             }
             gui.refreshSelectedThread();//no need to refresh if no selection
         }
@@ -138,7 +137,7 @@ public class Main {
      */
     public static void newNote() {
         ItemThread td = getSelectedThreadOrCreate();
-        ItemFactory.createAndAddNoteItem(td);
+        NoteItem.createAndAddNoteItem(td);
         gui.refreshSelectedThread();
     }
 

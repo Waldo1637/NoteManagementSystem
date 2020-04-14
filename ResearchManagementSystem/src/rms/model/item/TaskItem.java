@@ -58,4 +58,16 @@ public class TaskItem extends TextItem implements Serializable {
     public String getItemTypeName() {
         return "Task";
     }
+
+    public static TaskItem createAndAddTaskItem(ItemThread parentThread, String text) {
+        TaskItem i = new TaskItem(parentThread, text);
+        parentThread.add(i);
+        return i;
+    }
+
+    public static TaskItem createAndAddTaskItem(ItemThread parentThread) {
+        TaskItem i = new TaskItem(parentThread);
+        parentThread.add(i);
+        return i;
+    }
 }

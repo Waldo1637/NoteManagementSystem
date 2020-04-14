@@ -38,4 +38,10 @@ public class FileItem extends Item implements Serializable {
     public String getItemTypeName() {
         return "File";
     }
+
+    public static FileItem createAndAddFileItem(ItemThread parentThread, File srcFile) {
+        FileItem i = new FileItem(parentThread, srcFile);
+        parentThread.add(i);
+        return i;
+    }
 }

@@ -22,4 +22,16 @@ public class NoteItem extends TextItem implements Serializable {
     public String getItemTypeName() {
         return "Note";
     }
+
+    public static NoteItem createAndAddNoteItem(ItemThread parentThread, String text) {
+        NoteItem i = new NoteItem(parentThread, text);
+        parentThread.add(i);
+        return i;
+    }
+
+    public static NoteItem createAndAddNoteItem(ItemThread parentThread) {
+        NoteItem i = new NoteItem(parentThread);
+        parentThread.add(i);
+        return i;
+    }
 }
