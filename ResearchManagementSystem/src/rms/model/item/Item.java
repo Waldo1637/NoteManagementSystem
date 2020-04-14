@@ -42,12 +42,12 @@ public abstract class Item implements Serializable {
         return parentThread;
     }
 
-    public Item getParent() {
+    public Item getPreviousItem() {
         int pIndex = parentThread.indexOf(this) - 1;
         return pIndex < 0 ? null : parentThread.get(pIndex);
     }
 
-    public Item getChild() {
+    public Item getNextItem() {
         int cIndex = parentThread.indexOf(this) + 1;
         return cIndex >= parentThread.size() ? null : parentThread.get(cIndex);
     }
