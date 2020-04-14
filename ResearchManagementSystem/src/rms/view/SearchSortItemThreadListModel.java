@@ -1,13 +1,10 @@
 package rms.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.swing.AbstractListModel;
-import rms.model.item.ItemThread;
-import rms.control.search.AbstractFilter;
 import rms.control.Main;
+import rms.control.search.AbstractFilter;
+import rms.model.item.ItemThread;
 
 /**
  * List model that supports filtering and sorting
@@ -26,7 +23,13 @@ public class SearchSortItemThreadListModel extends AbstractListModel<ItemThread>
 
         //optionally, sort the list
         if (sorted) {
-            Collections.sort(items);
+            final Comparator<ItemThread> comparator = new Comparator<ItemThread>() {
+                @Override
+                public int compare(ItemThread o1, ItemThread o2) {
+                    return o2.getModificationTime().compareTo(o1.getModificationTime());
+                }
+            };
+            Collections.sort(items, comparator);
         }
     }
 

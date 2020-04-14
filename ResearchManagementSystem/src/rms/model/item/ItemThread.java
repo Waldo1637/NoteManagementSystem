@@ -13,7 +13,7 @@ import rms.model.Tag;
  *
  * @author Timothy
  */
-public class ItemThread implements Iterable<Item>, Serializable, Comparable<ItemThread> {
+public class ItemThread implements Iterable<Item>, Serializable {
 
     private static final long serialVersionUID = 01L;
 
@@ -121,11 +121,6 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
     @Override
     public String toString() {
         return String.format("%s [%2$tm/%2$te/%2$ty %2$tR]", name, modified);
-    }
-
-    @Override
-    public int compareTo(ItemThread other) {
-        return other.getModificationTime().compareTo(this.getModificationTime());
     }
 
     @Deprecated
