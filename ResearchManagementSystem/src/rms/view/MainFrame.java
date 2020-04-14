@@ -21,6 +21,7 @@ import rms.control.search.PendingTaskFilter;
 import rms.control.search.TagFilter;
 import rms.model.Tag;
 import rms.model.item.*;
+import rms.view.item.EmptyFileItemPanel;
 import rms.view.item.FileItemPanel;
 import rms.view.item.NoteItemPanel;
 import rms.view.item.TaskItemPanel;
@@ -712,6 +713,8 @@ public class MainFrame extends rms.view.util.NotificationFrame {
                 return new TaskItemPanel((TaskItem) i, collapse);
             } else if (i instanceof FileItem) {
                 return new FileItemPanel((FileItem) i, collapse);
+            } else if (i instanceof EmptyFileItem) {
+                return new EmptyFileItemPanel((EmptyFileItem) i, collapse);
             }
             throw new UnsupportedOperationException("Not implemented: " + i);
         } catch (Exception ex) {
@@ -729,20 +732,21 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
         public TagButton(final Tag tag) {
             this.tag = tag;
+            init();
+        }
+
+        private void init() {
             this.setBorderPainted(false);
             this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5), BorderFactory.createEtchedBorder(EtchedBorder.LOWERED)));
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             this.setText(tag.toString());
-
             this.setMinimumSize(new Dimension(40, 40));
-
             this.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     refreshThreadListAndDisplay(new TagFilter(Collections.singleton(tag)), null);
                 }
             });
-
             this.addMouseListener(new PopClickListener());
         }
     }

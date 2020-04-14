@@ -55,6 +55,18 @@ public class ItemThread implements Iterable<Item>, Serializable {
         return removed;
     }
 
+    public boolean replace(Item oldItem, Item newItem) {
+        int idx = data.indexOf(oldItem);
+        if (idx < 0) {
+            return false;
+        } else {
+            Item removed = data.set(idx, newItem);
+            assert oldItem.equals(removed);//only concurrent modification could make this fail?
+            touch();
+            return true;
+        }
+    }
+
     public int indexOf(Item i) {
         return data.indexOf(i);
     }
@@ -73,7 +85,6 @@ public class ItemThread implements Iterable<Item>, Serializable {
             dataFolder = new File(root, String.format("%09d", this.threadID));
             dataFolder.mkdirs();
         }
-
         return dataFolder;
     }
 

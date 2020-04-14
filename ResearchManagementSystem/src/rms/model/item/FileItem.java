@@ -101,4 +101,18 @@ public class FileItem extends Item implements Serializable {
         }
         return i;
     }
+
+    public static CreateResult createAndReplaceFileItem(Item oldItem, File sourceFile) {
+        final ItemThread parentThread = oldItem.getThread();
+        CreateResult i = create(parentThread, sourceFile);
+        if (i.success()) {
+            final FileItem newItem = i.item;
+            boolean result = parentThread.replace(oldItem, newItem);
+            if (!result) {
+                LOG.log(Level.WARNING, "Added new file Item to end of thread because old Item was not present in the thread.");
+                newItem.appendToParentThread();
+            }
+        }
+        return i;
+    }
 }

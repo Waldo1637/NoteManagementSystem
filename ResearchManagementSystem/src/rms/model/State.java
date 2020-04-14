@@ -152,7 +152,7 @@ public class State implements Serializable {
     }
 
     /**
-     * Deserialize the fields from the version 1 object in the stream and use
+     * De-serialize the fields from the version 1 object in the stream and use
      * them to initialize a State object of the version 2.
      *
      * @param serializedFields
@@ -186,7 +186,7 @@ public class State implements Serializable {
     }
 
     /**
-     * Deserialize the fields from the version 1 object in the stream and use
+     * De-serialize the fields from the version 1 object in the stream and use
      * them to initialize a State object of version 2.
      *
      * @param serializedFields
