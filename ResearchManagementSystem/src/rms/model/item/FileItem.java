@@ -15,21 +15,19 @@ import java.util.logging.Logger;
 public class FileItem extends Item implements Serializable {
 
     private static final long serialVersionUID = 01L;
-    private static final Logger thisLog = Logger.getLogger(FileItem.class.getName());
+    private static final Logger LOG = Logger.getLogger(FileItem.class.getName());
 
     private final File localFile;
 
     protected FileItem(ItemThread parentThread, File sourceFile) {
         super(parentThread);
-
         localFile = new File(parentThread.getDataFolder(), sourceFile.getName());
 
         try {
             Files.copy(sourceFile.toPath(), localFile.toPath(), COPY_ATTRIBUTES, REPLACE_EXISTING);
         } catch (IOException ex) {
-            thisLog.log(Level.SEVERE, "Unable to copy file", ex);
+            LOG.log(Level.SEVERE, "Unable to copy file", ex);
         }
-
     }
 
     public File getFile() {

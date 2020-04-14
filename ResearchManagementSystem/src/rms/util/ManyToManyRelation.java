@@ -89,21 +89,22 @@ public class ManyToManyRelation<A, B> implements Serializable {
             }
         }
     }
-    
+
     /**
      * Gets an unmodifiable view of all A contained in the relation.
-     * 
-     * @return 
+     *
+     * @return
      */
-    public Set<A> getAllA(){
+    public Set<A> getAllA() {
         return Collections.unmodifiableSet(forward.keySet());
     }
-    
+
     /**
      * Gets an unmodifiable view of all B contained in the relation.
-     * @return 
+     *
+     * @return
      */
-    public Set<B> getAllB(){
+    public Set<B> getAllB() {
         return Collections.unmodifiableSet(reverse.keySet());
     }
 
@@ -111,6 +112,7 @@ public class ManyToManyRelation<A, B> implements Serializable {
      * Gets an unmodifiable view of the mappings for A.
      *
      * @param a
+     *
      * @return all items of type B mapped to A or null if A is not in the map
      */
     public Set<B> getBforA(A a) {
@@ -122,6 +124,7 @@ public class ManyToManyRelation<A, B> implements Serializable {
      * Gets an unmodifiable view of the mappings for B.
      *
      * @param b
+     *
      * @return all items of type A mapped to B or null if B is not in the map
      */
     public Set<A> getAforB(B b) {
@@ -135,6 +138,7 @@ public class ManyToManyRelation<A, B> implements Serializable {
      * @param <V>
      * @param map
      * @param key
+     *
      * @return
      */
     private static <K, V> HashSet<V> getOrCreate(HashMap<K, HashSet<V>> map, K key) {

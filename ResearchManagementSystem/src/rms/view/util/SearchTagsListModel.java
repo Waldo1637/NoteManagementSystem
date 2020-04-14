@@ -13,7 +13,7 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class SearchTagsListModel extends AbstractListModel {
+public class SearchTagsListModel extends AbstractListModel<Tag> {
 
     private final List<Tag> items;
 
@@ -34,7 +34,7 @@ public class SearchTagsListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int i) {
+    public Tag getElementAt(int i) {
         return items.get(i);
     }
 }

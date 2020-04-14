@@ -22,8 +22,9 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
     private File dataFolder;
     protected Date modified;
     protected String name;
-    
-    @Deprecated protected final Set<Tag> tags;
+
+    @Deprecated
+    protected final Set<Tag> tags;
 
     public ItemThread() {
         this(null);
@@ -86,7 +87,7 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
 
     public void removeTags(Set<Tag> tags) {
         for (Tag t : tags) {
-            Main.getState().removeTagFromThread(this,t);
+            Main.getState().removeTagFromThread(this, t);
         }
     }
 
@@ -98,10 +99,10 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
         return name;
     }
 
-    public int getID(){
+    public int getID() {
         return threadID;
     }
-    
+
     public final void setName(String newName) {
         name = (newName == null || newName.isEmpty()) ? "<untitled>" : newName;
     }
@@ -120,9 +121,9 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
     public int compareTo(ItemThread other) {
         return other.getModificationTime().compareTo(this.getModificationTime());
     }
-    
+
     @Deprecated
-    public Set<Tag> getTagsForClassSerializationRevision0(){
+    public Set<Tag> getTagsForClassSerializationRevision0() {
         return tags;
     }
 }

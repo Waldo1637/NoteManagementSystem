@@ -14,7 +14,7 @@ import rms.control.Main;
  *
  * @author Timothy
  */
-public class SearchSortItemThreadListModel extends AbstractListModel {
+public class SearchSortItemThreadListModel extends AbstractListModel<ItemThread> {
 
     private final List<ItemThread> items;
 
@@ -36,7 +36,7 @@ public class SearchSortItemThreadListModel extends AbstractListModel {
     }
 
     @Override
-    public Object getElementAt(int i) {
+    public ItemThread getElementAt(int i) {
         return items.get(i);
     }
 }

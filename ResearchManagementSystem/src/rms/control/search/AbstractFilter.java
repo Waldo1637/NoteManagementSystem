@@ -19,6 +19,7 @@ public abstract class AbstractFilter {
      * the criteria of the subclass implementation.
      *
      * @param input
+     *
      * @return Set of {@link ItemThread}s which match the criteria
      */
     public Set<ItemThread> filterThreads(Iterable<ItemThread> input) {
@@ -34,7 +35,8 @@ public abstract class AbstractFilter {
     /**
      *
      * @param item
-     * @return  true iff the given item is accepted by the Filter
+     *
+     * @return true iff the given item is accepted by the Filter
      */
     public boolean includesItem(Item item) {
         return accept(item);
@@ -45,6 +47,7 @@ public abstract class AbstractFilter {
      * Items contained within.
      *
      * @param t
+     *
      * @return
      */
     protected boolean isAnyItemAccepted(ItemThread t) {
@@ -59,17 +62,18 @@ public abstract class AbstractFilter {
     /**
      *
      * @param item
+     *
      * @return {@code true} iff the given {@link Item} should be returned by
-     * this AbstractFilter
+     *         this AbstractFilter
      */
     protected abstract boolean accept(Item item);
 
     /**
      *
      * @param thread
+     *
      * @return {@code true} iff the given {@link ItemThread} should be returned
-     * by this AbstractFilter
+     *         by this AbstractFilter
      */
     protected abstract boolean accept(ItemThread thread);
-
 }

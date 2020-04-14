@@ -74,9 +74,9 @@ public abstract class Item implements Serializable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("{ID=%s,name=%s,type=%s,parentID=%s}", itemID, name, getItemTypeName(), parentThread.getID());
     }
-    
+
     public abstract String getItemTypeName();
 }

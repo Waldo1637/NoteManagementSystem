@@ -14,13 +14,14 @@ import java.util.logging.Logger;
  */
 public final class Helpers {
 
-    private static final Logger thisLog = Logger.getLogger(Helpers.class.getName());
+    private static final Logger LOG = Logger.getLogger(Helpers.class.getName());
 
     /**
      * Checks if String s1 contains string s2 in a case insensitive manner
      *
      * @param s1
      * @param s2
+     *
      * @return
      */
     public static boolean containsIgnoreCase(String s1, String s2) {
@@ -37,7 +38,7 @@ public final class Helpers {
             try {
                 c.close();
             } catch (IOException ex) {
-                thisLog.log(Level.WARNING, "Error closing resource", ex);
+                LOG.log(Level.WARNING, "Error closing resource", ex);
             }
         }
     }
@@ -48,6 +49,7 @@ public final class Helpers {
      * @param <N>
      * @param s1
      * @param s2
+     *
      * @return
      */
     public static <N> Set<N> intersection(Set<N> s1, Set<N> s2) {
@@ -55,18 +57,22 @@ public final class Helpers {
         retVal.retainAll(s2);
         return retVal;
     }
-    
+
     /**
      * Return a new Set containing the set difference {@code s1 - s2}
-     * 
+     *
      * @param <N>
      * @param s1
      * @param s2
-     * @return 
+     *
+     * @return
      */
-    public static <N> Set<N> difference(Set<N> s1, Set<N> s2){
+    public static <N> Set<N> difference(Set<N> s1, Set<N> s2) {
         HashSet<N> retVal = new HashSet<>(s1);
         retVal.removeAll(s2);
         return retVal;
+    }
+
+    private Helpers() {
     }
 }

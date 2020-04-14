@@ -7,52 +7,56 @@ import rms.view.MainFrame;
 
 /**
  * Utility class for obtaining information from the user via dialogs
- * 
+ *
  * @author Timothy
  */
 public class Prompts {
-    
-    private static final Logger thisLog = Logger.getLogger(Prompts.class.getName());
-    
-    public static enum PromptType {PLAIN, INFO, ERROR, WARNING, QUESTION};
-    
+
+    private static final Logger LOG = Logger.getLogger(Prompts.class.getName());
+
+    public static enum PromptType {
+        PLAIN, INFO, ERROR, WARNING, QUESTION
+    };
+
     /**
-     * 
+     *
      * @param prompt
      * @param type
-     * @return 
+     *
+     * @return
      */
-    public static boolean getUserApproval(String prompt, PromptType type){
+    public static boolean getUserApproval(String prompt, PromptType type) {
         String title = "Response needed";
         int intType = convert(type);
         int option = JOptionPane.showConfirmDialog(MainFrame.instance(), prompt, title, JOptionPane.YES_NO_OPTION, intType);
         return option == JOptionPane.YES_OPTION;
     }
-    
+
     /**
-     * 
+     *
      * @param prompt
      * @param type
+     *
      * @return user entered value or null if the user Cancelled
      */
-    public static String getUserInput(String prompt, PromptType type){
+    public static String getUserInput(String prompt, PromptType type) {
         String title = "Response needed";
         int intType = convert(type);
         return JOptionPane.showInputDialog(MainFrame.instance(), prompt, title, intType);
     }
-    
+
     /**
-     * 
+     *
      * @param title
      * @param prompt
-     * @param type 
+     * @param type
      */
-    public static void informUser(String title, String prompt, PromptType type){
+    public static void informUser(String title, String prompt, PromptType type) {
         JOptionPane.showMessageDialog(MainFrame.instance(), prompt, title, convert(type));
     }
-    
-    private static int convert(PromptType type){
-        switch(type){
+
+    private static int convert(PromptType type) {
+        switch (type) {
             case PLAIN:
                 return JOptionPane.PLAIN_MESSAGE;
             case INFO:
@@ -64,8 +68,11 @@ public class Prompts {
             case QUESTION:
                 return JOptionPane.QUESTION_MESSAGE;
             default:
-                thisLog.log(Level.SEVERE, "Undefined enum value.");
+                LOG.log(Level.SEVERE, "Undefined enum value.");
                 return JOptionPane.PLAIN_MESSAGE;
         }
+    }
+
+    private Prompts() {
     }
 }

@@ -45,7 +45,7 @@ public class BaseSearchDialog extends javax.swing.JDialog {
      * Close the dialog.
      *
      * @param isCancelled denotes if the user has cancelled the action or ok'd
-     * the action
+     *                    the action
      */
     protected void hideDialog(boolean isCancelled) {
         approved = !isCancelled;
@@ -68,7 +68,7 @@ public class BaseSearchDialog extends javax.swing.JDialog {
     /**
      *
      * @return the {@link AbstractFilter} created by this dialog or null if the
-     * dialog was canceled.
+     *         dialog was canceled.
      */
     public AbstractFilter getResult() {
         return approved ? createFilter() : null;

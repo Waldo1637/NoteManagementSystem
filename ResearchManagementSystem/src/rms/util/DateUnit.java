@@ -6,7 +6,7 @@ package rms.util;
  */
 public enum DateUnit {
     DAY("day(s)"), WEEK("week(s)"), MONTH("month(s)");
-    
+
     private final String text;
 
     /**

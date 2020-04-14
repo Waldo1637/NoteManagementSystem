@@ -46,7 +46,7 @@ public class JPanelTagSelection extends javax.swing.JPanel {
      * Create an empty TagSelectionPanel.
      */
     public JPanelTagSelection() {
-        this(Collections.EMPTY_SET);
+        this(Collections.<Tag>emptySet());
     }
 
     /**

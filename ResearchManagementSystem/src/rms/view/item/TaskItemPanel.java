@@ -10,7 +10,7 @@ import rms.model.item.TaskItem;
  */
 public class TaskItemPanel extends BaseItemPanel {
 
-    private static final Logger thisLog = Logger.getLogger(TaskItemPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(TaskItemPanel.class.getName());
 
     /**
      * Creates new form TaskItemPanel
@@ -141,7 +141,7 @@ public class TaskItemPanel extends BaseItemPanel {
         } else {
             ti.markCompleted();
         }
-        
+
         reflectItemChangesInUI();
     }//GEN-LAST:event_jButtonToggleStatusActionPerformed
 

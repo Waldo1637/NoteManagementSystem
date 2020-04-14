@@ -6,10 +6,11 @@ import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -18,41 +19,34 @@ import javax.swing.undo.UndoManager;
 /**
  * Utility class to add undo/redo functionality to a {@link JTextComponent}.
  *
- * If the {@link JTextComponent} is made uneditable, the undo/redo buffer is
+ * If the {@link JTextComponent} is made un-editable, the undo/redo buffer is
  * cleared.
  *
  * @author Timothy
  */
 public class UndoRedoProvider {
 
-    private static final Logger thisLog = Logger.getLogger(UndoRedoProvider.class.getName());
-
-    private final UndoManager manager;
+    private static final Logger LOG = Logger.getLogger(UndoRedoProvider.class.getName());
 
     /**
      * Add undo/redo functionality to the given {@link JTextComponent}.
      *
      * @param component
      */
-    public static void addTo(JTextComponent component) {
-        new UndoRedoProvider(component);
-    }
-
-    private UndoRedoProvider(final JTextComponent component) {
-        manager = new UndoManager();
-
-        Document componentDoc = component.getDocument();
+    public static void addTo(final JTextComponent component) {
+        final UndoManager manager = new UndoManager();
 
         // setup listener to store events to the manager
-        componentDoc.addUndoableEditListener(new UndoableEditListener() {
+        component.getDocument().addUndoableEditListener(new UndoableEditListener() {
             @Override
             public void undoableEditHappened(UndoableEditEvent evt) {
                 manager.addEdit(evt.getEdit());
             }
         });
 
-        // setup undo action
-        component.getActionMap().put("Undo", new AbstractAction("Undo") {
+        // add Undo and Redo actions to the component's ActionMap
+        final ActionMap actionMap = component.getActionMap();
+        actionMap.put("Undo", new AbstractAction("Undo") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 try {
@@ -63,10 +57,7 @@ public class UndoRedoProvider {
                 }
             }
         });
-        component.getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
-
-        // setup redo action
-        component.getActionMap().put("Redo", new AbstractAction("Redo") {
+        actionMap.put("Redo", new AbstractAction("Redo") {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 try {
@@ -77,7 +68,11 @@ public class UndoRedoProvider {
                 }
             }
         });
-        component.getInputMap().put(KeyStroke.getKeyStroke("control Y"), "Redo");
+
+        // setup keyboard shortcuts
+        final InputMap inputMap = component.getInputMap();
+        inputMap.put(KeyStroke.getKeyStroke("control Z"), "Undo");
+        inputMap.put(KeyStroke.getKeyStroke("control Y"), "Redo");
 
         // whenever the editable status of the component is changed, clear the undo/redo history
         component.addPropertyChangeListener(new PropertyChangeListener() {
@@ -89,6 +84,9 @@ public class UndoRedoProvider {
             }
         });
 
-        thisLog.log(Level.FINE, "undo/redo functionality added to {0}", component);
+        LOG.log(Level.FINE, "undo/redo functionality added to {0}", component);
+    }
+
+    private UndoRedoProvider() {
     }
 }

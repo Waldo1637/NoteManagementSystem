@@ -21,7 +21,7 @@ import rms.view.util.Prompts;
  */
 public class Main {
 
-    private static final Logger thisLog = Logger.getLogger(Main.class.getName());
+    private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     private static MainFrame gui;
     private static State state;
@@ -41,7 +41,7 @@ public class Main {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            thisLog.log(Level.SEVERE, "Error setting L&F", ex);
+            LOG.log(Level.SEVERE, "Error setting L&F", ex);
         }
         //</editor-fold>
 

@@ -19,7 +19,7 @@ public class UpcomingTaskFilter extends AbstractFilter {
 
     /**
      * @param increment number of {@code DateUnit}s into the future to search
-     * @param unit unit type associated with the increment
+     * @param unit      unit type associated with the increment
      */
     public UpcomingTaskFilter(int increment, DateUnit unit) {
         this.increment = increment;
@@ -29,8 +29,9 @@ public class UpcomingTaskFilter extends AbstractFilter {
     /**
      *
      * @param i {@link Item} to test for acceptance
+     *
      * @return {@code true} iff the deadline on {@code i} is within the range
-     * specified by this instance
+     *         specified by this instance
      */
     @Override
     protected boolean accept(Item i) {

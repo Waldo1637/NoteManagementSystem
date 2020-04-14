@@ -12,7 +12,7 @@ import rms.model.item.FileItem;
  */
 public class FileItemPanel extends BaseItemPanel {
 
-    private static final Logger thisLog = Logger.getLogger(FileItemPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(FileItemPanel.class.getName());
 
     /**
      * Creates new form FileItemPanel
@@ -25,8 +25,8 @@ public class FileItemPanel extends BaseItemPanel {
         initComponents();
         reflectItemChangesInUI_Additional();
     }
-    
-    private FileItem getFileItem(){
+
+    private FileItem getFileItem() {
         return (FileItem) displayedItem;
     }
 
@@ -84,7 +84,7 @@ public class FileItemPanel extends BaseItemPanel {
         try {
             Desktop.getDesktop().open(getFileItem().getFile());
         } catch (IllegalArgumentException | IOException ex) {
-            thisLog.log(Level.SEVERE, "Unable to open file.", ex);
+            LOG.log(Level.SEVERE, "Unable to open file.", ex);
         }
     }//GEN-LAST:event_jButtonFileLinkActionPerformed
 

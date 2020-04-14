@@ -21,8 +21,9 @@ public class TextFilter extends AbstractFilter {
     /**
      *
      * @param i
+     *
      * @return {@code true} iff the name of the {@code Item} or its body text
-     * contains (case insensitive) the search text
+     *         contains (case insensitive) the search text
      */
     @Override
     protected boolean accept(Item i) {
@@ -42,8 +43,9 @@ public class TextFilter extends AbstractFilter {
     /**
      *
      * @param t
-     * @return {@code true} iff the name of the {@code ItemThread} contains
-     * the search text (case insensitive comparison) or any item is accepted
+     *
+     * @return {@code true} iff the name of the {@code ItemThread} contains the
+     *         search text (case insensitive comparison) or any item is accepted
      */
     @Override
     protected boolean accept(ItemThread t) {

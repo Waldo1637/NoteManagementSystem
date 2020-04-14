@@ -18,7 +18,7 @@ public class NoteItemPanel extends BaseItemPanel {
         super(item, startCollapsed);
         initComponents();
         reflectItemChangesInUI_Additional();
-        
+
         //register a listener to update the UI when the user changes text
         itemTextField.addItemTextUpdateListener(new EditableTextField.ItemTextUpdateListener() {
             @Override

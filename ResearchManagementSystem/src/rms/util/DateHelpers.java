@@ -29,6 +29,7 @@ public final class DateHelpers {
      * Sets the time on the given {@link Date} object to midnight
      *
      * @param d
+     *
      * @return
      */
     public static Date removeTime(Date d) {
@@ -46,6 +47,7 @@ public final class DateHelpers {
      *
      * @param d1
      * @param d2
+     *
      * @return
      */
     public static int dayDiff(Date d1, Date d2) {
@@ -81,9 +83,11 @@ public final class DateHelpers {
      *
      * @param one
      * @param two
-     * @return  <code>true</code> if and only if the instant of time represented
-     * by the first <tt>Date</tt> object is equal to or earlier than the instant
-     * represented by the second; <code>false</code> otherwise.
+     *
+     * @return <code>true</code> if and only if the instant of time represented
+     *         by the first <tt>Date</tt> object is equal to or earlier than the
+     *         instant represented by the second; <code>false</code> otherwise.
+     *
      * @exception NullPointerException if either is null.
      */
     public static boolean beforeEqual(Date one, Date two) {
@@ -95,12 +99,17 @@ public final class DateHelpers {
      *
      * @param one
      * @param two
-     * @return  <code>true</code> if and only if the instant represented by the
-     * first <tt>Date</tt> object is equal to or later than the instant
-     * represented by the second; <code>false</code> otherwise.
+     *
+     * @return <code>true</code> if and only if the instant represented by the
+     *         first <tt>Date</tt> object is equal to or later than the instant
+     *         represented by the second; <code>false</code> otherwise.
+     *
      * @exception NullPointerException if either is null.
      */
     public static boolean afterEqual(Date one, Date two) {
         return one.getTime() >= two.getTime();
+    }
+
+    private DateHelpers() {
     }
 }

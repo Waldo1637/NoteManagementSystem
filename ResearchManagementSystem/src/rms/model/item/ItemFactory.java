@@ -37,4 +37,7 @@ public class ItemFactory {
         parentThread.add(i);
         return i;
     }
+
+    private ItemFactory() {
+    }
 }

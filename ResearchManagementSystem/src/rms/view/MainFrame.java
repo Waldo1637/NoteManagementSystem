@@ -52,8 +52,8 @@ import rms.view.util.WrapLayout;
  */
 public class MainFrame extends rms.view.util.NotificationFrame {
 
-    private static final Logger thisLog = Logger.getLogger(MainFrame.class.getName());
-    private static final Logger workerLog = Logger.getLogger("workers");
+    private static final Logger THIS_LOG = Logger.getLogger(MainFrame.class.getName());
+    private static final Logger WORKER_LOG = Logger.getLogger("workers");
 
     private static MainFrame inst = null;
     private AbstractFilter cachedFilter;
@@ -84,7 +84,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jMenuItemNewFile = new javax.swing.JMenuItem();
         jSplitPaneHoriz = new javax.swing.JSplitPane();
         jScrollPaneThreadList = new javax.swing.JScrollPane();
-        jListThreads = new javax.swing.JList();
+        jListThreads = new javax.swing.JList<>();
         jPanelThreadInfo = new javax.swing.JPanel();
         jSplitPaneVert = new javax.swing.JSplitPane();
         jScrollPaneTags = new javax.swing.JScrollPane();
@@ -603,10 +603,10 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         setVisible(false);
         try {
             System.out.println("Saving and exiting...");
-            thisLog.log(Level.FINE, "Saving and exiting.");
+            THIS_LOG.log(Level.FINE, "Saving and exiting.");
             worker.get();
         } catch (InterruptedException | ExecutionException ex) {
-            thisLog.log(Level.SEVERE, "Exception while saving", ex);
+            THIS_LOG.log(Level.SEVERE, "Exception while saving", ex);
         }
     }//GEN-LAST:event_formWindowClosing
 
@@ -689,7 +689,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             }
             throw new UnsupportedOperationException("Not implemented: " + i);
         } catch (Exception ex) {
-            thisLog.log(Level.SEVERE, "Error creating panel for Item " + i, ex);
+            THIS_LOG.log(Level.SEVERE, "Error creating panel for Item " + i, ex);
             throw ex;
         }
     }
@@ -803,17 +803,17 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             }
 
             hideLoader();
-            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
             try {
                 showLoader();
                 result = Main.loadStateFromFile();
             } catch (Exception ex) {
-                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
             return null;
         }
@@ -833,17 +833,17 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             } else {
                 Prompts.informUser("Error!", "Unrecoverable error: unable to save data.\nSee log files.", PromptType.ERROR);
             }
-            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
             try {
                 //no need to show loader for saving
                 result = Main.storeStateToFile();
             } catch (Exception ex) {
-                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
             return null;
         }
@@ -867,18 +867,18 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             clearDisplayedThread();
             setSelectedThread(toDisplay);
             hideLoader();
-            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
             try {
                 cachedFilter = filter;
                 showLoader();
                 jListThreads.setModel(new SearchSortItemThreadListModel(true, filter));
             } catch (Exception ex) {
-                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
             return null;
         }
@@ -905,12 +905,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             sb.setValue(sb.getMaximum());
 
             hideLoader();
-            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() throws Exception {
-            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
             try {
                 showLoader();
                 //clear existing content
@@ -924,7 +924,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
                     }
                 }
             } catch (Exception ex) {
-                workerLog.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
             return null;
         }
@@ -947,12 +947,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             jScrollPaneTags.updateUI();
 
             hideLoader();
-            workerLog.log(Level.FINE, "Stopping {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
         protected Void doInBackground() {
-            workerLog.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
 
             //clear existing content
@@ -979,7 +979,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelThreadName;
-    private javax.swing.JList jListThreads;
+    private javax.swing.JList<ItemThread> jListThreads;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuData;
     private javax.swing.JMenu jMenuDatabase;
@@ -1085,7 +1085,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
      * Refresh the thread list, showing only threads that match the given filter
      * and selecting the item given
      *
-     * @param filter the thread filter to apply
+     * @param filter    the thread filter to apply
      * @param toDisplay the item to select after refreshing (may be null)
      */
     public void refreshThreadListAndDisplay(AbstractFilter filter, ItemThread toDisplay) {

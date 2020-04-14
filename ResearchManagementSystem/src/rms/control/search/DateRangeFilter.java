@@ -21,9 +21,9 @@ public class DateRangeFilter extends AbstractFilter {
 
     /**
      *
-     * @param type the type of timestamp to search
+     * @param type  the type of timestamp to search
      * @param start inclusive start date of the range
-     * @param end inclusive end date of the range
+     * @param end   inclusive end date of the range
      */
     public DateRangeFilter(DateRangeType type, Date start, Date end) {
         this.type = type;

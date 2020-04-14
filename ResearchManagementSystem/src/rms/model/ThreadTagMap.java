@@ -19,7 +19,7 @@ public class ThreadTagMap implements Serializable {
     private final ManyToManyRelation<Tag, ItemThread> map;
 
     public ThreadTagMap() {
-        map = new ManyToManyRelation();
+        map = new ManyToManyRelation<>();
     }
 
     /**
@@ -68,8 +68,8 @@ public class ThreadTagMap implements Serializable {
         //add the new mapping
         map.add(tag, thread);
     }
-    
-    public void removeTagFromThread(ItemThread thread, Tag tag){
+
+    public void removeTagFromThread(ItemThread thread, Tag tag) {
         if (thread == null || tag == null) {
             //ensures there is never a null->null mappping
             throw new IllegalArgumentException("ItemThread and Tag must not be null.");
@@ -84,7 +84,7 @@ public class ThreadTagMap implements Serializable {
      */
     public Set<ItemThread> getAllItemThreads() {
         Set<ItemThread> s = map.getBforA(null);
-        return s == null ? Collections.EMPTY_SET : s;
+        return s == null ? Collections.<ItemThread>emptySet() : s;
     }
 
     /**
@@ -94,7 +94,7 @@ public class ThreadTagMap implements Serializable {
      */
     public Set<Tag> getAllTags() {
         Set<Tag> s = map.getAforB(null);
-        return s == null ? Collections.EMPTY_SET : s;
+        return s == null ? Collections.<Tag>emptySet() : s;
     }
 
     /**
@@ -102,8 +102,9 @@ public class ThreadTagMap implements Serializable {
      * the given {@link Tag}.
      *
      * @param t
+     *
      * @return all ItemsThreads containing the given Tag or null if there are
-     * none
+     *         none
      */
     public Set<ItemThread> getThreadsFor(Tag t) {
         if (t == null) {
@@ -121,6 +122,7 @@ public class ThreadTagMap implements Serializable {
      * given {@link ItemThread}.
      *
      * @param t
+     *
      * @return
      */
     public Set<Tag> getTagsFor(ItemThread t) {

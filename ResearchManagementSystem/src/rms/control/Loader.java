@@ -18,7 +18,7 @@ import rms.util.Helpers;
  */
 public class Loader {
 
-    private static final Logger thisLog = Logger.getLogger(Loader.class.getName());
+    private static final Logger LOG = Logger.getLogger(Loader.class.getName());
 
     private static final String currentVersionStateFileFullPath;
 
@@ -27,7 +27,7 @@ public class Loader {
         String baseDir = System.getProperty("user.dir");
         String fileName = String.format("index_%s.rms", Loader.class.getPackage().getSpecificationVersion());
         if (baseDir == null) {
-            thisLog.log(Level.SEVERE, "Unable to determine user directory.");
+            LOG.log(Level.SEVERE, "Unable to determine user directory.");
             currentVersionStateFileFullPath = null;
         } else {
             currentVersionStateFileFullPath = baseDir.concat("/").concat(fileName);
@@ -39,7 +39,8 @@ public class Loader {
      * for the current version. Exception is thrown if the file does not exist.
      *
      * @return the {@code State} object stored in file or null if unable to
-     * deserialize
+     *         deserialize
+     *
      * @throws rms.control.Loader.SerializedStateOutdatedException
      * @see rms.model.State
      */
@@ -55,9 +56,10 @@ public class Loader {
     /**
      * Deserializes the stored {@code State} from the given path migrating the
      * given State to the newest version if it is outdated.
-     * 
+     *
      * @param stateFile
-     * @return 
+     *
+     * @return
      */
     public static synchronized State loadFromFile(File stateFile) {
         State retVal = null;
@@ -65,9 +67,9 @@ public class Loader {
         try {
             in = new ObjectInputStream(new FileInputStream(stateFile));
             retVal = (State) in.readObject();
-            thisLog.log(Level.FINE, "State loaded from file {0}", stateFile.getAbsolutePath());
+            LOG.log(Level.FINE, "State loaded from file {0}", stateFile.getAbsolutePath());
         } catch (Exception ex) {    //catch any exception
-            thisLog.log(Level.INFO, "Unable to load state from " + stateFile.getAbsolutePath() + ". Creating new.", ex);
+            LOG.log(Level.INFO, "Unable to load state from " + stateFile.getAbsolutePath() + ". Creating new.", ex);
             retVal = new State();
         } finally {
             Helpers.closeResource(in);
@@ -92,10 +94,10 @@ public class Loader {
             try {
                 out = new ObjectOutputStream(new FileOutputStream(currentVersionStateFileFullPath));
                 out.writeObject(state);
-                thisLog.log(Level.FINE, "State saved to file {0}", currentVersionStateFileFullPath);
+                LOG.log(Level.FINE, "State saved to file {0}", currentVersionStateFileFullPath);
                 success = true;
             } catch (IOException ex) {
-                thisLog.log(Level.SEVERE, "Unable to store state.", ex);
+                LOG.log(Level.SEVERE, "Unable to store state.", ex);
             } finally {
                 Helpers.closeResource(out);
             }
@@ -104,6 +106,8 @@ public class Loader {
     }
 
     public static class SerializedStateOutdatedException extends Exception {
+    }
 
+    private Loader() {
     }
 }

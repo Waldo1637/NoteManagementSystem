@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.Timer;
 import javax.swing.UIDefaults;
@@ -18,8 +17,6 @@ import rms.view.util.UndoRedoProvider;
  * @author Timothy
  */
 public class EditableTextField extends javax.swing.JPanel {
-
-    private static final Logger thisLog = Logger.getLogger(EditableTextField.class.getName());
 
     private static final String SAVE = "Save";
     private static final String EDIT = "Edit";

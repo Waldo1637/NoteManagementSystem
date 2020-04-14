@@ -66,6 +66,7 @@ public class State implements Serializable {
      * returns it.
      *
      * @param name
+     *
      * @return
      */
     public Tag createNewTag(String name) {
@@ -124,6 +125,7 @@ public class State implements Serializable {
      * Object deserialization entry point.
      *
      * @param in
+     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -154,6 +156,7 @@ public class State implements Serializable {
      * them to initialize a State object of the version 2.
      *
      * @param serializedFields
+     *
      * @throws IOException
      */
     private void migrateFromVer1(ObjectInputStream.GetField serializedFields) throws IOException {
@@ -185,9 +188,10 @@ public class State implements Serializable {
     /**
      * Deserialize the fields from the version 1 object in the stream and use
      * them to initialize a State object of version 2.
-     * 
+     *
      * @param serializedFields
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private void migrateFromVer2(ObjectInputStream.GetField serializedFields) throws IOException {
         nextItemNumber = serializedFields.get("nextItemNumber", 0);

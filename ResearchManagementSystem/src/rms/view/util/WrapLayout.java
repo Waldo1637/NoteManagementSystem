@@ -14,8 +14,6 @@ import javax.swing.SwingUtilities;
  */
 public class WrapLayout extends FlowLayout {
 
-    private Dimension preferredLayoutSize;
-
     /**
      * Constructs a new <code>WrapLayout</code> with a left alignment and a
      * default 5-unit horizontal and vertical gap.
@@ -45,8 +43,8 @@ public class WrapLayout extends FlowLayout {
      * <code>WrapLayout</code>.
      *
      * @param align the alignment value
-     * @param hgap the horizontal gap between components
-     * @param vgap the vertical gap between components
+     * @param hgap  the horizontal gap between components
+     * @param vgap  the vertical gap between components
      */
     public WrapLayout(int align, int hgap, int vgap) {
         super(align, hgap, vgap);
@@ -57,8 +55,9 @@ public class WrapLayout extends FlowLayout {
      * <i>visible</i> components in the specified target container.
      *
      * @param target the component which needs to be laid out
+     *
      * @return the preferred dimensions to lay out the subcomponents of the
-     * specified container
+     *         specified container
      */
     @Override
     public Dimension preferredLayoutSize(Container target) {
@@ -70,8 +69,9 @@ public class WrapLayout extends FlowLayout {
      * components contained in the specified target container.
      *
      * @param target the component which needs to be laid out
+     *
      * @return the minimum dimensions to lay out the subcomponents of the
-     * specified container
+     *         specified container
      */
     @Override
     public Dimension minimumLayoutSize(Container target) {
@@ -84,8 +84,9 @@ public class WrapLayout extends FlowLayout {
      * Returns the minimum or preferred dimension needed to layout the target
      * container.
      *
-     * @param target target to get layout size for
+     * @param target    target to get layout size for
      * @param preferred should preferred size be calculated
+     *
      * @return the dimension to layout the target container
      */
     private Dimension layoutSize(Container target, boolean preferred) {
