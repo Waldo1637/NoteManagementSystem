@@ -2,6 +2,8 @@ package rms.model.item;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import rms.control.Main;
 
 /**
@@ -11,6 +13,8 @@ import rms.control.Main;
 public abstract class Item implements Serializable {
 
     private static final long serialVersionUID = 01L;
+
+    protected static final Logger LOG = Logger.getLogger(Item.class.getName());
 
     protected final int itemID;
     protected final ItemThread parentThread;
@@ -76,6 +80,19 @@ public abstract class Item implements Serializable {
     @Override
     public String toString() {
         return String.format("{ID=%s,name=%s,type=%s,parentID=%s}", itemID, name, getItemTypeName(), parentThread.getID());
+    }
+
+    protected boolean appendToParentThread() {
+        if (parentThread.indexOf(this) >= 0) {
+            LOG.log(Level.WARNING, "Failed to add Item {0} to parent thread (already there!)", this);
+            return false;
+        } else {
+            boolean result = parentThread.add(this);
+            if (!result) {
+                LOG.log(Level.WARNING, "Failed to add Item {0} to parent thread", this);
+            }
+            return result;
+        }
     }
 
     public abstract String getItemTypeName();

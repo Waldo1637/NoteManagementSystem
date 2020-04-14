@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
-import rms.model.Tag;
 import rms.control.Main;
+import rms.model.Tag;
 
 /**
  *
@@ -39,9 +39,20 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
         touch();
     }
 
-    protected void add(Item i) {
-        data.add(i);
-        touch();
+    protected boolean add(Item i) {
+        boolean added = data.add(i);
+        if (added) {
+            touch();
+        }
+        return added;
+    }
+
+    public boolean remove(Item i) {
+        boolean removed = data.remove(i);
+        if (removed) {
+            touch();
+        }
+        return removed;
     }
 
     public int indexOf(Item i) {
@@ -50,11 +61,6 @@ public class ItemThread implements Iterable<Item>, Serializable, Comparable<Item
 
     public Item get(int index) {
         return data.get(index);
-    }
-
-    public void remove(Item i) {
-        data.remove(i);
-        touch();
     }
 
     public int size() {

@@ -11,7 +11,10 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import rms.model.State;
-import rms.model.item.*;
+import rms.model.item.FileItem;
+import rms.model.item.ItemThread;
+import rms.model.item.NoteItem;
+import rms.model.item.TaskItem;
 import rms.view.MainFrame;
 import rms.view.util.Prompts;
 
@@ -121,11 +124,22 @@ public class Main {
      * create one (as long as the user actually selected a file).
      */
     public static void newFile() {
-        List<File> selection = gui.promptFileSelection();
+        List<File> selection = gui.promptFileSelection(true);
         if (!selection.isEmpty()) {
             ItemThread td = getSelectedThreadOrCreate();
+            String failures = null;
             for (File f : selection) {
-                FileItem.createAndAddFileItem(td, f);
+                FileItem.CreateResult result = FileItem.createAndAddFileItem(td, f);
+                if (!result.success()) {
+                    if (failures == null) {
+                        failures = result.error;
+                    } else {
+                        failures += System.lineSeparator() + result.error;
+                    }
+                }
+            }
+            if (failures != null) {
+                Prompts.informUser("File Import(s) Failed", failures, Prompts.PromptType.ERROR);
             }
             gui.refreshSelectedThread();//no need to refresh if no selection
         }

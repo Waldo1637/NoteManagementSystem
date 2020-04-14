@@ -10,10 +10,6 @@ public class NoteItem extends TextItem implements Serializable {
 
     private static final long serialVersionUID = 01L;
 
-    protected NoteItem(ItemThread parentThread) {
-        this(parentThread, null);
-    }
-
     protected NoteItem(ItemThread parentThread, String text) {
         super(parentThread, text);
     }
@@ -25,13 +21,11 @@ public class NoteItem extends TextItem implements Serializable {
 
     public static NoteItem createAndAddNoteItem(ItemThread parentThread, String text) {
         NoteItem i = new NoteItem(parentThread, text);
-        parentThread.add(i);
+        i.appendToParentThread();
         return i;
     }
 
     public static NoteItem createAndAddNoteItem(ItemThread parentThread) {
-        NoteItem i = new NoteItem(parentThread);
-        parentThread.add(i);
-        return i;
+        return createAndAddNoteItem(parentThread, null);
     }
 }

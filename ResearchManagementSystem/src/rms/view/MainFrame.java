@@ -643,27 +643,32 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
     };
 
-    private static JFileChooser createFileChooser() {
-        JFileChooser ret = new JFileChooser();
-        ret.setMultiSelectionEnabled(true);
-        return ret;
-    }
-
-    public List<File> promptFileSelection() {
+    public List<File> promptFileSelection(boolean allowMultiple) {
         JFileChooser chooser = this.cachedFileChooser;
         if (chooser == null) {
-            this.cachedFileChooser = chooser = createFileChooser();
+            this.cachedFileChooser = chooser = new JFileChooser();
         }
+        chooser.setMultiSelectionEnabled(allowMultiple);
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File[] ret = chooser.getSelectedFiles();
-            {//NOTE: simply using setSelectedFiles(null) is ineffective
-                File[] clear = {new File("")};
-                chooser.setSelectedFiles(clear);
+            if (allowMultiple) {
+                File[] ret = chooser.getSelectedFiles();
+                reset(chooser);
+                return Collections.unmodifiableList(Arrays.asList(ret));
+            } else {
+                File ret = chooser.getSelectedFile();
+                reset(chooser);
+                return Collections.singletonList(ret);
             }
-            return Collections.unmodifiableList(Arrays.asList(ret));
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private static void reset(JFileChooser chooser) {
+        final File f = new File("");
+        chooser.setSelectedFile(f);//using 'null' is not effective
+        File[] clear = {f};
+        chooser.setSelectedFiles(clear);//using 'null'/empty is not effective
     }
 
     private void promptToNameThread(ItemThread sel, boolean isNewThread) {

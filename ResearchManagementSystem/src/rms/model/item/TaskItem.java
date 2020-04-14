@@ -19,10 +19,6 @@ public class TaskItem extends TextItem implements Serializable {
     private Date deadline;
     private boolean completed;
 
-    protected TaskItem(ItemThread parentThread) {
-        this(parentThread, null);
-    }
-
     protected TaskItem(ItemThread parentThread, String text) {
         super(parentThread, text);
         this.completed = false;
@@ -61,13 +57,11 @@ public class TaskItem extends TextItem implements Serializable {
 
     public static TaskItem createAndAddTaskItem(ItemThread parentThread, String text) {
         TaskItem i = new TaskItem(parentThread, text);
-        parentThread.add(i);
+        i.appendToParentThread();
         return i;
     }
 
     public static TaskItem createAndAddTaskItem(ItemThread parentThread) {
-        TaskItem i = new TaskItem(parentThread);
-        parentThread.add(i);
-        return i;
+        return createAndAddTaskItem(parentThread, null);
     }
 }

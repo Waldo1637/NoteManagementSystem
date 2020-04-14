@@ -227,7 +227,8 @@ public class BaseItemPanel extends javax.swing.JPanel {
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         deleteButtonAction_PreApproval();
         if (Prompts.getUserApproval("Are you sure you want to delete this item?", Prompts.PromptType.QUESTION)) {
-            displayedItem.getThread().remove(displayedItem);
+            boolean result = displayedItem.getThread().remove(displayedItem);
+            assert result;
             deleteButtonAction_WithApproval();
 
             //cheap way to update UI
