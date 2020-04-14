@@ -112,7 +112,7 @@ public class Main {
      */
     public static void newTask() {
         ItemThread td = getSelectedThreadOrCreate();
-        ItemFactory.newTaskItem(td);
+        ItemFactory.createAndAddTaskItem(td);
         gui.refreshSelectedThread();
     }
 
@@ -126,7 +126,7 @@ public class Main {
         chooser.setMultiSelectionEnabled(true);
         if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
             for (File f : chooser.getSelectedFiles()) {
-                ItemFactory.newFileItem(td, f);
+                ItemFactory.createAndAddFileItem(td, f);
             }
         }
         gui.refreshSelectedThread();
@@ -138,7 +138,7 @@ public class Main {
      */
     public static void newNote() {
         ItemThread td = getSelectedThreadOrCreate();
-        ItemFactory.newNoteItem(td);
+        ItemFactory.createAndAddNoteItem(td);
         gui.refreshSelectedThread();
     }
 
