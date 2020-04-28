@@ -491,7 +491,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jSplitPaneHoriz.getActionMap().put("actionFindAll", ActionFindAll);
 
         //set the loading panel as the glass pane
-        setGlassPane(LoadingPanel.instance());
+        setGlassPane(new LoadingPanel());
     }
 
     private void jButtonAddTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTagActionPerformed
@@ -852,74 +852,82 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Workers ">
-    /**
-     * Task of loading State from file and populating the GUI with information
-     */
-    private class WorkerLoadData extends SwingWorker<Void, Void> {
-
-        private boolean result;
+    private abstract class UIBlockingWorker extends SwingWorker<Void, Void> {
 
         @Override
         protected void done() {
-            if (result) {
-                refreshThreadListAndDisplay();
-                displayNotification("Data loaded successfully");
-            } else {
-                Prompts.informUser("Error!", "Unrecoverable error: unable to load data.\nSee log files.", PromptType.ERROR);
-                System.exit(1);
-            }
-
+            this.updateUI();
             hideLoader();
-            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
+            WORKER_LOG.log(Level.FINE, "Completed {0}", this.getClass().getName());
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
+            showLoader();
             try {
-                showLoader();
-                result = Main.loadStateFromFile();
+                this.doWork();
             } catch (Exception ex) {
                 WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
             return null;
+        }
+
+        protected abstract void updateUI();
+
+        protected abstract void doWork() throws Exception;
+    }
+
+    /**
+     * Task of loading State from file and populating the GUI with information
+     */
+    private class WorkerLoadData extends UIBlockingWorker {
+
+        private boolean result;
+
+        @Override
+        protected void updateUI() {
+            if (result) {
+                refreshThreadListAndDisplay();
+                displayNotification("Data loaded successfully");
+            } else {
+                Prompts.informUser("Error!", "Unrecoverable error: unable to load data.\nSee log file for more information.", PromptType.ERROR);
+                System.exit(1);
+            }
+        }
+
+        @Override
+        protected void doWork() {
+            result = Main.loadStateFromFile();
         }
     }
 
     /**
      * Task of saving data from State to file
      */
-    private class WorkerSaveData extends SwingWorker<Void, Void> {
+    private class WorkerSaveData extends UIBlockingWorker {
 
         private boolean result;
 
         @Override
-        protected void done() {
+        protected void updateUI() {
             if (result) {
                 displayNotification("Data saved successfully");
             } else {
-                Prompts.informUser("Error!", "Unrecoverable error: unable to save data.\nSee log files.", PromptType.ERROR);
+                Prompts.informUser("Error!", "Unable to save data.\nSee log file for more information.", PromptType.ERROR);
             }
-            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
-            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            try {
-                //no need to show loader for saving
-                result = Main.storeStateToFile();
-            } catch (Exception ex) {
-                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
-            }
-            return null;
+        protected void doWork() {
+            result = Main.storeStateToFile();
         }
     }
 
     /**
      * Task of refreshing the list of threads in the GUI
      */
-    private class WorkerRefreshThreadList extends SwingWorker<Void, Void> {
+    private class WorkerRefreshThreadList extends UIBlockingWorker {
 
         private final AbstractFilter filter;
         private final ItemThread toDisplay;
@@ -930,31 +938,22 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
 
         @Override
-        protected void done() {
+        protected void updateUI() {
             clearDisplayedThread();
             setSelectedThread(toDisplay);
-            hideLoader();
-            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
-            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            try {
-                cachedFilter = filter;
-                showLoader();
-                jListThreads.setModel(new SearchSortItemThreadListModel(true, filter));
-            } catch (Exception ex) {
-                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
-            }
-            return null;
+        protected void doWork() {
+            cachedFilter = filter;
+            jListThreads.setModel(new SearchSortItemThreadListModel(true, filter));
         }
     }
 
     /**
      * Loads the items in the given thread to the GUI
      */
-    private class WorkerDisplayThreadItems extends SwingWorker<Void, Void> {
+    private class WorkerDisplayThreadItems extends UIBlockingWorker {
 
         private final ItemThread toLoad;
 
@@ -963,44 +962,34 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
 
         @Override
-        protected void done() {
+        protected void updateUI() {
             //relayout the UI
             jPanelThreadContent.updateUI();
 
             //update the scroll bar position
             JScrollBar sb = jScrollPaneContent.getVerticalScrollBar();
             sb.setValue(sb.getMaximum());
-
-            hideLoader();
-            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
-            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            try {
-                showLoader();
-                //clear existing content
-                jXPanelContent.removeAll();
-                //load items
-                if (toLoad.size() == 0) {
-                    jXPanelContent.add(jPanelEmptyThread);
-                } else {
-                    for (Item i : toLoad) {
-                        jXPanelContent.add(createPanelForItem(i));
-                    }
+        protected void doWork() {
+            //clear existing content
+            jXPanelContent.removeAll();
+            //load items
+            if (toLoad.size() == 0) {
+                jXPanelContent.add(jPanelEmptyThread);
+            } else {
+                for (Item i : toLoad) {
+                    jXPanelContent.add(createPanelForItem(i));
                 }
-            } catch (Exception ex) {
-                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
             }
-            return null;
         }
     }
 
     /**
      * Loads the {@link Tag}s for the given thread to the GUI
      */
-    private class WorkerDisplayThreadTags extends SwingWorker<Void, Void> {
+    private class WorkerDisplayThreadTags extends UIBlockingWorker {
 
         private final ItemThread toLoad;
 
@@ -1009,29 +998,20 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
 
         @Override
-        protected void done() {
+        protected void updateUI() {
             //relayout the UI
             jScrollPaneTags.updateUI();
-
-            hideLoader();
-            WORKER_LOG.log(Level.FINE, "Stopping {0}", this.getClass().getName());
         }
 
         @Override
-        protected Void doInBackground() {
-            WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
-            showLoader();
-
+        protected void doWork() {
             //clear existing content
             jPanelTags.removeAll();
-
             //load tags
             for (Tag t : toLoad.getTagsUnmodifible()) {
                 jPanelTags.add(new TagButton(t));
             }
             jPanelTags.add(jButtonAddTag);
-
-            return null;
         }
     }
     //</editor-fold>

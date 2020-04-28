@@ -14,19 +14,14 @@ import javax.swing.JPanel;
  */
 public class LoadingPanel extends JPanel implements FocusListener, MouseListener {
 
-    private static LoadingPanel inst = null;
-
-    private LoadingPanel() {
+    public LoadingPanel() {
         initComponents();
+        initComponentsMore();
     }
 
-    public static LoadingPanel instance() {
-        if (inst == null) {
-            inst = new LoadingPanel();
-            inst.addFocusListener(inst);
-            inst.addMouseListener(inst);
-        }
-        return inst;
+    private void initComponentsMore() {
+        this.addFocusListener(this);
+        this.addMouseListener(this);
     }
 
     /**

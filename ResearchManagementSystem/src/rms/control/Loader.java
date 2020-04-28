@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rms.model.State;
-import rms.util.Helpers;
 
 /**
  * Facilities to load the State from file and store it to file
@@ -62,17 +61,13 @@ public class Loader {
      * @return
      */
     public static synchronized State loadFromFile(File stateFile) {
-        State retVal = null;
-        ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new FileInputStream(stateFile));
+        State retVal;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(stateFile))) {
             retVal = (State) in.readObject();
             LOG.log(Level.FINE, "State loaded from file {0}", stateFile.getAbsolutePath());
         } catch (Exception ex) {    //catch any exception
             LOG.log(Level.INFO, "Unable to load state from " + stateFile.getAbsolutePath() + ". Creating new.", ex);
             retVal = new State();
-        } finally {
-            Helpers.closeResource(in);
         }
         return retVal;
     }
@@ -88,18 +83,13 @@ public class Loader {
      */
     public static synchronized boolean storeToFile(State state) {
         boolean success = false;
-
         if (currentVersionStateFileFullPath != null) {
-            ObjectOutputStream out = null;
-            try {
-                out = new ObjectOutputStream(new FileOutputStream(currentVersionStateFileFullPath));
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(currentVersionStateFileFullPath))) {
                 out.writeObject(state);
                 LOG.log(Level.FINE, "State saved to file {0}", currentVersionStateFileFullPath);
                 success = true;
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, "Unable to store state.", ex);
-            } finally {
-                Helpers.closeResource(out);
             }
         }
         return success;
