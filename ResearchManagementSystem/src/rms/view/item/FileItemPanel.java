@@ -81,11 +81,16 @@ public class FileItemPanel extends BaseItemPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonFileLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileLinkActionPerformed
-        try {
-            Desktop.getDesktop().open(getFileItem().getFile());
-        } catch (IllegalArgumentException | IOException ex) {
-            LOG.log(Level.SEVERE, "Unable to open file.", ex);
-        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Desktop.getDesktop().open(getFileItem().getFile());
+                } catch (IllegalArgumentException | IOException ex) {
+                    LOG.log(Level.SEVERE, "Unable to open file.", ex);
+                }
+            }
+        });
     }//GEN-LAST:event_jButtonFileLinkActionPerformed
 
 
