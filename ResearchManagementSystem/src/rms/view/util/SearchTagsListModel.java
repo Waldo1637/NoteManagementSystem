@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.AbstractListModel;
 import rms.model.Tag;
-import rms.util.Helpers;
 
 /**
  * AbstractListModel used for displaying a subset of a {@link Tag} set
@@ -19,9 +18,9 @@ public class SearchTagsListModel extends AbstractListModel<Tag> {
 
     public SearchTagsListModel(Set<Tag> allTags, String searchString) {
         items = new ArrayList<>();
-
+        searchString = searchString.toLowerCase();
         for (Tag t : allTags) {
-            if (Helpers.containsIgnoreCase(t.toString(), searchString)) {
+            if (t.toString().toLowerCase().contains(searchString)) {
                 items.add(t);
             }
         }

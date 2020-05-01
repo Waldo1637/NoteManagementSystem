@@ -11,15 +11,35 @@ import java.util.Set;
 public final class Helpers {
 
     /**
-     * Checks if String s1 contains string s2 in a case insensitive manner
      *
-     * @param s1
-     * @param s2
+     * @param input
+     * @param words
      *
      * @return
      */
-    public static boolean containsIgnoreCase(String s1, String s2) {
-        return s1.toLowerCase().contains(s2.toLowerCase());
+    public static boolean stringContainsAnyWord(String input, Iterable<String> words) {
+        for (String item : words) {
+            if (input.contains(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param input
+     * @param words
+     *
+     * @return
+     */
+    public static boolean stringContainsAllWords(String input, Iterable<String> words) {
+        for (String item : words) {
+            if (!input.contains(item)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
