@@ -477,6 +477,8 @@ public class MainFrame extends NotificationFrame {
         configureMenuItemAndGlobalShortcut(jMenuItemShowAll, actionShowAll);
         //must override for the thread list because it seems to capture ctrl+A already (but does nothing)
         jListThreads.getInputMap(JComponent.WHEN_FOCUSED).put(jMenuItemShowAll.getAccelerator(), actionShowAll.getValue(Action.NAME));
+        //Select a better index for the mnemonic underline
+        jMenuItemNewThreadDuplicate.setDisplayedMnemonicIndex(12);
     }
 
     private static void configureMenuItemAndGlobalShortcut(JMenuItem menuItem, Action action) {
