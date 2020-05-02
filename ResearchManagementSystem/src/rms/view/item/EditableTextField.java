@@ -1,6 +1,9 @@
 package rms.view.item;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -114,7 +117,7 @@ public class EditableTextField extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextPaneDescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneDescFocusLost
-        if (evt.getOppositeComponent() != saveEditButton) {
+        if (evt.getOppositeComponent() != saveEditButton) {//already handled in that case
             saveAction();
         }
     }//GEN-LAST:event_jTextPaneDescFocusLost
@@ -220,6 +223,26 @@ public class EditableTextField extends javax.swing.JPanel {
         ItemTextUpdatedEvent event = new ItemTextUpdatedEvent(this, item.getText());
         for (ItemTextUpdateListener l : _listeners) {
             l.textUpdated(event);
+        }
+    }
+
+    /**
+     * This method should be called before storing the State to file to ensure
+     * that any modifications in the current text field are stored to the State.
+     */
+    public static void ensureModificationsAreStored() {
+        //NOTE: In most scenarios, it would be sufficient for the MainFrame to
+        //  request focus or use KeyboardFocusManager.clearGlobalFocusOwner(). 
+        //  However, doing that after the window closing action has fired
+        //  doesn't seem to have any effect. Instead, we determine if some 
+        //  instance of the 'jTextPaneDesc' owns the focus and directly call
+        //  the saveAction() method on the parent.
+        Component o = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (o != null) {
+            Container parent = o.getParent();
+            if (parent instanceof EditableTextField) {
+                ((EditableTextField) parent).saveAction();
+            }
         }
     }
 }

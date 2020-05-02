@@ -22,10 +22,7 @@ import rms.control.search.PendingTaskFilter;
 import rms.control.search.TagFilter;
 import rms.model.Tag;
 import rms.model.item.*;
-import rms.view.item.EmptyFileItemPanel;
-import rms.view.item.FileItemPanel;
-import rms.view.item.NoteItemPanel;
-import rms.view.item.TaskItemPanel;
+import rms.view.item.*;
 import rms.view.search.*;
 import rms.view.util.Prompts.PromptType;
 import rms.view.util.*;
@@ -838,6 +835,7 @@ public class MainFrame extends NotificationFrame {
 
         @Override
         protected void doWork() {
+            EditableTextField.ensureModificationsAreStored();
             result = Main.storeStateToFile();
         }
     }
