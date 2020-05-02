@@ -2,6 +2,7 @@ package rms.view;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -26,17 +27,15 @@ import rms.view.item.FileItemPanel;
 import rms.view.item.NoteItemPanel;
 import rms.view.item.TaskItemPanel;
 import rms.view.search.*;
-import rms.view.util.LoadingPanel;
-import rms.view.util.Prompts;
 import rms.view.util.Prompts.PromptType;
-import rms.view.util.WrapLayout;
+import rms.view.util.*;
 
 /**
  * The main UI window (singleton)
  *
  * @author Timothy
  */
-public class MainFrame extends rms.view.util.NotificationFrame {
+public class MainFrame extends NotificationFrame {
 
     private static final Logger THIS_LOG = Logger.getLogger(MainFrame.class.getName());
     private static final Logger WORKER_LOG = Logger.getLogger("workers");
@@ -66,6 +65,58 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         initComponentsMore();
     }
 
+    private final Action actionNewThreadBlank = new ButtonAction("New Thread (blank)", "", KeyEvent.VK_N) {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            createAndShowNewThread();
+        }
+    };
+
+    private final Action actionNewThreadDuplicate = new ButtonAction("New Thread (duplicate)", "", KeyEvent.VK_D) {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            ItemThread selectedThread = getSelectedThread();
+            if (selectedThread != null) {
+                Prompts.Response result = Prompts.getUserResponse("Would you like to copy any files in the thread?"
+                        + System.lineSeparator()
+                        + "If 'no' they will be replaced with file placeholders.", PromptType.QUESTION);
+                switch (result) {
+                    default://print warning and fall through to CANCEL
+                        THIS_LOG.log(Level.WARNING, "Undefined user response: {0}", result);
+                    case CANCEL:
+                        break;//do nothing
+                    case YES:
+                        promptToNameThread(Main.getState().createNewThread(selectedThread, false), true);
+                        break;
+                    case NO:
+                        promptToNameThread(Main.getState().createNewThread(selectedThread, true), true);
+                        break;
+                }
+            }
+        }
+    };
+
+    private final Action actionShowAll = new ButtonAction("Show All", "Clear the current search filter", KeyEvent.VK_A) {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            refreshThreadListAndDisplay();
+        }
+    };
+
+    private final Action actionSave = new ButtonAction("Save", "", KeyEvent.VK_S) {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            new WorkerSaveData().execute();
+        }
+    };
+
+    private final Action actionFindAll = new ButtonAction("By Full Text", "", KeyEvent.VK_F) {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            useSearchDialog(new DialogSearchText(MainFrame.instance()));
+        }
+    };
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -77,10 +128,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         jButtonAddTag = new javax.swing.JButton();
         jPopupMenuTag = new javax.swing.JPopupMenu();
         jMenuItemRemoveTag = new javax.swing.JMenuItem();
-        jMenuNewItem = new javax.swing.JMenu();
-        jMenuItemNewTask = new javax.swing.JMenuItem();
-        jMenuItemNewNote = new javax.swing.JMenuItem();
-        jMenuItemNewFile = new javax.swing.JMenuItem();
         jSplitPaneHoriz = new javax.swing.JSplitPane();
         jScrollPaneThreadList = new javax.swing.JScrollPane();
         jListThreads = new javax.swing.JList<>();
@@ -170,32 +217,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
             }
         });
         jPopupMenuTag.add(jMenuItemRemoveTag);
-
-        jMenuNewItem.setText("Item");
-
-        jMenuItemNewTask.setText("New Task");
-        jMenuItemNewTask.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemNewTaskActionPerformed(evt);
-            }
-        });
-        jMenuNewItem.add(jMenuItemNewTask);
-
-        jMenuItemNewNote.setText("New Note");
-        jMenuItemNewNote.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemNewNoteActionPerformed(evt);
-            }
-        });
-        jMenuNewItem.add(jMenuItemNewNote);
-
-        jMenuItemNewFile.setText("New File");
-        jMenuItemNewFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemNewFileActionPerformed(evt);
-            }
-        });
-        jMenuNewItem.add(jMenuItemNewFile);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Research Management System");
@@ -323,24 +344,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
         jMenuData.setText("Data");
 
-        jMenuItemNewThreadBlank.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemNewThreadBlank.setText("New Thread (blank)");
         jMenuItemNewThreadBlank.setToolTipText("");
-        jMenuItemNewThreadBlank.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemNewThreadBlankActionPerformed(evt);
-            }
-        });
         jMenuData.add(jMenuItemNewThreadBlank);
 
-        jMenuItemNewThreadDuplicate.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemNewThreadDuplicate.setText("New Thread (duplicate)");
         jMenuItemNewThreadDuplicate.setToolTipText("");
-        jMenuItemNewThreadDuplicate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemNewThreadDuplicateActionPerformed(evt);
-            }
-        });
         jMenuData.add(jMenuItemNewThreadDuplicate);
         jMenuData.add(jSeparator4);
 
@@ -356,13 +365,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
         jMenuFind.setText("Find");
 
-        jMenuItemShowAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemShowAll.setText("Show All");
-        jMenuItemShowAll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemShowAllActionPerformed(evt);
-            }
-        });
         jMenuFind.add(jMenuItemShowAll);
         jMenuFind.add(jSeparator2);
 
@@ -382,13 +385,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         });
         jMenuFind.add(jMenuItemFindDate);
 
-        jMenuItemFindText.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemFindText.setText("By Full Text");
-        jMenuItemFindText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemFindTextActionPerformed(evt);
-            }
-        });
         jMenuFind.add(jMenuItemFindText);
         jMenuFind.add(jSeparator1);
 
@@ -420,13 +417,7 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
         jMenuDatabase.setText("Database");
 
-        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSave.setText("Save");
-        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemSaveActionPerformed(evt);
-            }
-        });
         jMenuDatabase.add(jMenuItemSave);
 
         jMenuItemReload.setText("Reload");
@@ -475,23 +466,26 @@ public class MainFrame extends rms.view.util.NotificationFrame {
 
     private void initComponentsMore() {
         jPanelTags.setLayout(new WrapLayout(WrapLayout.LEFT, 1, 1));
-
-        //global keyboard shortcut for "Save"
-        jSplitPaneHoriz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(jMenuItemSave.getAccelerator(), "actionSave");
-        jSplitPaneHoriz.getActionMap().put("actionSave", ActionSave);
-        //global keyboard shortcut for "Show All"
-        jListThreads.getInputMap(JComponent.WHEN_FOCUSED).put(jMenuItemShowAll.getAccelerator(), "actionShowAll");//must override for list
-        jSplitPaneHoriz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(jMenuItemShowAll.getAccelerator(), "actionShowAll");
-        jSplitPaneHoriz.getActionMap().put("actionShowAll", ActionShowAll);
-        //global keyboard shortcut for "New Thread"
-        jSplitPaneHoriz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(jMenuItemNewThreadBlank.getAccelerator(), "actionNewThread");
-        jSplitPaneHoriz.getActionMap().put("actionNewThread", ActionNewThread);
-        //global keyboard shortcut for "Search All"
-        jSplitPaneHoriz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(jMenuItemFindText.getAccelerator(), "actionFindAll");
-        jSplitPaneHoriz.getActionMap().put("actionFindAll", ActionFindAll);
-
         //set the loading panel as the glass pane
         setGlassPane(new LoadingPanel());
+
+        //Map actions to menu items and congfigure global hotkeys
+        configureMenuItemAndGlobalShortcut(jMenuItemNewThreadBlank, actionNewThreadBlank);
+        configureMenuItemAndGlobalShortcut(jMenuItemNewThreadDuplicate, actionNewThreadDuplicate);
+        configureMenuItemAndGlobalShortcut(jMenuItemSave, actionSave);
+        configureMenuItemAndGlobalShortcut(jMenuItemFindText, actionFindAll);
+        configureMenuItemAndGlobalShortcut(jMenuItemShowAll, actionShowAll);
+        //must override for the thread list because it seems to capture ctrl+A already (but does nothing)
+        jListThreads.getInputMap(JComponent.WHEN_FOCUSED).put(jMenuItemShowAll.getAccelerator(), actionShowAll.getValue(Action.NAME));
+    }
+
+    private static void configureMenuItemAndGlobalShortcut(JMenuItem menuItem, Action action) {
+        //Configure the MenuItem based on the Action
+        menuItem.setAction(action);
+        //After configuring, Text and Accelerator can be retrieved to setup global shortcut 
+        String actionName = menuItem.getText();
+        menuItem.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(menuItem.getAccelerator(), actionName);
+        menuItem.getActionMap().put(actionName, action);
     }
 
     private void jButtonAddTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTagActionPerformed
@@ -515,36 +509,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         }
     }//GEN-LAST:event_jMenuItemRemoveTagActionPerformed
 
-    private void jMenuItemNewTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewTaskActionPerformed
-        Main.newTask();
-    }//GEN-LAST:event_jMenuItemNewTaskActionPerformed
-
-    private void jMenuItemNewNoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewNoteActionPerformed
-        Main.newNote();
-    }//GEN-LAST:event_jMenuItemNewNoteActionPerformed
-
-    private void jMenuItemNewFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewFileActionPerformed
-        Main.newFile();
-    }//GEN-LAST:event_jMenuItemNewFileActionPerformed
-
-    private void jMenuItemNewThreadBlankActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewThreadBlankActionPerformed
-        createAndShowNewThread();
-    }//GEN-LAST:event_jMenuItemNewThreadBlankActionPerformed
-
-    private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
-        new WorkerSaveData().execute();
-    }//GEN-LAST:event_jMenuItemSaveActionPerformed
-
     private void jMenuItemReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemReloadActionPerformed
         String message = "Reloading will cuase you to lose any data added since the last time you saved.\nAre you sure you want to proceed?";
         if (Prompts.getUserApproval(message, PromptType.WARNING)) {
             loadStateAndPopulate();
         }
     }//GEN-LAST:event_jMenuItemReloadActionPerformed
-
-    private void jMenuItemShowAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemShowAllActionPerformed
-        ActionShowAll.actionPerformed(evt);
-    }//GEN-LAST:event_jMenuItemShowAllActionPerformed
 
     private void jMenuItemFindTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindTagActionPerformed
         useSearchDialog(new DialogSearchTags(this));
@@ -553,10 +523,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private void jMenuItemFindDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindDateActionPerformed
         useSearchDialog(new DialogDateRange(this));
     }//GEN-LAST:event_jMenuItemFindDateActionPerformed
-
-    private void jMenuItemFindTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindTextActionPerformed
-        useSearchDialog(new DialogSearchText(this));
-    }//GEN-LAST:event_jMenuItemFindTextActionPerformed
 
     private void jMenuItemFindDeadlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindDeadlineActionPerformed
         useSearchDialog(new DialogDeadline(this));
@@ -610,7 +576,8 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     }//GEN-LAST:event_jLabelThreadNameMouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        //Cannot use ActionSave because I need reference to the worker in order to wait
+        //Cannot use 'actionSave' because I need reference to the worker in
+        //  order to wait for the save to complete (and log any exceptions).
         WorkerSaveData worker = new WorkerSaveData();
         worker.execute();
         setVisible(false);
@@ -629,57 +596,6 @@ public class MainFrame extends rms.view.util.NotificationFrame {
         // Update the tags for the selected thread in case any were deleted
         new WorkerDisplayThreadTags(getSelectedThread()).execute();
     }//GEN-LAST:event_jMenuItemManageTagsActionPerformed
-
-    private void jMenuItemNewThreadDuplicateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewThreadDuplicateActionPerformed
-        //TODO: For now, just copy the current thread
-        ItemThread selectedThread = getSelectedThread();
-        if (selectedThread != null) {
-            Prompts.Response result = Prompts.getUserResponse("Would you like to copy any files in the thread?"
-                    + System.lineSeparator()
-                    + "If 'no' they will be replaced with file placeholders.", PromptType.QUESTION);
-
-            switch (result) {
-                default://print warning and fall through to CANCEL
-                    THIS_LOG.log(Level.WARNING, "Undefined user response: {0}", result);
-                case CANCEL:
-                    break;//do nothing
-                case YES:
-                    promptToNameThread(Main.getState().createNewThread(selectedThread, false), true);
-                    break;
-                case NO:
-                    promptToNameThread(Main.getState().createNewThread(selectedThread, true), true);
-                    break;
-            }
-        }
-    }//GEN-LAST:event_jMenuItemNewThreadDuplicateActionPerformed
-
-    private final Action ActionShowAll = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            refreshThreadListAndDisplay();
-        }
-    };
-
-    private final Action ActionSave = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            new WorkerSaveData().execute();
-        }
-    };
-
-    private final Action ActionNewThread = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            createAndShowNewThread();
-        }
-    };
-
-    private final Action ActionFindAll = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            useSearchDialog(new DialogSearchText(MainFrame.instance()));
-        }
-    };
 
     public List<File> promptFileSelection(boolean allowMultiple) {
         JFileChooser chooser = this.cachedFileChooser;
@@ -1040,16 +956,12 @@ public class MainFrame extends rms.view.util.NotificationFrame {
     private javax.swing.JMenuItem jMenuItemFindTag;
     private javax.swing.JMenuItem jMenuItemFindText;
     private javax.swing.JMenuItem jMenuItemManageTags;
-    private javax.swing.JMenuItem jMenuItemNewFile;
-    private javax.swing.JMenuItem jMenuItemNewNote;
-    private javax.swing.JMenuItem jMenuItemNewTask;
     private javax.swing.JMenuItem jMenuItemNewThreadBlank;
     private javax.swing.JMenuItem jMenuItemNewThreadDuplicate;
     private javax.swing.JMenuItem jMenuItemReload;
     private javax.swing.JMenuItem jMenuItemRemoveTag;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenuItem jMenuItemShowAll;
-    private javax.swing.JMenu jMenuNewItem;
     private javax.swing.JPanel jPanelEmptyThread;
     private javax.swing.JPanel jPanelHeader;
     private javax.swing.JPanel jPanelTags;
