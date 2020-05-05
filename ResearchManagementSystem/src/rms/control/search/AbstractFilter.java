@@ -43,23 +43,6 @@ public abstract class AbstractFilter {
     }
 
     /**
-     * Helper method to check if an ItemThread should be accepted based on the
-     * Items contained within.
-     *
-     * @param t
-     *
-     * @return
-     */
-    protected boolean isAnyItemAccepted(ItemThread t) {
-        for (Item i : t) {
-            if (accept(i)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      *
      * @param item
      *
@@ -70,10 +53,18 @@ public abstract class AbstractFilter {
 
     /**
      *
-     * @param thread
+     * @param t
      *
      * @return {@code true} iff the given {@link ItemThread} should be returned
      *         by this AbstractFilter
      */
-    protected abstract boolean accept(ItemThread thread);
+    protected boolean accept(ItemThread t) {
+        //Default behavior: the entire thread is accepted if any item is accepted
+        for (Item i : t) {
+            if (accept(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

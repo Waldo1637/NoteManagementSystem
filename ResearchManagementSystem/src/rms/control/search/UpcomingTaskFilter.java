@@ -2,7 +2,6 @@ package rms.control.search;
 
 import java.util.Date;
 import rms.model.item.Item;
-import rms.model.item.ItemThread;
 import rms.model.item.TaskItem;
 import rms.util.DateHelpers;
 import rms.util.DateUnit;
@@ -65,11 +64,5 @@ public class UpcomingTaskFilter extends AbstractFilter {
             return (finalDate == null) ? false : DateHelpers.beforeEqual(deadline, finalDate);
         }
         return false;
-    }
-
-    @Override
-    protected boolean accept(ItemThread t) {
-        //the entire thread is accepted if any item is accepted
-        return isAnyItemAccepted(t);
     }
 }

@@ -77,7 +77,7 @@ public class TextFilter extends AbstractFilter {
      */
     @Override
     protected boolean accept(ItemThread t) {
-        return containsMatch(t.getName()) || isAnyItemAccepted(t);
+        return containsMatch(t.getName()) || super.accept(t);
     }
 
     /**
