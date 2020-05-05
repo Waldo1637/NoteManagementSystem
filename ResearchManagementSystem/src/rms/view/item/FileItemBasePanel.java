@@ -30,10 +30,13 @@ public abstract class FileItemBasePanel extends BaseItemPanel {
         super(item, startCollapsed);
         initComponents();
         setFileButtonText(buttonText);
+//        jButtonFileLink.setBorderPainted(true);
+//        rms.util.Helpers.addOutsideColorBorder(jButtonFileLink, java.awt.Color.GREEN);
     }
 
     protected final void setFileButtonText(String newText) {
         jButtonFileLink.setText(newText);
+        jButtonFileLink.setToolTipText(newText);
     }
 
     /**
@@ -47,6 +50,8 @@ public abstract class FileItemBasePanel extends BaseItemPanel {
 
         jButtonFileLink = new javax.swing.JButton();
 
+        getInnerContentPanel().setLayout(new javax.swing.BoxLayout(getInnerContentPanel(), javax.swing.BoxLayout.X_AXIS));
+
         jButtonFileLink.setForeground(new java.awt.Color(0, 0, 255));
         jButtonFileLink.setText("Open File");
         jButtonFileLink.setBorderPainted(false);
@@ -59,21 +64,7 @@ public abstract class FileItemBasePanel extends BaseItemPanel {
                 jButtonFileLinkActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getInnerContentPanel());
-        getInnerContentPanel().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jButtonFileLink)
-                .addGap(0, 318, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jButtonFileLink)
-                .addGap(0, 13, Short.MAX_VALUE))
-        );
+        getInnerContentPanel().add(jButtonFileLink);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonFileLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileLinkActionPerformed

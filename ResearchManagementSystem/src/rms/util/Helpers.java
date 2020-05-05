@@ -1,7 +1,10 @@
 package rms.util;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 
 /**
  * Static utility methods
@@ -70,6 +73,17 @@ public final class Helpers {
         HashSet<N> retVal = new HashSet<>(s1);
         retVal.removeAll(s2);
         return retVal;
+    }
+
+    /**
+     *
+     * @param comp
+     * @param c
+     */
+    public static void addOutsideColorBorder(JComponent comp, Color c) {
+        comp.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(c),
+                comp.getBorder()));
     }
 
     private Helpers() {

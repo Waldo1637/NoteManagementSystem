@@ -896,8 +896,11 @@ public class MainFrame extends NotificationFrame {
                 jXPanelContent.add(jPanelEmptyThread);
             } else {
                 for (Item i : toLoad) {
-                    jXPanelContent.add(createPanelForItem(i));
+                    JPanel itemPanel = createPanelForItem(i);
+//                    rms.util.Helpers.addOutsideColorBorder(itemPanel, java.awt.Color.RED);
+                    jXPanelContent.add(itemPanel);
                 }
+//                rms.util.Helpers.addOutsideColorBorder(jXPanelContent, java.awt.Color.BLUE);
             }
         }
     }
