@@ -23,11 +23,6 @@ public class FileItemNormalPanel extends FileItemBasePanel {
     }
 
     @Override
-    protected void reflectItemChangesInUI_Additional() {
-        setFileButtonText(getFile().getName());
-    }
-
-    @Override
     protected void deleteButtonAction_WithApproval() {
         getFile().delete();
     }
