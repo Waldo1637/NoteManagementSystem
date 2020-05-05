@@ -664,9 +664,9 @@ public class MainFrame extends NotificationFrame {
             } else if (i instanceof TaskItem) {
                 return new TaskItemPanel((TaskItem) i, collapse);
             } else if (i instanceof FileItem) {
-                return new FileItemPanel((FileItem) i, collapse);
+                return new FileItemNormalPanel((FileItem) i, collapse);
             } else if (i instanceof EmptyFileItem) {
-                return new EmptyFileItemPanel((EmptyFileItem) i, collapse);
+                return new FileItemEmptyPanel((EmptyFileItem) i, collapse);
             }
             throw new UnsupportedOperationException("Not implemented: " + i);
         } catch (Exception ex) {

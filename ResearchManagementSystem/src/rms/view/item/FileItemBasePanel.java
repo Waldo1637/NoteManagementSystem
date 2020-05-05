@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rms.model.item.EmptyFileItem;
 import rms.model.item.FileItem;
+import rms.model.item.Item;
 import rms.view.MainFrame;
 import rms.view.util.Prompts;
 
@@ -13,19 +13,27 @@ import rms.view.util.Prompts;
  *
  * @author Timothy
  */
-public class EmptyFileItemPanel extends BaseItemPanel {
+public abstract class FileItemBasePanel extends BaseItemPanel {
 
-    private static final Logger LOG = Logger.getLogger(EmptyFileItemPanel.class.getName());
+    protected static final Logger LOG = Logger.getLogger(FileItemBasePanel.class.getName());
 
     /**
-     * Creates new form EmptyFileItemPanel
+     * Creates new form {@link FileItemBasePanel}.
+     *
+     * NOTE: calls {@link #initComponents()}
      *
      * @param item
      * @param startCollapsed
+     * @param buttonText
      */
-    public EmptyFileItemPanel(EmptyFileItem item, boolean startCollapsed) {
+    protected FileItemBasePanel(Item item, boolean startCollapsed, String buttonText) {
         super(item, startCollapsed);
         initComponents();
+        setFileButtonText(buttonText);
+    }
+
+    protected final void setFileButtonText(String newText) {
+        jButtonFileLink.setText(newText);
     }
 
     /**
@@ -40,12 +48,11 @@ public class EmptyFileItemPanel extends BaseItemPanel {
         jButtonFileLink = new javax.swing.JButton();
 
         jButtonFileLink.setForeground(new java.awt.Color(0, 0, 255));
-        jButtonFileLink.setActionCommand("Add File");
+        jButtonFileLink.setText("Open File");
         jButtonFileLink.setBorderPainted(false);
         jButtonFileLink.setContentAreaFilled(false);
         jButtonFileLink.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButtonFileLink.setFocusPainted(false);
-        jButtonFileLink.setLabel("*** Add File ***");
         jButtonFileLink.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jButtonFileLink.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -59,7 +66,7 @@ public class EmptyFileItemPanel extends BaseItemPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jButtonFileLink)
-                .addGap(0, 450, Short.MAX_VALUE))
+                .addGap(0, 318, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -70,9 +77,23 @@ public class EmptyFileItemPanel extends BaseItemPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonFileLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileLinkActionPerformed
-        //Prompt the user for the new file. If a selection is made, then replace
-        //  the existing item with a new FileItem in the current thread and
-        //  force the GUI to redraw.
+        fileButtonAction();
+    }//GEN-LAST:event_jButtonFileLinkActionPerformed
+
+    /**
+     * Executed when the file name button is clicked.
+     */
+    protected abstract void fileButtonAction();
+
+    /**
+     * Executed when the Auxiliary button is clicked. Prompts the user for a new
+     * file and replaces the existing {@link Item} with a new {@link FileItem}.
+     */
+    @Override
+    protected void auxiliaryButtonAction() {
+        //Prompt the user for the new file. If a selection is made, then
+        //  replace the existing item with a new FileItem in the current
+        //  thread and force the GUI to redraw.
         MainFrame gui = MainFrame.instance();
         List<File> selection = gui.promptFileSelection(false);//single selection
         if (!selection.isEmpty()) {
@@ -80,13 +101,14 @@ public class EmptyFileItemPanel extends BaseItemPanel {
                 LOG.log(Level.WARNING, "Somehow multiple files were selected! Using only the first.");
             }
             FileItem.CreateResult result = FileItem.createAndReplaceFileItem(displayedItem, selection.get(0));
-            if (!result.success()) {
+            if (result.success()) {
+                deleteButtonAction_WithApproval();//if there was a file, delete it
+                gui.refreshSelectedThread();//no need to refresh if no selection
+            } else {
                 Prompts.informUser("File Import Failed", result.error, Prompts.PromptType.ERROR);
             }
-            gui.refreshSelectedThread();//no need to refresh if no selection
         }
-    }//GEN-LAST:event_jButtonFileLinkActionPerformed
-
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonFileLink;

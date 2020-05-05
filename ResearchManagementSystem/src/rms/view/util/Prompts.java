@@ -31,8 +31,9 @@ public class Prompts {
      */
     public static boolean getUserApproval(String prompt, PromptType type) {
         String title = "Response needed";
-        int iType = convert(type);
-        int option = JOptionPane.showConfirmDialog(MainFrame.instance(), prompt, title, JOptionPane.YES_NO_OPTION, iType);
+        int optionType = JOptionPane.YES_NO_OPTION;
+        int messageType = convert(type);
+        int option = JOptionPane.showConfirmDialog(MainFrame.instance(), prompt, title, optionType, messageType);
         return option == JOptionPane.YES_OPTION;
     }
 
@@ -41,12 +42,13 @@ public class Prompts {
      * @param prompt
      * @param type
      *
-     * @return
+     * @return the specific {@link Response} from the user
      */
     public static Response getUserResponse(String prompt, PromptType type) {
         String title = "Response needed";
-        int iType = convert(type);
-        int option = JOptionPane.showConfirmDialog(MainFrame.instance(), prompt, title, JOptionPane.YES_NO_CANCEL_OPTION, iType);
+        int optionType = JOptionPane.YES_NO_CANCEL_OPTION;
+        int messageType = convert(type);
+        int option = JOptionPane.showConfirmDialog(MainFrame.instance(), prompt, title, optionType, messageType);
         return convertToResponse(option);
     }
 
