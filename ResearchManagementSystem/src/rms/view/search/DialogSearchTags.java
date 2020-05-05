@@ -28,7 +28,7 @@ public class DialogSearchTags extends BaseSearchDialog {
     @Override
     protected AbstractFilter createFilter() {
         Set<Tag> selectedTags = tagSelectionPanel.getSelectedTags();
-        return selectedTags.isEmpty() ? null : new TagFilter(selectedTags);
+        return selectedTags.isEmpty() ? null : TagFilter.get(selectedTags);
     }
 
     private void initComponentsMore() {

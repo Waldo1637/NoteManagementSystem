@@ -12,13 +12,19 @@ import javax.swing.KeyStroke;
 public abstract class ButtonAction extends AbstractAction {
 
     public ButtonAction(String text, String tooltip, int mnemonicAndAccel) {
-        init(text, tooltip, mnemonicAndAccel);
+        init(text, tooltip, mnemonicAndAccel, true);
     }
 
-    private void init(String text, String tooltip, int mnemonicAndAccel) {
+    public ButtonAction(String text, String tooltip, int mnemonicAndAccel, boolean addAccel) {
+        init(text, tooltip, mnemonicAndAccel, addAccel);
+    }
+
+    private void init(String text, String tooltip, int mnemonicAndAccel, boolean addAccel) {
         putValue(Action.NAME, text);//button text (action name)
         putValue(Action.SHORT_DESCRIPTION, tooltip);
         putValue(Action.MNEMONIC_KEY, mnemonicAndAccel);
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(mnemonicAndAccel, InputEvent.CTRL_MASK));
+        if (addAccel) {
+            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(mnemonicAndAccel, InputEvent.CTRL_MASK));
+        }
     }
 }

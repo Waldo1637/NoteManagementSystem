@@ -23,7 +23,18 @@ public class TextFilter extends AbstractFilter {
     private final List<String> searchWords;// lowercase via constructor
     private final boolean matchAll;
 
-    public TextFilter(String searchText, MatchType type) {
+    /**
+     *
+     * @param searchText
+     * @param type
+     *
+     * @return
+     */
+    public static TextFilter get(String searchText, MatchType type) {
+        return new TextFilter(searchText, type);
+    }
+
+    private TextFilter(String searchText, MatchType type) {
         switch (type) {
             case Any:
                 //For an Any match, split the String and set 'matchAll' to false

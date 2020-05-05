@@ -177,6 +177,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFindPending">
               <Properties>
+                <Property name="mnemonic" type="int" value="80"/>
                 <Property name="text" type="java.lang.String" value="Pending Tasks"/>
               </Properties>
               <Events>
@@ -185,7 +186,8 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFindLateTasks">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Late Tasks"/>
+                <Property name="mnemonic" type="int" value="79"/>
+                <Property name="text" type="java.lang.String" value="Overdue Tasks"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemFindLateTasksActionPerformed"/>

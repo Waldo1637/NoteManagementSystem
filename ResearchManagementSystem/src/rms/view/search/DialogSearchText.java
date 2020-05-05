@@ -26,7 +26,7 @@ public class DialogSearchText extends BaseSearchDialog {
         if (searchText != null && !searchText.isEmpty()) {
             String action = buttonGroupMatch.getSelection().getActionCommand();
             TextFilter.MatchType mType = TextFilter.MatchType.valueOf(action);
-            return new TextFilter(searchText, mType);
+            return TextFilter.get(searchText, mType);
         } else {
             return null;
         }

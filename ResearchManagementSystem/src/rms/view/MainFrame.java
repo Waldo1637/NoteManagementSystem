@@ -22,6 +22,7 @@ import rms.control.search.PendingTaskFilter;
 import rms.control.search.TagFilter;
 import rms.model.Tag;
 import rms.model.item.*;
+import rms.view.item.BaseItemPanel.ThreadCollapseAllHandler;
 import rms.view.item.*;
 import rms.view.search.*;
 import rms.view.util.Prompts.PromptType;
@@ -394,6 +395,7 @@ public class MainFrame extends NotificationFrame {
         });
         jMenuFind.add(jMenuItemFindDeadline);
 
+        jMenuItemFindPending.setMnemonic('P');
         jMenuItemFindPending.setText("Pending Tasks");
         jMenuItemFindPending.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -402,7 +404,8 @@ public class MainFrame extends NotificationFrame {
         });
         jMenuFind.add(jMenuItemFindPending);
 
-        jMenuItemFindLateTasks.setText("Late Tasks");
+        jMenuItemFindLateTasks.setMnemonic('O');
+        jMenuItemFindLateTasks.setText("Overdue Tasks");
         jMenuItemFindLateTasks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemFindLateTasksActionPerformed(evt);
@@ -528,11 +531,11 @@ public class MainFrame extends NotificationFrame {
     }//GEN-LAST:event_jMenuItemFindDeadlineActionPerformed
 
     private void jMenuItemFindPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindPendingActionPerformed
-        refreshThreadListAndDisplay(new PendingTaskFilter(), null);
+        refreshThreadListAndDisplay(PendingTaskFilter.get(), null);
     }//GEN-LAST:event_jMenuItemFindPendingActionPerformed
 
     private void jMenuItemFindLateTasksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindLateTasksActionPerformed
-        refreshThreadListAndDisplay(new LateTaskFilter(), null);
+        refreshThreadListAndDisplay(LateTaskFilter.get(), null);
     }//GEN-LAST:event_jMenuItemFindLateTasksActionPerformed
 
     private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
@@ -655,9 +658,8 @@ public class MainFrame extends NotificationFrame {
         jButtonDeleteThread.setEnabled(b);
     }
 
-    private JPanel createPanelForItem(Item i) {
+    private BaseItemPanel createPanelForItem(Item i) {
         boolean collapse = cachedFilter == null ? false : !cachedFilter.includesItem(i);
-
         try {
             if (i instanceof NoteItem) {
                 return new NoteItemPanel((NoteItem) i, collapse);
@@ -696,36 +698,36 @@ public class MainFrame extends NotificationFrame {
             this.addActionListener(new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    refreshThreadListAndDisplay(new TagFilter(Collections.singleton(tag)), null);
+                    refreshThreadListAndDisplay(TagFilter.get(Collections.singleton(tag)), null);
                 }
             });
-            this.addMouseListener(new PopClickListener());
+            this.addMouseListener(tagPopupClickListener);
         }
     }
 
     /**
      * MouseAdapter for displaying the popup menu on tags
      */
-    private class PopClickListener extends MouseAdapter {
+    private final MouseAdapter tagPopupClickListener = new MouseAdapter() {
 
         @Override
         public void mousePressed(MouseEvent e) {
             if (e.isPopupTrigger()) {
-                doPop(e);
+                showPopup(e);
             }
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger()) {
-                doPop(e);
+                showPopup(e);
             }
         }
 
-        private void doPop(MouseEvent e) {
+        private void showPopup(MouseEvent e) {
             jPopupMenuTag.show(e.getComponent(), e.getX(), e.getY());
         }
-    }
+    };
 
     /**
      * Loads the given ItemThread into the GUI
@@ -895,8 +897,10 @@ public class MainFrame extends NotificationFrame {
             if (toLoad.size() == 0) {
                 jXPanelContent.add(jPanelEmptyThread);
             } else {
+                ThreadCollapseAllHandler collapseHdlr = new ThreadCollapseAllHandler();
                 for (Item i : toLoad) {
-                    JPanel itemPanel = createPanelForItem(i);
+                    BaseItemPanel itemPanel = createPanelForItem(i);
+                    collapseHdlr.register(itemPanel);
 //                    rms.util.Helpers.addOutsideColorBorder(itemPanel, java.awt.Color.RED);
                     jXPanelContent.add(itemPanel);
                 }

@@ -4,17 +4,16 @@ import rms.model.item.Item;
 import rms.model.item.TaskItem;
 
 /**
- * Finds {@link TaskItem}s which are overdue, i.e. their deadline is in the
- * past.
+ * Finds {@link TaskItem}s which have been marked completed.
  *
  * @author Timothy
  */
-public class LateTaskFilter extends AbstractFilter {
+public class CompletedTaskFilter extends AbstractFilter {
 
     // thread-safe lazy singleton pattern
     private static class InstanceHolder {
 
-        static final LateTaskFilter INSTANCE = new LateTaskFilter();
+        static final CompletedTaskFilter INSTANCE = new CompletedTaskFilter();
 
         private InstanceHolder() {
         }
@@ -24,15 +23,15 @@ public class LateTaskFilter extends AbstractFilter {
      *
      * @return
      */
-    public static LateTaskFilter get() {
+    public static CompletedTaskFilter get() {
         return InstanceHolder.INSTANCE;
     }
 
-    private LateTaskFilter() {
+    private CompletedTaskFilter() {
     }
 
     @Override
     protected boolean accept(Item i) {
-        return (i instanceof TaskItem) ? ((TaskItem) i).isOverdue() : false;
+        return (i instanceof TaskItem) ? ((TaskItem) i).isComplete() : false;
     }
 }

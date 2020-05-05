@@ -1,8 +1,21 @@
 package rms.view.item;
 
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import rms.control.search.AbstractFilter;
+import rms.control.search.CompletedTaskFilter;
+import rms.control.search.LateTaskFilter;
+import rms.control.search.PendingTaskFilter;
 import rms.model.item.Item;
+import rms.view.util.ButtonAction;
 import rms.view.util.Prompts;
 
 /**
@@ -10,6 +23,126 @@ import rms.view.util.Prompts;
  * @author Timothy
  */
 public class BaseItemPanel extends javax.swing.JPanel {
+
+    public static class ThreadCollapseAllHandler extends MouseAdapter {
+
+        private final ArrayList<BaseItemPanel> panels = new ArrayList<>();
+
+        public void register(BaseItemPanel registrant) {
+            assert !panels.contains(registrant);
+            panels.add(registrant);
+            registrant.jButtonToggleCollapsed.addMouseListener(this);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
+        }
+
+        private class CollapseAction extends ButtonAction {
+
+            private final AbstractFilter filter;
+
+            public CollapseAction(String text, String tooltip, int mnemonicAndAccel, AbstractFilter filter) {
+                super(text, tooltip, mnemonicAndAccel, false);
+                this.filter = filter;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (BaseItemPanel p : panels) {
+                    if (filter.includesItem(p.displayedItem)) {
+                        p.collapse();
+                    }
+                }
+            }
+        }
+
+        private class UncollapseAction extends ButtonAction {
+
+            private final AbstractFilter filter;
+
+            public UncollapseAction(String text, String tooltip, int mnemonicAndAccel, AbstractFilter filter) {
+                super(text, tooltip, mnemonicAndAccel, false);
+                this.filter = filter;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (BaseItemPanel p : panels) {
+                    if (filter.includesItem(p.displayedItem)) {
+                        p.uncollapse();
+                    }
+                }
+            }
+        }
+
+        private void showPopup(MouseEvent e) {
+            JPopupMenu menu = new JPopupMenu();
+            {
+                JMenu menuCollapse = new JMenu("Collapse");
+                menuCollapse.setMnemonic(KeyEvent.VK_C);
+                menu.add(menuCollapse);
+                menuCollapse.add(new JMenuItem(new CollapseAction(
+                        "All",
+                        "Collapses all items in the current thread",
+                        KeyEvent.VK_A,
+                        AbstractFilter.ALL)));
+                menuCollapse.addSeparator();
+                menuCollapse.add(new JMenuItem(new CollapseAction(
+                        "Completed",
+                        "Collapses all Tasks in the current thread that are completed",
+                        KeyEvent.VK_C,
+                        CompletedTaskFilter.get())));
+                menuCollapse.add(new JMenuItem(new CollapseAction(
+                        "Pending",
+                        "Collapses all Tasks in the current thread that are not completed",
+                        KeyEvent.VK_P,
+                        PendingTaskFilter.get())));
+                menuCollapse.add(new JMenuItem(new CollapseAction(
+                        "Overdue",
+                        "Collapses all Tasks in the current thread that are not completed and due in the past",
+                        KeyEvent.VK_O,
+                        LateTaskFilter.get())));
+            }
+            {
+                JMenu menuExpand = new JMenu("Expand");
+                menuExpand.setMnemonic(KeyEvent.VK_E);
+                menu.add(menuExpand);
+                menuExpand.add(new JMenuItem(new UncollapseAction(
+                        "All",
+                        "Expands all items in the current thread",
+                        KeyEvent.VK_A,
+                        AbstractFilter.ALL)));
+                menuExpand.addSeparator();
+                menuExpand.add(new JMenuItem(new UncollapseAction(
+                        "Completed",
+                        "Expands all Tasks in the current thread that are completed",
+                        KeyEvent.VK_C,
+                        CompletedTaskFilter.get())));
+                menuExpand.add(new JMenuItem(new UncollapseAction(
+                        "Pending",
+                        "Expands all Tasks in the current thread that are not completed",
+                        KeyEvent.VK_P,
+                        PendingTaskFilter.get())));
+                menuExpand.add(new JMenuItem(new UncollapseAction(
+                        "Overdue",
+                        "Expands all Tasks in the current thread that are not completed and due in the past",
+                        KeyEvent.VK_O,
+                        LateTaskFilter.get())));
+            }
+            menu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
 
     protected final Item displayedItem;
 

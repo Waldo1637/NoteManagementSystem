@@ -25,7 +25,7 @@ public class DialogDeadline extends BaseSearchDialog {
     protected AbstractFilter createFilter() {
         int increment = Integer.valueOf((String) jComboBoxIncrement.getSelectedItem());
         DateUnit unit = (DateUnit) jComboBoxUnit.getSelectedItem();
-        return new UpcomingTaskFilter(increment, unit);
+        return UpcomingTaskFilter.get(increment, unit);
     }
 
     /**

@@ -17,10 +17,20 @@ public class TagFilter extends AbstractFilter {
 
     /**
      *
-     * @param tag {@link Tag} to search {@link ItemThread}s for
+     * @param tags {@link Tag} to search {@link ItemThread}s for
+     *
+     * @return
      */
-    public TagFilter(Set<Tag> tag) {
-        this.tag = tag;
+    public static TagFilter get(Set<Tag> tags) {
+        return new TagFilter(tags);
+    }
+
+    /**
+     *
+     * @param tags {@link Tag} to search {@link ItemThread}s for
+     */
+    private TagFilter(Set<Tag> tags) {
+        this.tag = tags;
     }
 
     @Override

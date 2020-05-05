@@ -28,7 +28,7 @@ public class DialogDateRange extends BaseSearchDialog {
         DateRangeType selectionType = (DateRangeType) jComboBoxType.getSelectedItem();
         Date startDate = jXDatePickerStart.getDate();
         Date endDate = jXDatePickerEnd.getDate();
-        return new DateRangeFilter(selectionType, startDate, endDate);
+        return DateRangeFilter.get(selectionType, startDate, endDate);
     }
 
     /**

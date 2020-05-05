@@ -14,6 +14,20 @@ import rms.model.item.ItemThread;
  */
 public abstract class AbstractFilter {
 
+    public static final AbstractFilter ALL = new AbstractFilter() {
+        @Override
+        protected boolean accept(Item item) {
+            return true;
+        }
+    };
+
+    public static final AbstractFilter NONE = new AbstractFilter() {
+        @Override
+        protected boolean accept(Item item) {
+            return false;
+        }
+    };
+
     /**
      * Searches the {@code input} Collection for {@link ItemThread}s which match
      * the criteria of the subclass implementation.

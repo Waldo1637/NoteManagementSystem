@@ -19,8 +19,18 @@ public class UpcomingTaskFilter extends AbstractFilter {
     /**
      * @param increment number of {@code DateUnit}s into the future to search
      * @param unit      unit type associated with the increment
+     *
+     * @return
      */
-    public UpcomingTaskFilter(int increment, DateUnit unit) {
+    public static UpcomingTaskFilter get(int increment, DateUnit unit) {
+        return new UpcomingTaskFilter(increment, unit);
+    }
+
+    /**
+     * @param increment number of {@code DateUnit}s into the future to search
+     * @param unit      unit type associated with the increment
+     */
+    private UpcomingTaskFilter(int increment, DateUnit unit) {
         this.increment = increment;
         this.unit = unit;
     }
