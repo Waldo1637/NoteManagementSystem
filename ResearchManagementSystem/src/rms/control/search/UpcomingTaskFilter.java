@@ -43,7 +43,7 @@ public class UpcomingTaskFilter extends AbstractFilter {
      *         specified by this instance
      */
     @Override
-    protected boolean accept(Item i) {
+    public boolean accept(Item i) {
         if (i instanceof TaskItem) {
             Date deadline = ((TaskItem) i).getDeadline();
 

@@ -31,7 +31,7 @@ public class CompletedTaskFilter extends AbstractFilter {
     }
 
     @Override
-    protected boolean accept(Item i) {
+    public boolean accept(Item i) {
         return (i instanceof TaskItem) ? ((TaskItem) i).isComplete() : false;
     }
 }

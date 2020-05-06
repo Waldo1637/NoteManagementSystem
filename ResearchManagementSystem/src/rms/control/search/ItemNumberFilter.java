@@ -32,7 +32,7 @@ public class ItemNumberFilter extends AbstractFilter {
     }
 
     @Override
-    protected boolean accept(Item item) {
+    public boolean accept(Item item) {
         return item.getID() == itemID;
     }
 }

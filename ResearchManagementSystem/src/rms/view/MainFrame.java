@@ -674,7 +674,7 @@ public class MainFrame extends NotificationFrame {
     }
 
     private BaseItemPanel createPanelForItem(Item i) {
-        boolean collapse = cachedFilter == null ? false : !cachedFilter.includesItem(i);
+        boolean collapse = cachedFilter == null ? false : !cachedFilter.accept(i);
         try {
             if (i instanceof NoteItem) {
                 return new NoteItemPanel((NoteItem) i, collapse);

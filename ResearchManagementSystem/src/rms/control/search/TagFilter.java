@@ -34,13 +34,13 @@ public class TagFilter extends AbstractFilter {
     }
 
     @Override
-    protected boolean accept(Item i) {
+    public boolean accept(Item i) {
         //An item is accepted if its owning thread is accepted
         return accept(i.getThread());
     }
 
     @Override
-    protected boolean accept(ItemThread t) {
+    public boolean accept(ItemThread t) {
         return !Helpers.intersection(t.getTagsUnmodifible(), tag).isEmpty();
     }
 }

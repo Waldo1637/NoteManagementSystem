@@ -60,7 +60,7 @@ public class BaseItemPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (BaseItemPanel p : panels) {
-                    if (filter.includesItem(p.displayedItem)) {
+                    if (filter.accept(p.displayedItem)) {
                         p.collapse();
                     }
                 }
@@ -79,7 +79,7 @@ public class BaseItemPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (BaseItemPanel p : panels) {
-                    if (filter.includesItem(p.displayedItem)) {
+                    if (filter.accept(p.displayedItem)) {
                         p.uncollapse();
                     }
                 }

@@ -64,7 +64,7 @@ public class TextFilter extends AbstractFilter {
      *         contains (case insensitive) the search text
      */
     @Override
-    protected boolean accept(Item i) {
+    public boolean accept(Item i) {
         if (containsMatch(i.getName())) {
             //check the item name for the text
             return true;
@@ -87,7 +87,7 @@ public class TextFilter extends AbstractFilter {
      *         search text (case insensitive comparison) or any item is accepted
      */
     @Override
-    protected boolean accept(ItemThread t) {
+    public boolean accept(ItemThread t) {
         return containsMatch(t.getName()) || super.accept(t);
     }
 

@@ -16,14 +16,14 @@ public abstract class AbstractFilter {
 
     public static final AbstractFilter ALL = new AbstractFilter() {
         @Override
-        protected boolean accept(Item item) {
+        public boolean accept(Item item) {
             return true;
         }
     };
 
     public static final AbstractFilter NONE = new AbstractFilter() {
         @Override
-        protected boolean accept(Item item) {
+        public boolean accept(Item item) {
             return false;
         }
     };
@@ -48,12 +48,19 @@ public abstract class AbstractFilter {
 
     /**
      *
-     * @param item
+     * @param thread
      *
-     * @return true iff the given item is accepted by the Filter
+     * @return {@code true} iff the given {@link ItemThread} should be returned
+     *         by this AbstractFilter
      */
-    public boolean includesItem(Item item) {
-        return accept(item);
+    public boolean accept(ItemThread thread) {
+        //Default behavior: the entire thread is accepted if any item is accepted
+        for (Item i : thread) {
+            if (accept(i)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -61,24 +68,8 @@ public abstract class AbstractFilter {
      * @param item
      *
      * @return {@code true} iff the given {@link Item} should be returned by
-     *         this AbstractFilter
+     *         this {@link AbstractFilter}
      */
-    protected abstract boolean accept(Item item);
+    public abstract boolean accept(Item item);
 
-    /**
-     *
-     * @param t
-     *
-     * @return {@code true} iff the given {@link ItemThread} should be returned
-     *         by this AbstractFilter
-     */
-    protected boolean accept(ItemThread t) {
-        //Default behavior: the entire thread is accepted if any item is accepted
-        for (Item i : t) {
-            if (accept(i)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

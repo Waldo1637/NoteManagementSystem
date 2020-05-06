@@ -43,7 +43,7 @@ public class DateRangeFilter extends AbstractFilter {
     }
 
     @Override
-    protected boolean accept(Item i) {
+    public boolean accept(Item i) {
         Date itemDate = null;
 
         switch (type) {
