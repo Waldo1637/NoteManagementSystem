@@ -45,6 +45,14 @@ public final class Helpers {
         return true;
     }
 
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+
+    public static String convertNullToEmpty(String s) {
+        return s == null ? "" : s;
+    }
+
     /**
      * Return a new Set containing the set intersection of the two given
      *

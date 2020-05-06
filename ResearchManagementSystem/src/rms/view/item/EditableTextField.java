@@ -147,10 +147,8 @@ public class EditableTextField extends javax.swing.JPanel {
         saveEditButton.setText(EDIT);
         makeEditable(false);
 
-        String newText = jTextPaneDesc.getText();
-        if (!newText.equals(item.getText())) {
-            item.replaceText(newText);
-            _fireItemTextUpdatedEvent();
+        if (item.replaceText(jTextPaneDesc.getText())) {
+            fireItemTextUpdatedEvent();
         }
     }
 
@@ -209,19 +207,19 @@ public class EditableTextField extends javax.swing.JPanel {
         public void textUpdated(ItemTextUpdatedEvent event);
     }
 
-    private final ArrayList<ItemTextUpdateListener> _listeners = new ArrayList<>();
+    private final ArrayList<ItemTextUpdateListener> listeners = new ArrayList<>();
 
     public synchronized void addItemTextUpdateListener(ItemTextUpdateListener l) {
-        _listeners.add(l);
+        listeners.add(l);
     }
 
     public synchronized void removeItemTextUpdateListener(ItemTextUpdateListener l) {
-        _listeners.remove(l);
+        listeners.remove(l);
     }
 
-    private synchronized void _fireItemTextUpdatedEvent() {
+    private synchronized void fireItemTextUpdatedEvent() {
         ItemTextUpdatedEvent event = new ItemTextUpdatedEvent(this, item.getText());
-        for (ItemTextUpdateListener l : _listeners) {
+        for (ItemTextUpdateListener l : listeners) {
             l.textUpdated(event);
         }
     }

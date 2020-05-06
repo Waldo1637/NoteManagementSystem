@@ -98,12 +98,13 @@ public class TextFilter extends AbstractFilter {
      * @return
      */
     private boolean containsMatch(String test) {
-        if (test != null) {
+        if (test == null || test.isEmpty()) {
+            return false;
+        } else {
             test = test.toLowerCase();//make lowercase to ignore case
             return matchAll
                     ? Helpers.stringContainsAllWords(test, searchWords)
                     : Helpers.stringContainsAnyWord(test, searchWords);
         }
-        return false;
     }
 }

@@ -3,7 +3,6 @@ package rms.view.item;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import rms.model.item.FileItem;
 import rms.view.util.Prompts;
@@ -34,7 +33,7 @@ public class FileItemNormalPanel extends FileItemBasePanel {
             public void run() {
                 try {
                     Desktop.getDesktop().open(getFile());
-                } catch (IllegalArgumentException | IOException ex) {
+                } catch (Exception ex) {
                     LOG.log(Level.SEVERE, "Unable to open file.", ex);
                 }
             }

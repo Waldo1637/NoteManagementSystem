@@ -26,7 +26,7 @@ public class TaskItemPanel extends BaseItemPanel {
         //register a listener to update the UI when the user changes text
         itemTextField.addItemTextUpdateListener(new EditableTextField.ItemTextUpdateListener() {
             @Override
-            public void textUpdated(EditableTextField.ItemTextUpdatedEvent event) {
+            public void textUpdated(EditableTextField.ItemTextUpdatedEvent evt) {
                 reflectItemChangesInUI();
             }
         });
