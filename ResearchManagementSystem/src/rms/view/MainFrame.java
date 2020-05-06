@@ -154,6 +154,7 @@ public class MainFrame extends NotificationFrame {
         jMenuItemFindTag = new javax.swing.JMenuItem();
         jMenuItemFindDate = new javax.swing.JMenuItem();
         jMenuItemFindText = new javax.swing.JMenuItem();
+        jMenuItemFindItemNum = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItemFindDeadline = new javax.swing.JMenuItem();
         jMenuItemFindPending = new javax.swing.JMenuItem();
@@ -386,6 +387,15 @@ public class MainFrame extends NotificationFrame {
 
         jMenuItemFindText.setText("By Full Text");
         jMenuFind.add(jMenuItemFindText);
+
+        jMenuItemFindItemNum.setMnemonic('N');
+        jMenuItemFindItemNum.setText("By Item Number");
+        jMenuItemFindItemNum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemFindItemNumActionPerformed(evt);
+            }
+        });
+        jMenuFind.add(jMenuItemFindItemNum);
         jMenuFind.add(jSeparator1);
 
         jMenuItemFindDeadline.setText("Upcoming Deadlines");
@@ -530,6 +540,10 @@ public class MainFrame extends NotificationFrame {
     private void jMenuItemFindDeadlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindDeadlineActionPerformed
         useSearchDialog(new DialogDeadline(this));
     }//GEN-LAST:event_jMenuItemFindDeadlineActionPerformed
+
+    private void jMenuItemFindItemNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindItemNumActionPerformed
+        useSearchDialog(new DialogItemNumber(this));
+    }//GEN-LAST:event_jMenuItemFindItemNumActionPerformed
 
     private void jMenuItemFindPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFindPendingActionPerformed
         refreshThreadListAndDisplay(PendingTaskFilter.get(), null);
@@ -959,6 +973,7 @@ public class MainFrame extends NotificationFrame {
     private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemFindDate;
     private javax.swing.JMenuItem jMenuItemFindDeadline;
+    private javax.swing.JMenuItem jMenuItemFindItemNum;
     private javax.swing.JMenuItem jMenuItemFindLateTasks;
     private javax.swing.JMenuItem jMenuItemFindPending;
     private javax.swing.JMenuItem jMenuItemFindTag;
