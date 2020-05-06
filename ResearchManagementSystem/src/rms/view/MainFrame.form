@@ -146,6 +146,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemFindTag">
               <Properties>
+                <Property name="mnemonic" type="int" value="84"/>
                 <Property name="text" type="java.lang.String" value="By Tag"/>
               </Properties>
               <Events>

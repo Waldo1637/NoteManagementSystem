@@ -63,14 +63,14 @@ public class MainFrame extends NotificationFrame {
         initComponentsMore();
     }
 
-    private final Action actionNewThreadBlank = new ButtonAction("New Thread (blank)", "", KeyEvent.VK_N) {
+    private final Action actionNewThreadBlank = new ButtonAction("New Thread (blank)", null, KeyEvent.VK_N) {
         @Override
         public void actionPerformed(ActionEvent evt) {
             createAndShowNewThread();
         }
     };
 
-    private final Action actionNewThreadDuplicate = new ButtonAction("New Thread (duplicate)", "", KeyEvent.VK_D) {
+    private final Action actionNewThreadDuplicate = new ButtonAction("New Thread (duplicate)", null, KeyEvent.VK_D) {
         @Override
         public void actionPerformed(ActionEvent evt) {
             ItemThread selectedThread = getSelectedThread();
@@ -101,14 +101,14 @@ public class MainFrame extends NotificationFrame {
         }
     };
 
-    private final Action actionSave = new ButtonAction("Save", "", KeyEvent.VK_S) {
+    private final Action actionSave = new ButtonAction("Save", null, KeyEvent.VK_S) {
         @Override
         public void actionPerformed(ActionEvent evt) {
             new WorkerSaveData().execute();
         }
     };
 
-    private final Action actionFindAll = new ButtonAction("By Full Text", "", KeyEvent.VK_F) {
+    private final Action actionFindAll = new ButtonAction("By Full Text", null, KeyEvent.VK_F) {
         @Override
         public void actionPerformed(ActionEvent evt) {
             useSearchDialog(new DialogSearchText(MainFrame.instance()));
@@ -367,6 +367,7 @@ public class MainFrame extends NotificationFrame {
         jMenuFind.add(jMenuItemShowAll);
         jMenuFind.add(jSeparator2);
 
+        jMenuItemFindTag.setMnemonic('T');
         jMenuItemFindTag.setText("By Tag");
         jMenuItemFindTag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
