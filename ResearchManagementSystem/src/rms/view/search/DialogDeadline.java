@@ -23,7 +23,7 @@ public class DialogDeadline extends BaseSearchDialog {
 
     @Override
     protected AbstractFilter createFilter() {
-        int increment = Integer.valueOf((String) jComboBoxIncrement.getSelectedItem());
+        int increment = (Integer) jSpinnerIncrement.getValue();
         DateUnit unit = (DateUnit) jComboBoxUnit.getSelectedItem();
         return UpcomingTaskFilter.get(increment, unit);
     }
@@ -38,14 +38,14 @@ public class DialogDeadline extends BaseSearchDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBoxIncrement = new javax.swing.JComboBox();
         jComboBoxUnit = new javax.swing.JComboBox<>(DateUnit.values());
+        jSpinnerIncrement = new javax.swing.JSpinner();
 
         setMinimumSize(new java.awt.Dimension(374, 133));
 
         jLabel1.setText("Find pending items due in the next");
 
-        jComboBoxIncrement.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30" }));
+        jSpinnerIncrement.setModel(new javax.swing.SpinnerNumberModel(1, null, null, 1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getInnerContentPanel());
         getInnerContentPanel().setLayout(layout);
@@ -54,7 +54,7 @@ public class DialogDeadline extends BaseSearchDialog {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxIncrement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSpinnerIncrement, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -64,16 +64,16 @@ public class DialogDeadline extends BaseSearchDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBoxIncrement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBoxUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSpinnerIncrement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBoxIncrement;
     private javax.swing.JComboBox<DateUnit> jComboBoxUnit;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JSpinner jSpinnerIncrement;
     // End of variables declaration//GEN-END:variables
 }
