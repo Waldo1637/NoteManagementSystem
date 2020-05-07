@@ -28,7 +28,7 @@
   <SubComponents>
     <Component class="rms.view.item.EditableTextField" name="itemTextField">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new rms.view.item.EditableTextField(getNoteItem(), super.getAuxButton())"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new rms.view.item.EditableTextField(getNoteItem().getText(), super.getAuxButton())"/>
       </AuxValues>
     </Component>
   </SubComponents>

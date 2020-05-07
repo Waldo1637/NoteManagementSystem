@@ -9,7 +9,8 @@ import rms.model.item.NoteItem;
 public class NoteItemPanel extends BaseItemPanel {
 
     /**
-     * Creates new form NoteItemPanel
+     * Creates a new {@link NoteItemPanel} displaying the given
+     * {@link NoteItem}.
      *
      * @param item
      * @param startCollapsed
@@ -17,24 +18,20 @@ public class NoteItemPanel extends BaseItemPanel {
     public NoteItemPanel(NoteItem item, boolean startCollapsed) {
         super(item, startCollapsed);
         initComponents();
-        reflectItemChangesInUI_Additional();
 
-        //register a listener to update the UI when the user changes text
+        //register a listener to update the modification time when the text changes
         itemTextField.addItemTextUpdateListener(new EditableTextField.ItemTextUpdateListener() {
             @Override
             public void textUpdated(EditableTextField.ItemTextUpdatedEvent evt) {
-                reflectItemChangesInUI();
+                if (getNoteItem().replaceText(evt.getNewText())) {
+                    updateUI_modTime();
+                }
             }
         });
     }
 
     private NoteItem getNoteItem() {
         return (NoteItem) displayedItem;
-    }
-
-    @Override
-    protected void reflectItemChangesInUI_Additional() {
-        itemTextField.updateViewFromItem();
     }
 
     /**
@@ -46,7 +43,7 @@ public class NoteItemPanel extends BaseItemPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        itemTextField = new rms.view.item.EditableTextField(getNoteItem(), super.getAuxButton());
+        itemTextField = new rms.view.item.EditableTextField(getNoteItem().getText(), super.getAuxButton());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getInnerContentPanel());
         getInnerContentPanel().setLayout(layout);

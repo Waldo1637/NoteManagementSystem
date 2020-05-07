@@ -154,7 +154,7 @@ public class BaseItemPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Creates a new BaseItemPanel displaying the given {@link Item}
+     * Creates a new {@link BaseItemPanel} displaying the given {@link Item}.
      *
      * @param item
      * @param startCollapsed
@@ -168,10 +168,10 @@ public class BaseItemPanel extends javax.swing.JPanel {
 
         // need to have this check to use the Bean in NetBeans GUI editor
         if (displayedItem != null) {
-            reflectItemChangesInUI_Base();
             jLabelItemType.setText(displayedItem.getItemTypeName());
             jLabelItemID.setText(String.format("%05d", displayedItem.getID()));
             jLabelItemDateCreated.setText(displayedItem.getCreationTime().toString());
+            updateUI_modTime();
         }
     }
 
@@ -189,18 +189,9 @@ public class BaseItemPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Update the basic {@link Item} properties in the UI along with anything
-     * defined in {@link #reflectItemChangesInUI_Additional()}.
+     * Update the "modified" time label in this base Panel.
      */
-    public final void reflectItemChangesInUI() {
-        reflectItemChangesInUI_Base();
-        reflectItemChangesInUI_Additional();
-    }
-
-    /**
-     * Update the base Item properties that may change
-     */
-    private void reflectItemChangesInUI_Base() {
+    protected final void updateUI_modTime() {
         jLabelItemDateModified.setText(displayedItem.getModificationTime().toString());
     }
 
@@ -409,14 +400,6 @@ public class BaseItemPanel extends javax.swing.JPanel {
      * Executed when the Auxiliary button is clicked.
      */
     protected void auxiliaryButtonAction() {
-        //No action by default
-    }
-
-    /**
-     * Executed as a result of reflectItemChangesInUI() after the basic
-     * {@link Item} properties have been updated in the UI.
-     */
-    protected void reflectItemChangesInUI_Additional() {
         //No action by default
     }
 

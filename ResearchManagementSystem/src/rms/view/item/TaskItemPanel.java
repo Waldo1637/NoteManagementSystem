@@ -1,7 +1,6 @@
 package rms.view.item;
 
 import java.awt.Color;
-import java.util.logging.Logger;
 import rms.model.item.TaskItem;
 
 /**
@@ -10,24 +9,26 @@ import rms.model.item.TaskItem;
  */
 public class TaskItemPanel extends BaseItemPanel {
 
-    private static final Logger LOG = Logger.getLogger(TaskItemPanel.class.getName());
-
     /**
-     * Creates new form TaskItemPanel
+     * Creates a new {@link TaskItemPanel} displaying the given
+     * {@link TaskItem}.
      *
      * @param item
      * @param startCollapsed
      */
     public TaskItemPanel(TaskItem item, boolean startCollapsed) {
-        super(item, startCollapsed);
+        super(item, startCollapsed);//calls updateUI_modTime()
         initComponents();
-        reflectItemChangesInUI_Additional();
+        jXDatePickerDeadline.setDate(getTaskItem().getDeadline());
+        updateUI_completionStatus();
 
-        //register a listener to update the UI when the user changes text
+        //register a listener to update the modification time when the text changes
         itemTextField.addItemTextUpdateListener(new EditableTextField.ItemTextUpdateListener() {
             @Override
             public void textUpdated(EditableTextField.ItemTextUpdatedEvent evt) {
-                reflectItemChangesInUI();
+                if (getTaskItem().replaceText(evt.getNewText())) {
+                    updateUI_modTime();
+                }
             }
         });
     }
@@ -36,14 +37,7 @@ public class TaskItemPanel extends BaseItemPanel {
         return (TaskItem) displayedItem;
     }
 
-    @Override
-    protected void reflectItemChangesInUI_Additional() {
-        jXDatePickerDeadline.setDate(getTaskItem().getDeadline());
-        itemTextField.updateViewFromItem();
-        updateStatusIndicator();
-    }
-
-    private void updateStatusIndicator() {
+    private void updateUI_completionStatus() {
         TaskItem ti = getTaskItem();
         if (ti.isComplete()) {
             jLabelStatus.setText("Completed");
@@ -71,7 +65,7 @@ public class TaskItemPanel extends BaseItemPanel {
         jXDatePickerDeadline = new org.jdesktop.swingx.JXDatePicker();
         jLabelStatus = new javax.swing.JLabel();
         jButtonToggleStatus = new javax.swing.JButton();
-        itemTextField = new rms.view.item.EditableTextField(getTaskItem(), super.getAuxButton());
+        itemTextField = new rms.view.item.EditableTextField(getTaskItem().getText(), super.getAuxButton());
 
         jLabel1.setText("Deadline:");
 
@@ -131,7 +125,7 @@ public class TaskItemPanel extends BaseItemPanel {
 
     private void jXDatePickerDeadlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jXDatePickerDeadlineActionPerformed
         getTaskItem().setDeadline(jXDatePickerDeadline.getDate());
-        reflectItemChangesInUI();
+        updateUI_modTime();
     }//GEN-LAST:event_jXDatePickerDeadlineActionPerformed
 
     private void jButtonToggleStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonToggleStatusActionPerformed
@@ -141,8 +135,8 @@ public class TaskItemPanel extends BaseItemPanel {
         } else {
             ti.markCompleted();
         }
-
-        reflectItemChangesInUI();
+        updateUI_modTime();
+        updateUI_completionStatus();
     }//GEN-LAST:event_jButtonToggleStatusActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

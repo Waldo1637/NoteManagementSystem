@@ -18,7 +18,8 @@ public abstract class FileItemBasePanel extends BaseItemPanel {
     protected static final Logger LOG = Logger.getLogger(FileItemBasePanel.class.getName());
 
     /**
-     * Creates new form {@link FileItemBasePanel}.
+     * Creates a new {@link FileItemBasePanel} displaying the given {@link Item}
+     * and using the given {@link String} as the text for the file link.
      *
      * NOTE: calls {@link #initComponents()}
      *

@@ -8,11 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.Timer;
 import javax.swing.UIDefaults;
 import rms.model.item.TextItem;
-import rms.view.util.CustomEditorKit;
 import rms.view.util.UndoRedoProvider;
 
 /**
@@ -25,57 +25,53 @@ public class EditableTextField extends javax.swing.JPanel {
     private static final String EDIT = "Edit";
 
     private final JButton saveEditButton;
-    private final TextItem item;
+    private String lastSavedText;//'null' is allowed, visually same as empty
 
     /**
      * No-arg constructor for Bean creation. NOTE: Do not use.
      */
     public EditableTextField() {
         saveEditButton = null;
-        item = null;
+        lastSavedText = null;
         initComponents();
     }
 
     /**
      * Creates new form EditableTextField
      *
-     * @param item
+     * @param text
      * @param saveEditButton
      */
-    public EditableTextField(TextItem item, JButton saveEditButton) {
-        this.item = item;
+    public EditableTextField(String text, JButton saveEditButton) {
+        if (saveEditButton == null) {
+            throw new IllegalArgumentException();
+        }
+        this.lastSavedText = text;
         this.saveEditButton = saveEditButton;
         initComponents();
-        if (saveEditButton != null && item != null) {
-            initComponentsMore();
-        }
-    }
 
-    private void initComponentsMore() {
-        UndoRedoProvider.addTo(jTextPaneDesc);
+        jTextPaneDesc.setText(text);
+        //NOTE: makeEditable(..) calls preserveSize() so no need to do it right
+        //  after setText(..) as would normally be required.
         makeEditable(false);
 
-        saveEditButton.addActionListener(new java.awt.event.ActionListener() {
+        UndoRedoProvider.addTo(jTextPaneDesc);
+        saveEditButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                switch (saveEditButton.getText()) {
+            public void actionPerformed(ActionEvent evt) {
+                final String txt = EditableTextField.this.saveEditButton.getText();
+                switch (txt) {
                     case SAVE:
                         saveAction();
                         break;
                     case EDIT:
                         editAction();
                         break;
+                    default:
+                        throw new IllegalStateException("Invalid button text: " + txt);
                 }
             }
         });
-    }
-
-    /**
-     * Updates the UI using the current values of the Item fields.
-     */
-    public final void updateViewFromItem() {
-        jTextPaneDesc.setText(item.getText());
-        preserveSize();
     }
 
     /**
@@ -91,8 +87,7 @@ public class EditableTextField extends javax.swing.JPanel {
 
         setPreferredSize(new java.awt.Dimension(6, 22));
 
-        jTextPaneDesc.setEditable(false);
-        jTextPaneDesc.setEditorKit(new CustomEditorKit(36));
+        jTextPaneDesc.setEditorKit(new rms.view.util.CustomEditorKit(36));
         jTextPaneDesc.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextPaneDescFocusLost(evt);
@@ -127,7 +122,6 @@ public class EditableTextField extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextPaneDescKeyTyped
 
     private void editAction() {
-        saveEditButton.setText(SAVE);
         makeEditable(true);
 
         //Try requesting focus every 5 ms until successful
@@ -144,15 +138,17 @@ public class EditableTextField extends javax.swing.JPanel {
     }
 
     private void saveAction() {
-        saveEditButton.setText(EDIT);
         makeEditable(false);
 
-        if (item.replaceText(jTextPaneDesc.getText())) {
-            fireItemTextUpdatedEvent();
+        String newText = jTextPaneDesc.getText();
+        if (!Objects.equals(this.lastSavedText, newText)) {
+            this.lastSavedText = newText;
+            fireItemTextUpdatedEvent(newText);
         }
     }
 
     private void makeEditable(boolean editable) {
+        saveEditButton.setText(editable ? SAVE : EDIT);
         changeDescPaneColor(editable ? Color.WHITE : Color.LIGHT_GRAY);
         jTextPaneDesc.setEditable(editable);
         preserveSize();
@@ -167,9 +163,10 @@ public class EditableTextField extends javax.swing.JPanel {
     }
 
     /**
-     * There is a bug which causes the textPane to be redrawn at default size
-     * unless getPreferredSize is called immediately after actions that cause a
-     * repaint.
+     * There is a bug that causes the {@link javax.swing.JTextPane} to be
+     * redrawn at default size unless
+     * {@link javax.swing.JTextPane#getPreferredSize()} is called immediately
+     * after actions that cause a repaint (such as setting the text).
      */
     private void preserveSize() {
         jTextPaneDesc.getPreferredSize();
@@ -209,18 +206,24 @@ public class EditableTextField extends javax.swing.JPanel {
 
     private final ArrayList<ItemTextUpdateListener> listeners = new ArrayList<>();
 
-    public synchronized void addItemTextUpdateListener(ItemTextUpdateListener l) {
-        listeners.add(l);
+    public void addItemTextUpdateListener(ItemTextUpdateListener l) {
+        synchronized (listeners) {
+            listeners.add(l);
+        }
     }
 
-    public synchronized void removeItemTextUpdateListener(ItemTextUpdateListener l) {
-        listeners.remove(l);
+    public void removeItemTextUpdateListener(ItemTextUpdateListener l) {
+        synchronized (listeners) {
+            listeners.remove(l);
+        }
     }
 
-    private synchronized void fireItemTextUpdatedEvent() {
-        ItemTextUpdatedEvent event = new ItemTextUpdatedEvent(this, item.getText());
-        for (ItemTextUpdateListener l : listeners) {
-            l.textUpdated(event);
+    private void fireItemTextUpdatedEvent(String newText) {
+        ItemTextUpdatedEvent event = new ItemTextUpdatedEvent(this, newText);
+        synchronized (listeners) {
+            for (ItemTextUpdateListener l : listeners) {
+                l.textUpdated(event);
+            }
         }
     }
 
