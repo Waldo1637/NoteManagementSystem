@@ -35,6 +35,8 @@ public final class EditableTextField extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(EditableTextField.class.getName());
     //
+    private static final boolean DEBUG_CONVERSION = false;
+    //
     private static final String SAVE = "Save";
     private static final String EDIT = "Edit";
     //
@@ -248,10 +250,16 @@ public final class EditableTextField extends javax.swing.JPanel {
     }
 
     private void saveAction(boolean initial) {
-        if (jTextPaneDesc.isEditable()) {//skip if not in edit mode
+        if (jTextPaneDesc.isEditable()) {//skip if pane was not in edit mode
             //Convert the 'jTextPaneDesc' content to HTML form for storage and to
             //  allow links to be clicked (unless this call is for initialization)
-            String converted = initial ? this.lastSavedText : getAndConvertContent(false);
+            final String converted = initial
+                    ? this.lastSavedText
+                    : getAndConvertContent(false);
+            if (DEBUG_CONVERSION) {
+                System.out.printf("[saveAction] converted=|%s| %n",
+                        toStringDebug(converted, false));
+            }
             //Create a new HTML EditorKit and set the converted text
             jTextPaneDesc.setEditorKit(addStyles(new CustomHTMLEditorKit(36)));
             jTextPaneDesc.setText(converted);
@@ -261,7 +269,10 @@ public final class EditableTextField extends javax.swing.JPanel {
             //If the converted content has changed from the last time saveAction()
             //  was called, then fire an ItemTextUpdatedEvent.
             if (!Objects.equals(this.lastSavedText, converted)) {
-//                System.out.println("[saveAction] old = " + toStringDebug(this.lastSavedText, false) + ", new = " + toStringDebug(converted, false));
+                if (DEBUG_CONVERSION) {
+                    System.out.printf("[saveAction] old=|%s| %n",
+                            toStringDebug(this.lastSavedText, false));
+                }
                 this.lastSavedText = converted;
                 fireItemTextUpdatedEvent(converted);
             }
@@ -275,32 +286,33 @@ public final class EditableTextField extends javax.swing.JPanel {
     }
 
     private static String toStringDebug(String s, boolean charMap) {
-        if (s == null) {
-            return null;
-        } else if (charMap) {
-            char[] chars = s.toCharArray();
-            int iMax = chars.length - 1;
-            if (iMax == -1) {
-                return "[]";
-            }
+        if (DEBUG_CONVERSION) {
+            if (s == null) {
+                return null;
+            } else if (charMap) {
+                char[] chars = s.toCharArray();
+                int iMax = chars.length - 1;
+                if (iMax == -1) {
+                    return "[]";
+                }
 
-            StringBuilder b = new StringBuilder();
-            b.append('[');
-            for (int i = 0;; i++) {
-                char c = chars[i];
-                if (32 < c && c < 127) {
-                    b.append(c);
-                } else {
-                    b.append("(").append((int) c).append(")");
+                StringBuilder b = new StringBuilder();
+                b.append('[');
+                for (int i = 0;; i++) {
+                    char c = chars[i];
+                    if (32 < c && c < 127) {
+                        b.append(c);
+                    } else {
+                        b.append("(").append((int) c).append(")");
+                    }
+                    if (i == iMax) {
+                        return b.append(']').toString();
+                    }
+                    b.append(", ");
                 }
-                if (i == iMax) {
-                    return b.append(']').toString();
-                }
-                b.append(", ");
             }
-        } else {
-            return s;
         }
+        return s;
     }
 
     private void makeEditable(boolean editable) {
@@ -414,7 +426,10 @@ public final class EditableTextField extends javax.swing.JPanel {
             } else {
                 writeDocAsHTML(w, doc);
             }
-//            System.out.println("[getAndConvertContent] in=|" + jTextPaneDesc.getText() + "| out=|" + os.toString() + "|");
+            if (DEBUG_CONVERSION) {
+                System.out.printf("[getAndConvertContent] in=|%s| out=|%s| %n",
+                        jTextPaneDesc.getText(), os.toString());
+            }
             return os.toString();
         } catch (IOException | BadLocationException ex) {
             LOG.log(Level.SEVERE, "Conversion exception", ex);
