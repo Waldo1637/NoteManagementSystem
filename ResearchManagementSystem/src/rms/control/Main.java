@@ -1,5 +1,6 @@
 package rms.control;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import rms.model.State;
 import rms.model.item.FileItem;
 import rms.model.item.ItemThread;
@@ -43,7 +45,7 @@ public class Main {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             LOG.log(Level.SEVERE, "Error setting L&F", ex);
         }
         //</editor-fold>
@@ -52,7 +54,7 @@ public class Main {
         gui = MainFrame.instance();
 
         // display the UI
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 gui.setVisible(true);
@@ -61,19 +63,29 @@ public class Main {
         });
     }
 
+    /**
+     * If the {@code java.util.logging.config.file} property was not explicitly
+     * set, then obtain the {@code logging.properties} file from the classpath.
+     */
     private static void setupLogging() {
-        String logFileFromProperties = System.getProperty("java.util.logging.config.file");
-        if (logFileFromProperties == null) {
-            String logFileName = "logging.properties";
-            InputStream configStream = Main.class.getClassLoader().getResourceAsStream(logFileName);
-            try {
-                if (configStream == null) {
-                    configStream = new FileInputStream(logFileName);
-                }
+        if (null == System.getProperty("java.util.logging.config.file")) {
+            try (InputStream configStream = openLogConfig()) {
                 LogManager.getLogManager().readConfiguration(configStream);
             } catch (IOException ignored) {
             }
         }
+    }
+
+    /**
+     * @return {@link InputStream} for the {@code logging.properties} file from
+     *         the classpath or (if not found) from the working directory
+     *
+     * @throws IOException
+     */
+    private static InputStream openLogConfig() throws IOException {
+        String logFileName = "logging.properties";
+        InputStream configStream = Main.class.getClassLoader().getResourceAsStream(logFileName);
+        return configStream != null ? configStream : new FileInputStream(logFileName);
     }
 
     /**
