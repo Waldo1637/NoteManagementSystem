@@ -89,6 +89,8 @@ public class Main {
             JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
             if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
                 state = Loader.loadFromFile(chooser.getSelectedFile());
+                //Immediately write the converted state
+                Loader.storeToFile(state);
             }
         }
         return state != null;
