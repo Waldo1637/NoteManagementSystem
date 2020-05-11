@@ -186,7 +186,9 @@ public final class State implements Serializable {
         this.threadsAndTags = new ThreadTagMap();
         this.nextItemNumber = serializedFields.get("nextItemNumber", 0);
         this.nextThreadNumber = serializedFields.get("nextThreadNumber", 0);
+        @SuppressWarnings("unchecked")
         HashSet<Tag> tags = (HashSet<Tag>) serializedFields.get("tags", null);
+        @SuppressWarnings("unchecked")
         HashSet<ItemThread> threads = (HashSet<ItemThread>) serializedFields.get("threads", null);
 
         // Capture the old Tag set from the stream and add to ThreadTagMap
@@ -197,7 +199,9 @@ public final class State implements Serializable {
         // Capture the old ItemThread set and Tag mapping from the stream and add to ThreadTagMap
         for (ItemThread thread : threads) {
             this.threadsAndTags.addNewThread(thread);
-            for (Tag tag : thread.getTagsForClassSerializationRevision0()) {
+            @SuppressWarnings("deprecation")
+            Set<Tag> t = thread.getTagsForClassSerializationRevision0();
+            for (Tag tag : t) {
                 this.threadsAndTags.addTagToThread(thread, tag);
             }
         }
