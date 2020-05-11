@@ -821,7 +821,7 @@ public class MainFrame extends NotificationFrame {
         protected void updateUI() {
             if (result) {
                 refreshThreadListAndDisplay();
-                displayNotification("Data loaded successfully");
+                displayNotification("Data loaded");
             } else {
                 Prompts.informUser("Error!", "Unrecoverable error: unable to load data.\nSee log file for more information.", PromptType.ERROR);
                 System.exit(1);
@@ -844,7 +844,7 @@ public class MainFrame extends NotificationFrame {
         @Override
         protected void updateUI() {
             if (result) {
-                displayNotification("Data saved successfully");
+                displayNotification("Data saved");
             } else {
                 Prompts.informUser("Error!", "Unable to save data.\nSee log file for more information.", PromptType.ERROR);
             }
