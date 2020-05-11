@@ -16,8 +16,7 @@ public final class Tag implements Serializable, Comparable<Tag> {
     /**
      * Creates a new Tag with the given name.
      *
-     * NOTE: must use {@link State#newTag(java.lang.String)} to create a new
-     * Tag.
+     * NOTE: Use {@link State#newTag(java.lang.String)} to create a new Tag.
      *
      * @param name
      */
@@ -37,10 +36,11 @@ public final class Tag implements Serializable, Comparable<Tag> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            return Objects.equals(this.name, ((Tag) obj).name);
         }
-        return Objects.equals(this.name, ((Tag) obj).name);
     }
 
     @Override
