@@ -11,7 +11,7 @@ import rms.util.DateHelpers;
  *
  * @author Timothy
  */
-public class ItemThread implements Iterable<Item>, Serializable {
+public final class ItemThread implements Iterable<Item>, Serializable {
 
     private static final long serialVersionUID = 01L;
 

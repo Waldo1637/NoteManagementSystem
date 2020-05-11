@@ -11,7 +11,7 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class TagFilter extends AbstractFilter {
+public final class TagFilter extends AbstractFilter {
 
     private final Set<Tag> tag;
 

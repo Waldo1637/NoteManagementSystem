@@ -11,7 +11,7 @@ import rms.util.DateUnit;
  *
  * @author Timothy
  */
-public class UpcomingTaskFilter extends AbstractFilter {
+public final class UpcomingTaskFilter extends AbstractFilter {
 
     private final int increment;
     private final DateUnit unit;

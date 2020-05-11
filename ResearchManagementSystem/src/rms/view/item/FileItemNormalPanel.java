@@ -11,7 +11,7 @@ import rms.view.util.Prompts;
  *
  * @author Timothy Hoffman
  */
-public class FileItemNormalPanel extends FileItemBasePanel {
+public final class FileItemNormalPanel extends FileItemBasePanel {
 
     public FileItemNormalPanel(FileItem item, boolean startCollapsed) {
         super(item, startCollapsed, item.getFile().getName());

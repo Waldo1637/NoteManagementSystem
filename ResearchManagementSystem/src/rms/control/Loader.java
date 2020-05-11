@@ -15,7 +15,7 @@ import rms.model.State;
  *
  * @author Timothy
  */
-public class Loader {
+public final class Loader {
 
     private static final Logger LOG = Logger.getLogger(Loader.class.getName());
 

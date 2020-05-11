@@ -11,7 +11,7 @@ import rms.util.ManyToManyRelation;
  *
  * @author Timothy
  */
-public class ThreadTagMap implements Serializable {
+public final class ThreadTagMap implements Serializable {
 
     private static final long serialVersionUID = 01L;
 

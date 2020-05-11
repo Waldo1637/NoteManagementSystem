@@ -33,7 +33,7 @@ import rms.view.util.*;
  *
  * @author Timothy
  */
-public class MainFrame extends NotificationFrame {
+public final class MainFrame extends NotificationFrame {
 
     private static final Logger THIS_LOG = Logger.getLogger(MainFrame.class.getName());
     private static final Logger WORKER_LOG = Logger.getLogger("workers");

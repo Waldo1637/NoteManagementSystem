@@ -10,7 +10,7 @@ import rms.view.MainFrame;
  *
  * @author Timothy
  */
-public class Prompts {
+public final class Prompts {
 
     private static final Logger LOG = Logger.getLogger(Prompts.class.getName());
 

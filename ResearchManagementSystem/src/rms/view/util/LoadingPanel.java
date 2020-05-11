@@ -12,7 +12,7 @@ import javax.swing.JPanel;
  *
  * @author Timothy
  */
-public class LoadingPanel extends JPanel implements FocusListener, MouseListener {
+public final class LoadingPanel extends JPanel implements FocusListener, MouseListener {
 
     public LoadingPanel() {
         initComponents();

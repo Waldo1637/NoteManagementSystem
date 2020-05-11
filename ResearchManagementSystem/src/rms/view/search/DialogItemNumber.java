@@ -8,7 +8,7 @@ import rms.control.search.ItemNumberFilter;
  *
  * @author Timothy
  */
-public class DialogItemNumber extends BaseSearchDialog {
+public final class DialogItemNumber extends BaseSearchDialog {
 
     /**
      * Creates new form DialogDeadline

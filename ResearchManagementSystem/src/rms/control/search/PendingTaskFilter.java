@@ -8,7 +8,7 @@ import rms.model.item.TaskItem;
  *
  * @author Timothy
  */
-public class PendingTaskFilter extends AbstractFilter {
+public final class PendingTaskFilter extends AbstractFilter {
 
     // thread-safe lazy singleton pattern
     private static class InstanceHolder {

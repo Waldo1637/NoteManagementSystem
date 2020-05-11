@@ -6,7 +6,7 @@ import rms.model.item.NoteItem;
  *
  * @author Timothy
  */
-public class NoteItemPanel extends BaseItemPanel {
+public final class NoteItemPanel extends BaseItemPanel {
 
     /**
      * Creates a new {@link NoteItemPanel} displaying the given

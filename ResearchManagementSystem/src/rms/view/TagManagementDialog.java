@@ -14,7 +14,7 @@ import rms.view.util.Prompts.PromptType;
  *
  * @author Timothy
  */
-public class TagManagementDialog extends javax.swing.JDialog {
+public final class TagManagementDialog extends javax.swing.JDialog {
 
     /**
      * Creates new TagManagementDialog containing the set of {@link Tag}s

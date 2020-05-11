@@ -4,12 +4,11 @@ import rms.model.item.Item;
 import rms.model.item.TaskItem;
 
 /**
- * Finds {@link TaskItem}s which are overdue, i.e. their deadline is in the
- * past.
+ * Finds {@link TaskItem}s which are overdue (i.e. deadline is in the past).
  *
  * @author Timothy
  */
-public class LateTaskFilter extends AbstractFilter {
+public final class LateTaskFilter extends AbstractFilter {
 
     // thread-safe lazy singleton pattern
     private static class InstanceHolder {

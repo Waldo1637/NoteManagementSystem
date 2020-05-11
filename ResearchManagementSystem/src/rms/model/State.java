@@ -14,7 +14,7 @@ import rms.model.item.ItemThread;
  *
  * @author Timothy
  */
-public class State implements Serializable {
+public final class State implements Serializable {
 
     //Do not change
     private static final long serialVersionUID = 01L;

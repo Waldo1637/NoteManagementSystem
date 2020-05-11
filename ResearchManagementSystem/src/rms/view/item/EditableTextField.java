@@ -31,7 +31,7 @@ import rms.view.util.UndoRedoProvider;
  *
  * @author Timothy
  */
-public class EditableTextField extends javax.swing.JPanel {
+public final class EditableTextField extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(EditableTextField.class.getName());
     //

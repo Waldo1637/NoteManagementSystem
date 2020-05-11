@@ -23,7 +23,7 @@ import javax.swing.undo.UndoManager;
  *
  * @author Timothy
  */
-public class UndoRedoProvider {
+public final class UndoRedoProvider {
 
     private static final Logger LOG = Logger.getLogger(UndoRedoProvider.class.getName());
 

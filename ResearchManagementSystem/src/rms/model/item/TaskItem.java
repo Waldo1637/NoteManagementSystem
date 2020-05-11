@@ -8,7 +8,7 @@ import rms.util.DateHelpers;
  *
  * @author Timothy
  */
-public class TaskItem extends TextItem implements Serializable {
+public final class TaskItem extends TextItem implements Serializable {
 
     private static final long serialVersionUID = 01L;
 

@@ -13,7 +13,7 @@ import java.util.Set;
  * @param <A>
  * @param <B>
  */
-public class ManyToManyRelation<A, B> implements Serializable {
+public final class ManyToManyRelation<A, B> implements Serializable {
 
     private static final long serialVersionUID = 01L;
 

@@ -12,7 +12,7 @@ import rms.view.util.JPanelTagSelection;
  *
  * @author Timothy
  */
-public class DialogSearchTags extends BaseSearchDialog {
+public final class DialogSearchTags extends BaseSearchDialog {
 
     /**
      * Creates new form DialogSearchTags

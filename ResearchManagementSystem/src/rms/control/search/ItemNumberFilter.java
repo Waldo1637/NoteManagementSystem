@@ -9,7 +9,7 @@ import rms.model.item.ItemThread;
  *
  * @author Timothy
  */
-public class ItemNumberFilter extends AbstractFilter {
+public final class ItemNumberFilter extends AbstractFilter {
 
     private final int itemID;
 

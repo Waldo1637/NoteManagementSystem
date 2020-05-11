@@ -14,7 +14,7 @@ import rms.util.Helpers;
  *
  * @author Timothy
  */
-public class TextFilter extends AbstractFilter {
+public final class TextFilter extends AbstractFilter {
 
     public static enum MatchType {
         Any, All, Exact

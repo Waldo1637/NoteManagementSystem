@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @author Timothy
  */
-public class Tag implements Serializable, Comparable<Tag> {
+public final class Tag implements Serializable, Comparable<Tag> {
 
     private static final long serialVersionUID = 01L;
 

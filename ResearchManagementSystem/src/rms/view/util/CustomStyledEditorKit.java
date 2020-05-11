@@ -8,7 +8,7 @@ import javax.swing.text.*;
  *
  * @author Timothy
  */
-public class CustomStyledEditorKit extends StyledEditorKit {
+public final class CustomStyledEditorKit extends StyledEditorKit {
 
     private final ViewFactory myViewFactory;
 

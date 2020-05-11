@@ -16,7 +16,7 @@ import rms.view.util.Prompts.PromptType;
  *
  * @author Timothy
  */
-public class TagSelectionDialog extends javax.swing.JDialog {
+public final class TagSelectionDialog extends javax.swing.JDialog {
 
     private Set<Tag> selection;
 

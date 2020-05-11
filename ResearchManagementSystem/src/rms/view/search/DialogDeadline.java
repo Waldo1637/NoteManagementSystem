@@ -9,7 +9,7 @@ import rms.util.DateUnit;
  *
  * @author Timothy
  */
-public class DialogDeadline extends BaseSearchDialog {
+public final class DialogDeadline extends BaseSearchDialog {
 
     /**
      * Creates new form DialogDeadline

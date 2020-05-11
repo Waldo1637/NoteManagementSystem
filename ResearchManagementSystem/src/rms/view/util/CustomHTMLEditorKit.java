@@ -10,7 +10,7 @@ import javax.swing.text.html.HTMLEditorKit;
  *
  * @author Timothy
  */
-public class CustomHTMLEditorKit extends HTMLEditorKit {
+public final class CustomHTMLEditorKit extends HTMLEditorKit {
 
     private final ViewFactory myViewFactory;
 

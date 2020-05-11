@@ -17,7 +17,7 @@ import rms.model.Tag;
  *
  * @author Timothy
  */
-public class JPanelTagSelection extends javax.swing.JPanel {
+public final class JPanelTagSelection extends javax.swing.JPanel {
 
     private final ArrayList<DoubleClickSelectionListener> listeners;
     private final Set<Tag> completeTagList;

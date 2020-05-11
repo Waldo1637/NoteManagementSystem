@@ -7,7 +7,7 @@ import rms.model.item.TaskItem;
  *
  * @author Timothy
  */
-public class TaskItemPanel extends BaseItemPanel {
+public final class TaskItemPanel extends BaseItemPanel {
 
     /**
      * Creates a new {@link TaskItemPanel} displaying the given

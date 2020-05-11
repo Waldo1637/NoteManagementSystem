@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  * @author Timothy
  */
-public class EmptyFileItem extends Item implements Serializable {
+public final class EmptyFileItem extends Item implements Serializable {
 
     private static final long serialVersionUID = 01L;
 

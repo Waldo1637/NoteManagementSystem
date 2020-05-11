@@ -24,7 +24,7 @@ import rms.view.util.Prompts;
  *
  * @author Timothy
  */
-public class Main {
+public final class Main {
 
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 

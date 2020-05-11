@@ -13,7 +13,7 @@ import java.util.logging.Level;
  *
  * @author Timothy
  */
-public class FileItem extends Item implements Serializable {
+public final class FileItem extends Item implements Serializable {
 
     private static final long serialVersionUID = 01L;
 

@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  * @author Timothy
  */
-public class NoteItem extends TextItem implements Serializable {
+public final class NoteItem extends TextItem implements Serializable {
 
     private static final long serialVersionUID = 01L;
 

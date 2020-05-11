@@ -12,7 +12,7 @@ import rms.util.DateRangeType;
  *
  * @author Timothy
  */
-public class DateRangeFilter extends AbstractFilter {
+public final class DateRangeFilter extends AbstractFilter {
 
     private final DateRangeType type;
     private final Date start;
