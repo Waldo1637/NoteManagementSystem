@@ -146,7 +146,7 @@ public final class State implements Serializable {
     }
 
     /**
-     * Object deserialization entry point.
+     * Object de-serialization entry point.
      *
      * @param in
      *
