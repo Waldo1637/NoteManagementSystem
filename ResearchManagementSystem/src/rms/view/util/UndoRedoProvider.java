@@ -9,8 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -37,10 +36,15 @@ public class UndoRedoProvider {
         final UndoManager manager = new UndoManager();
 
         // setup listener to store events to the manager
-        component.getDocument().addUndoableEditListener(new UndoableEditListener() {
+        component.getDocument().addUndoableEditListener(manager);
+        // setup listener to remap the undoable listener if the document changes
+        component.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
-            public void undoableEditHappened(UndoableEditEvent evt) {
-                manager.addEdit(evt.getEdit());
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName() == "document") {
+                    ((Document) evt.getOldValue()).removeUndoableEditListener(manager);
+                    ((Document) evt.getNewValue()).addUndoableEditListener(manager);
+                }
             }
         });
 
