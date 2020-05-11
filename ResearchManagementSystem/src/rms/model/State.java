@@ -2,24 +2,32 @@ package rms.model;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import rms.model.item.ItemThread;
 
 /**
- * Stores references to all items
+ * Main data storage. Stores all {@link ItemThread} and {@link Tag} instances
+ * and has methods for creating new ones and managing the relationships between
+ * the two.
  *
  * @author Timothy
  */
 public class State implements Serializable {
 
+    //Do not change
     private static final long serialVersionUID = 01L;
 
-    // Used for serialization backwards compatibility. Should be updated if 
-    //  serialization incompatible changes are made. Also update the
-    //  deserialization process outlined at the end of this file.
+    /**
+     * Version number for new or de-serialized instances.
+     */
+    private static final byte CURRENT_OBJ_SERIAL_VERSION = 2;
+
+    /**
+     * Denotes the serialization version of a serialized object instance.
+     * Determines which read method must be used to de-serialize the object.
+     */
     private byte classSerializationVersion;
 
     // State data
@@ -28,9 +36,10 @@ public class State implements Serializable {
     private ThreadTagMap threadsAndTags;
 
     public State() {
-        nextItemNumber = 0;
-        nextThreadNumber = 0;
-        threadsAndTags = new ThreadTagMap();
+        this.nextItemNumber = 0;
+        this.nextThreadNumber = 0;
+        this.threadsAndTags = new ThreadTagMap();
+        this.classSerializationVersion = CURRENT_OBJ_SERIAL_VERSION;
     }
 
     public int getNextItemNumber() {
@@ -148,70 +157,68 @@ public class State implements Serializable {
         // Read the fields from the stream
         ObjectInputStream.GetField serializedFields = in.readFields();
 
-        // Check for revision number. If no revision number, assume 1
-        ObjectStreamField revisionField = serializedFields.getObjectStreamClass().getField("classSerializationVersion");
-        byte serialVersionNumber = revisionField == null ? 1 : serializedFields.get("classSerializationVersion", (byte) 0);
-        //NOTE: 1 -> field does not exist (i.e. version 1), 0 -> default value
+        // Check for version number. If not present, version is 1 (the field did not exist).
+        byte objectVersionNumber = serializedFields.get("classSerializationVersion", (byte) 1);
 
         // Take the appropriate action based on revision number
-        switch (serialVersionNumber) {
+        switch (objectVersionNumber) {
             case 1:
-                migrateFromVer1(serializedFields);
+                readFromVer1(serializedFields);
                 break;
             case 2:
-                migrateFromVer2(serializedFields);
+                readFromVer2(serializedFields);
                 break;
             default:
-                throw new UnsupportedOperationException("Version number " + serialVersionNumber + " is not supported.");
+                throw new UnsupportedOperationException("Version number " + objectVersionNumber + " is not supported.");
         }
     }
 
     /**
-     * De-serialize the fields from the version 1 object in the stream and use
-     * them to initialize a State object of the version 2.
+     * De-serialize the fields as a version 1 object and use them to initialize
+     * a State object of the most recent version.
      *
      * @param serializedFields
      *
      * @throws IOException
      */
-    private void migrateFromVer1(ObjectInputStream.GetField serializedFields) throws IOException {
+    private void readFromVer1(ObjectInputStream.GetField serializedFields) throws IOException {
         // Update fields of this State from the Stream where possible
-        threadsAndTags = new ThreadTagMap();
-        nextItemNumber = serializedFields.get("nextItemNumber", 0);
-        nextThreadNumber = serializedFields.get("nextThreadNumber", 0);
+        this.threadsAndTags = new ThreadTagMap();
+        this.nextItemNumber = serializedFields.get("nextItemNumber", 0);
+        this.nextThreadNumber = serializedFields.get("nextThreadNumber", 0);
         HashSet<Tag> tags = (HashSet<Tag>) serializedFields.get("tags", null);
         HashSet<ItemThread> threads = (HashSet<ItemThread>) serializedFields.get("threads", null);
 
         // Capture the old Tag set from the stream and add to ThreadTagMap
         for (Tag tag : tags) {
-            threadsAndTags.addNewTag(tag);
+            this.threadsAndTags.addNewTag(tag);
         }
 
         // Capture the old ItemThread set and Tag mapping from the stream and add to ThreadTagMap
         for (ItemThread thread : threads) {
-            threadsAndTags.addNewThread(thread);
+            this.threadsAndTags.addNewThread(thread);
             for (Tag tag : thread.getTagsForClassSerializationRevision0()) {
-                threadsAndTags.addTagToThread(thread, tag);
+                this.threadsAndTags.addTagToThread(thread, tag);
             }
         }
 
         //Update the revision number so the serialized version of this will
-        //  reflect that it has been migrated to revision 2.
-        classSerializationVersion = 2;
+        //  reflect that it has been migrated to the current version.
+        this.classSerializationVersion = CURRENT_OBJ_SERIAL_VERSION;
     }
 
     /**
-     * De-serialize the fields from the version 1 object in the stream and use
-     * them to initialize a State object of version 2.
+     * De-serialize the fields as a version 2 object and use them to initialize
+     * a State object of the most recent version.
      *
      * @param serializedFields
      *
      * @throws IOException
      */
-    private void migrateFromVer2(ObjectInputStream.GetField serializedFields) throws IOException {
-        nextItemNumber = serializedFields.get("nextItemNumber", 0);
-        nextThreadNumber = serializedFields.get("nextThreadNumber", 0);
-        threadsAndTags = (ThreadTagMap) serializedFields.get("threadsAndTags", new ThreadTagMap());
-        classSerializationVersion = 2;  //set the serialization version to 2
+    private void readFromVer2(ObjectInputStream.GetField serializedFields) throws IOException {
+        this.nextItemNumber = serializedFields.get("nextItemNumber", 0);
+        this.nextThreadNumber = serializedFields.get("nextThreadNumber", 0);
+        this.threadsAndTags = (ThreadTagMap) serializedFields.get("threadsAndTags", new ThreadTagMap());
+        this.classSerializationVersion = CURRENT_OBJ_SERIAL_VERSION;
     }
 }
