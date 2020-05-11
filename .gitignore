@@ -5,7 +5,9 @@
 #NetBeans specific
 #ignore entire folder but make exceptions
 */nbproject/*
-*/manifest.mf
+!*/nbproject/configs/
+!*/nbproject/project.properties
+!*/nbproject/project.xml
 
 #Project specific
 /ResearchManagementSystem/files/
