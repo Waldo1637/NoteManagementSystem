@@ -22,7 +22,8 @@ public class TaskItemPanel extends BaseItemPanel {
         jXDatePickerDeadline.setDate(getTaskItem().getDeadline());
         updateUI_completionStatus();
 
-        //register a listener to update the modification time when the text changes
+        //register a listener to update the underlying item content and 
+        //  modification time when the text changes in the UI.
         itemTextField.addItemTextUpdateListener(new EditableTextField.ItemTextUpdateListener() {
             @Override
             public void textUpdated(EditableTextField.ItemTextUpdatedEvent evt) {

@@ -19,7 +19,8 @@ public class NoteItemPanel extends BaseItemPanel {
         super(item, startCollapsed);
         initComponents();
 
-        //register a listener to update the modification time when the text changes
+        //register a listener to update the underlying item content and 
+        //  modification time when the text changes in the UI.
         itemTextField.addItemTextUpdateListener(new EditableTextField.ItemTextUpdateListener() {
             @Override
             public void textUpdated(EditableTextField.ItemTextUpdatedEvent evt) {
