@@ -65,10 +65,7 @@ public final class TextFilter extends AbstractFilter {
      */
     @Override
     public boolean accept(Item i) {
-        if (containsMatch(i.getName())) {
-            //check the item name for the text
-            return true;
-        } else if (i instanceof TextItem) {
+        if (i instanceof TextItem) {
             //if the item is a TextItem, check the text
             return containsMatch(((TextItem) i).getText());
         } else if (i instanceof FileItem) {

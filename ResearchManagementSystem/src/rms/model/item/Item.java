@@ -22,27 +22,24 @@ public abstract class Item implements Serializable {
     protected final ItemThread parentThread;
     protected final Date created;
     protected Date modified;
-    protected String name;
 
-    protected Item(ItemThread parentThread, String name) {
+    protected Item(ItemThread parentThread) {
         if (parentThread == null) {
             throw new IllegalArgumentException("Parent thread cannot be null");
         }
-
         this.itemID = Main.getState().getNextItemNumber();
         this.parentThread = parentThread;
         this.created = DateHelpers.now();
         this.modified = DateHelpers.clone(created);
-        this.name = name;
-    }
-
-    protected Item(ItemThread parentThread) {
-        this(parentThread, "");
     }
 
     //copy constructor
-    protected Item(ItemThread parentThreadForCopy, Item toCopy) {
-        this(parentThreadForCopy, toCopy.name);//it's assigned a new ID and new Dates
+    protected Item(ItemThread parentThread, Item toCopy) {
+        //NOTE: The copy constructor simply delegates to the normal constructor
+        //  ignorming the given {@link Item} because only the parent
+        //  {@link ItemThread} can be explicitly set (i.e. a new ID and new
+        //  dates are automatically assigned).
+        this(parentThread);
     }
 
     public static class CopyOptions {
@@ -62,6 +59,8 @@ public abstract class Item implements Serializable {
      * @return
      */
     public abstract Item duplicateInThread(ItemThread parentThreadForCopy, CopyOptions opts);
+
+    public abstract String getItemTypeName();
 
     public int getID() {
         return itemID;
@@ -89,14 +88,6 @@ public abstract class Item implements Serializable {
         return modified;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String newName) {
-        this.name = newName;
-    }
-
     public void touch() {
         this.modified = DateHelpers.now();
         this.getThread().touch();
@@ -104,7 +95,7 @@ public abstract class Item implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("{ID=%s,name=%s,type=%s,parentID=%s}", itemID, name, getItemTypeName(), parentThread.getID());
+        return String.format("{ID=%s,type=%s,parentID=%s}", itemID, getItemTypeName(), parentThread.getID());
     }
 
     protected boolean appendToParentThread() {
@@ -119,6 +110,4 @@ public abstract class Item implements Serializable {
             return result;
         }
     }
-
-    public abstract String getItemTypeName();
 }
