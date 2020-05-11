@@ -873,7 +873,17 @@ public class MainFrame extends NotificationFrame {
         @Override
         protected void updateUI() {
             clearDisplayedThread();
-            setSelectedThread(toDisplay);
+
+            ItemThread display = toDisplay;
+            //If the thread to display is not selected but there is
+            //  only one, go ahead and show it.
+            if (display == null) {
+                ListModel<ItemThread> model = jListThreads.getModel();
+                if (model.getSize() == 1) {
+                    display = model.getElementAt(0);
+                }
+            }
+            setSelectedThread(display);
         }
 
         @Override
