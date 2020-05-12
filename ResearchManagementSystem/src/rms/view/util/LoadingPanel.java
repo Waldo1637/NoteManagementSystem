@@ -7,8 +7,8 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 /**
- * Panel showing a loading gif and blocking all input to the underlying
- * components
+ * Panel showing a loading GIF and blocking all input to the underlying
+ * components.
  *
  * @author Timothy
  */
@@ -48,11 +48,12 @@ public final class LoadingPanel extends JPanel implements FocusListener, MouseLi
 
     @Override
     public void setVisible(boolean aFlag) {
-        if (aFlag) {
-            // Grab the focus to capture all key events
-            requestFocus();
-        }
         super.setVisible(aFlag);
+        if (aFlag) {
+            // Grab the focus to capture all key and mouse events.
+            //NOTE: Component must first be visible for this to succeed.
+            requestFocusInWindow();
+        }
     }
 
     @Override
@@ -62,9 +63,9 @@ public final class LoadingPanel extends JPanel implements FocusListener, MouseLi
 
     @Override
     public void focusLost(FocusEvent e) {
-        // Make sure focus is not lost while visible
+        // Make sure focus is not lost while visible.
         if (isVisible()) {
-            requestFocus();
+            requestFocusInWindow();
         }
     }
 
