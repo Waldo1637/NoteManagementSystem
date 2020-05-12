@@ -1,10 +1,7 @@
 package rms.view;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -478,21 +475,40 @@ public final class MainFrame extends NotificationFrame {
     private void initComponentsMore() {
         jPanelTags.setLayout(new WrapLayout(WrapLayout.LEFT, 1, 1));
         //set the loading panel as the glass pane
-        setGlassPane(new LoadingPanel());
+        final LoadingPanel glassPaneLoadingPanel = new LoadingPanel();
+        setGlassPane(glassPaneLoadingPanel);
 
         //Map actions to menu items and congfigure global hotkeys
-        configureMenuItemAndGlobalShortcut(jMenuItemNewThreadBlank, actionNewThreadBlank);
-        configureMenuItemAndGlobalShortcut(jMenuItemNewThreadDuplicate, actionNewThreadDuplicate);
-        configureMenuItemAndGlobalShortcut(jMenuItemSave, actionSave);
-        configureMenuItemAndGlobalShortcut(jMenuItemFindText, actionFindAll);
-        configureMenuItemAndGlobalShortcut(jMenuItemShowAll, actionShowAll);
+        configureMenuItemAndGlobalShortcut(glassPaneLoadingPanel, jMenuItemNewThreadBlank, actionNewThreadBlank);
+        configureMenuItemAndGlobalShortcut(glassPaneLoadingPanel, jMenuItemNewThreadDuplicate, actionNewThreadDuplicate);
+        configureMenuItemAndGlobalShortcut(glassPaneLoadingPanel, jMenuItemSave, actionSave);
+        configureMenuItemAndGlobalShortcut(glassPaneLoadingPanel, jMenuItemFindText, actionFindAll);
+        configureMenuItemAndGlobalShortcut(glassPaneLoadingPanel, jMenuItemShowAll, actionShowAll);
         //must override for the thread list because it seems to capture ctrl+A already (but does nothing)
         jListThreads.getInputMap(JComponent.WHEN_FOCUSED).put(jMenuItemShowAll.getAccelerator(), actionShowAll.getValue(Action.NAME));
         //Select a better index for the mnemonic underline
         jMenuItemNewThreadDuplicate.setDisplayedMnemonicIndex(12);
     }
 
-    private static void configureMenuItemAndGlobalShortcut(JMenuItem menuItem, Action action) {
+    private static void configureMenuItemAndGlobalShortcut(LoadingPanel glassPaneLoadingPanel, JMenuItem menuItem, Action action) {
+        //Register a Listener to disable the Actions while the LoadingPanel is showing
+        glassPaneLoadingPanel.addComponentListener(new ComponentAdapter() {
+            boolean backup = true;//default is enabled
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                //Restore the enabled status on the Action
+                action.setEnabled(backup);
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+                //Store current enabled status and disable the Action
+                backup = action.isEnabled();
+                action.setEnabled(false);
+            }
+        });
+
         //Configure the MenuItem based on the Action
         menuItem.setAction(action);
         //After configuring, Text and Accelerator can be retrieved to setup global shortcut 
