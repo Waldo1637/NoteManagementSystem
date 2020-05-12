@@ -626,8 +626,11 @@ public final class MainFrame extends NotificationFrame {
     private void jMenuItemManageTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemManageTagsActionPerformed
         // Create new TagManagementDialog and show it
         new TagManagementDialog(instance()).showDialog();
-        // Update the tags for the selected thread in case any were deleted
-        new WorkerDisplayThreadTags(getSelectedThread()).execute();
+        // Refresh the view in case any tags for the selected thread were deleted
+        ItemThread selectedThread = getSelectedThread();
+        if (selectedThread != null) {
+            new WorkerDisplayThreadTags(selectedThread).execute();
+        }
     }//GEN-LAST:event_jMenuItemManageTagsActionPerformed
 
     public List<File> promptFileSelection(boolean allowMultiple) {
