@@ -3,11 +3,11 @@ package rms.view.item;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -17,10 +17,16 @@ import javax.swing.Timer;
 import javax.swing.UIDefaults;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.Element;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import rms.control.search.ItemNumberFilter;
 import rms.model.item.TextItem;
+import rms.util.TextConversion;
 import rms.view.MainFrame;
 import rms.view.util.CustomHTMLEditorKit;
 import rms.view.util.CustomStyledEditorKit;
@@ -42,35 +48,6 @@ public final class EditableTextField extends javax.swing.JPanel {
     //
     private static final Pattern ITEM_REF_PATT = Pattern.compile("^#(\\d+)$");
     //
-    private static final String LINK_TAG = "link";
-    private static final String LINK_TAG_OPEN = "<" + LINK_TAG + ">";
-    private static final String LINK_TAG_CLOSE = "</" + LINK_TAG + ">";
-    //Pattern matches any string of at least one character between the LINK_TAGs
-    //  and uses the reluctant quantifier (i.e. ?) for the shortest match to
-    //  ensure that each pair of link tags in a line forms its own link.
-    private static final Pattern LINK_PATT = Pattern.compile(LINK_TAG_OPEN + "(.+?)" + LINK_TAG_CLOSE);
-    //
-    private static final Map<String, String> HTML_REP_MAP;
-    //NOTE: groups 0 and 1 are equal since () wraps the entire thing
-    private static final Pattern HTML_REPLACE_PATT;
-
-    static {
-        HashMap<String, String> tempHtmlRepMap = new HashMap<>();
-        //Specify replacements necessary for HTML to display properly
-        tempHtmlRepMap.put("<", "&#60;");
-        tempHtmlRepMap.put(">", "&#62;");
-        tempHtmlRepMap.put(" ", "&#160;");
-        tempHtmlRepMap.put("\t", "&#09;");
-        //Build the pattern to match all of the HTML replacements needed
-        String s = '(' + LINK_PATT.pattern();//must come first, contains <>
-        for (Map.Entry<String, String> e : tempHtmlRepMap.entrySet()) {
-            s += '|' + e.getKey();
-        }
-        s += ')';
-        HTML_REPLACE_PATT = Pattern.compile(s);
-        HTML_REP_MAP = Collections.unmodifiableMap(tempHtmlRepMap);
-    }
-
     private final JButton saveEditButton;
 
     /**
@@ -279,17 +256,39 @@ public final class EditableTextField extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * If {@code jTextPaneDesc.getStyledDocument()} is {@link HTMLDocument},
+     * convert the {@code <body>} content to plain text with links, otherwise
+     * convert to HTML form.
+     *
+     * @param expectingHTML
+     *
+     * @return
+     *
+     * @throws IllegalStateException if {@code expectingHTML==true} and the
+     *                               document is not an {@link HTMLDocument}
+     */
+    private String getAndConvertContent(boolean expectingHTML) {
+        StyledDocument doc = jTextPaneDesc.getStyledDocument();
+        String retVal = TextConversion.convertDocumentContent(doc, expectingHTML);
+        if (DEBUG_CONVERSION) {
+            System.out.printf("[getAndConvertContent] in=|%s| out=|%s| %n",
+                    jTextPaneDesc.getText(), retVal);
+        }
+        return retVal;
+    }
+
     private static HTMLEditorKit addStyles(HTMLEditorKit kit) {
         StyleSheet sty = kit.getStyleSheet();
         sty.addRule("p {margin:0; padding:0; }");//no space between <p>
         return kit;
     }
 
-    private static String toStringDebug(String s, boolean charMap) {
+    private static String toStringDebug(String s, boolean asCharArray) {
         if (DEBUG_CONVERSION) {
             if (s == null) {
                 return null;
-            } else if (charMap) {
+            } else if (asCharArray) {
                 char[] chars = s.toCharArray();
                 int iMax = chars.length - 1;
                 if (iMax == -1) {
@@ -308,7 +307,7 @@ public final class EditableTextField extends javax.swing.JPanel {
                     if (i == iMax) {
                         return b.append(']').toString();
                     }
-                    b.append(", ");
+                    b.append(" ");
                 }
             }
         }
@@ -405,178 +404,6 @@ public final class EditableTextField extends javax.swing.JPanel {
                 l.textUpdated(event);
             }
         }
-    }
-
-    /**
-     * If {@code jTextPaneDesc.getStyledDocument()} is {@link HTMLDocument},
-     * convert the {@code <body>} content to plain text with links, otherwise
-     * convert to HTML form.
-     *
-     * @return
-     */
-    private String getAndConvertContent(boolean expectingHTML) {
-        StyledDocument doc = jTextPaneDesc.getStyledDocument();
-        if (expectingHTML != (doc instanceof HTMLDocument)) {
-            throw new IllegalStateException("Expecting HTML? " + expectingHTML + ", found " + doc.getClass());
-        }
-        try (OutputStream os = new ByteArrayOutputStream();
-                Writer w = new OutputStreamWriter(os)) {
-            if (expectingHTML) {//i.e. (doc instanceof HTMLDocument)
-                writeDocAsPlainTextWithLinks(w, (HTMLDocument) doc);
-            } else {
-                writeDocAsHTML(w, doc);
-            }
-            if (DEBUG_CONVERSION) {
-                System.out.printf("[getAndConvertContent] in=|%s| out=|%s| %n",
-                        jTextPaneDesc.getText(), os.toString());
-            }
-            return os.toString();
-        } catch (IOException | BadLocationException ex) {
-            LOG.log(Level.SEVERE, "Conversion exception", ex);
-            return null;
-        }
-    }
-
-    private static void writeDocAsHTML(Writer out, StyledDocument plainDoc) throws IOException, BadLocationException {
-        new MinimalHTMLWriter(out, plainDoc) {
-
-            {
-                //Disable max line length to condense HTML content
-                setCanWrapLines(false);
-            }
-
-            @Override
-            protected String getText(Element elem) throws BadLocationException {
-                return sanitize(super.getText(elem), true);
-            }
-
-            /**
-             * This is used to sanitize the entire text of a each "paragraph"
-             * (i.e. {@code isTopLevel==true}) and also the text within a link
-             * body (i.e. {@code isTopLevel==false}).
-             *
-             * @param text
-             * @param isTopLevel
-             *
-             * @return
-             */
-            private String sanitize(String text, boolean isTopLevel) {
-                StringBuffer sb = new StringBuffer();
-                Matcher matcher = HTML_REPLACE_PATT.matcher(text);
-                while (matcher.find()) {
-                    String repWith = HTML_REP_MAP.get(matcher.group());
-                    if (repWith == null) {
-                        //The reluctant regular expression will process nested link
-                        //  tags (ex: <link><link>hi</link></link>) by matching the
-                        //  first <link> with the first </link>, leaving the other
-                        //  pair separated with the opening tag inside and the
-                        //  closing tag outside. Thus, this case can only happen
-                        //  at the top level, not in the recursive call (and since
-                        //  the recursive call only occurs in this case, it means
-                        //  there will only ever be one level of recursion).
-                        if (!isTopLevel) {
-                            throw new IllegalStateException("Unknown nested match fragment: " + matcher.group());
-                        }
-                        //Sanity check: when the match is not in the Map, the
-                        //  only other option is a <link>...</link>
-                        if (!LINK_PATT.matcher(matcher.group()).matches()) {
-                            throw new IllegalStateException("Unknown match fragment: " + matcher.group());
-                        }
-                        //NOTE: The link body will be group 2.
-                        String group2 = matcher.group(2);
-                        //Cannot directly use $2 in the appendReplacement(..)
-                        //  because some sanitization must happen (for both the
-                        //  href/title use and the tag content use.
-                        //NOTE: 'title' is used for the tooltip.
-                        matcher.appendReplacement(sb, "<a href=\"");
-                        //The href/title uses must be sanitized to remove double quotes
-                        if (group2.contains("\"")) {
-                            group2 = group2.replaceAll("\"", "%22");
-                            //Notify the user of the change but asynchronously
-                            //  so that the content conversion can complete in
-                            //  the background.
-                            EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Prompts.informUser("Illegal character",
-                                            "Link/URL cannot contain double quote (\")."
-                                            + "\nIt will be replaced with %22.",
-                                            Prompts.PromptType.INFO);
-                                }
-                            });
-                        }
-                        sb.append(group2).append("\" title=\"").append(group2).append("\">");
-                        //Content should be further sanitized so that certain characters
-                        //  are just displayed and not treated as HTML syntax.
-                        sb.append(sanitize(group2, false)).append("</a>");
-                    } else {
-                        matcher.appendReplacement(sb, repWith);
-                    }
-                }
-                matcher.appendTail(sb);
-
-                return sb.toString();
-            }
-
-            @Override
-
-            protected void writeHeader() throws IOException {
-                //Write a condensed header
-                write("<head></head>");
-            }
-
-            @Override
-            protected void indent() throws IOException {
-                //Skip all indentation to condense HTML content
-            }
-
-            @Override
-            protected void write(char ch) throws IOException {
-                //Skip direct write of NEWLINE to condense HTML content
-                if (NEWLINE != ch) {
-                    super.write(ch);
-                }
-            }
-
-            @Override
-            protected void writeNonHTMLAttributes(AttributeSet attr) throws IOException {
-                //Do not generate the <span> tag with styling for each paragraph
-                //It was forcing links to be black and overall caused excess
-                //  clutter in the HTML text. A better solution might be to
-                //  figure out where the style attributes are even coming from
-                //  and remove them at the source. However, I'm not sure how to
-                //  do that at this time.
-            }
-        }
-                .write();
-        out.flush();
-    }
-
-    private static void writeDocAsPlainTextWithLinks(Writer out, HTMLDocument doc) throws IOException, BadLocationException {
-        Segment data = new Segment();
-        //NOTE: I had previously tried "doc.getIterator(HTML.Tag.CONTENT)" but
-        //  that also returned elements in the head, not just the body.
-        final HTML.Tag cTag = HTML.Tag.CONTENT;
-        Element body = doc.getElement(doc.getDefaultRootElement(), StyleConstants.NameAttribute, HTML.Tag.BODY);
-        ElementIterator itr = new ElementIterator(body);//traverse the body
-        for (Element elem = itr.next(); elem != null; elem = itr.next()) {
-            AttributeSet a = elem.getAttributes();
-            if (a.isDefined(cTag) || a.getAttribute(StyleConstants.NameAttribute) == cTag) {//content elements
-                Object anchorTag = a.getAttribute(HTML.Tag.A);
-                if (anchorTag == null) {
-                    int start = elem.getStartOffset();
-                    int end = elem.getEndOffset();
-                    doc.getText(start, end - start, data);
-                    out.write(data.array, data.offset, data.count);
-                } else {
-                    SimpleAttributeSet asAttrs = (SimpleAttributeSet) anchorTag;
-                    Object link = asAttrs.getAttribute(HTML.Attribute.HREF);
-                    String name = LINK_TAG_OPEN + link + LINK_TAG_CLOSE;
-                    out.write(name);
-                }
-            }
-        }
-        out.flush();
     }
 
     /**

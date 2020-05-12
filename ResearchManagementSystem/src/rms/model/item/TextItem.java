@@ -1,7 +1,11 @@
 package rms.model.item;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Objects;
+import java.util.logging.Level;
 import rms.util.Helpers;
+import rms.util.TextConversion;
 
 /**
  *
@@ -62,6 +66,26 @@ public abstract class TextItem extends Item {
         return true;
     }
 
-    @Override
-    public abstract String getItemTypeName();
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        //de-serialize
+        in.defaultReadObject();
+
+        //If the 'text' field is not in HTML format, convert it
+        //NOTE: This step is necessary to not lose formatting since the
+        //  EditableTextField started using HTML to diplay the text/links.
+        if (!TextConversion.HTML_CONTENT.PATTERN.matcher(this.text).matches()) {
+            String converted = TextConversion.convertPlainTextToHTML(this.text);
+            //Only replace if non-null. If null, the conversion failed (an error
+            //  was logged by TextConversion) so just keep the existing text and
+            //  the layout/formatting may be lost and any HTML tags appearing in
+            //  the content will likely be lost after a couple of edit/save 
+            //  cycles on the text pane that holds this item. But I don't know
+            //  if there's much else that I could do about it.
+            if (converted != null) {
+                this.text = converted;
+            } else {
+                LOG.log(Level.WARNING, "Failed to convert item {0} to HTML: {1}", new Object[]{this.itemID, this.text});
+            }
+        }
+    }
 }
