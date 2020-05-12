@@ -1,17 +1,13 @@
 package rms.control;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rms.model.State;
 
 /**
- * Facilities loading and storing of the State object from/to the file system.
+ * Facilities loading and storing of the {@link State} object from/to the file
+ * system.
  *
  * @author Timothy
  */
@@ -22,7 +18,7 @@ public final class Loader {
     private static final String DATA_FILE_PATH;
 
     static {
-        // setup the currentVersionStateFileFullPath variable
+        // setup the DATA_FILE_PATH variable
         String baseDir = System.getProperty("user.dir");
         if (baseDir == null) {
             LOG.log(Level.SEVERE, "Unable to determine user directory.");
@@ -35,14 +31,13 @@ public final class Loader {
     }
 
     /**
-     * Attempts to de-serialize the stored {@code State} from the default path
+     * Attempts to de-serialize the stored {@link State} from the default path
      * for the current version. Exception is thrown if the file does not exist.
      *
-     * @return the {@code State} object stored in file or null if unable to
-     *         de-serialize
+     * @return the {@link State} object stored in file or {@code null} if unable
+     *         to de-serialize
      *
      * @throws rms.control.Loader.SerializedStateOutdatedException
-     * @see rms.model.State
      */
     public static synchronized State attemptLoadDefaultFromFile() throws SerializedStateOutdatedException {
         File stateFile = new File(DATA_FILE_PATH);
@@ -53,12 +48,13 @@ public final class Loader {
     }
 
     /**
-     * De-serializes the stored {@code State} from the given path migrating the
-     * given State to the newest version if it is outdated.
+     * De-serializes the stored {@link State} from the given path, migrating the
+     * {@link State} to the newest version if it is outdated.
      *
      * @param stateFile
      *
-     * @return
+     * @return the loaded {@code State} or {@code null} if not found or failed
+     *         to load for some reason
      */
     public static synchronized State loadFromFile(File stateFile) {
         State retVal;
@@ -66,20 +62,18 @@ public final class Loader {
             retVal = (State) in.readObject();
             LOG.log(Level.FINE, "State loaded from file {0}", stateFile.getAbsolutePath());
         } catch (Exception ex) {    //catch any exception
-            LOG.log(Level.INFO, "Unable to load state from " + stateFile.getAbsolutePath() + ". Creating new.", ex);
-            retVal = new State();
+            LOG.log(Level.INFO, "Failed to load state from " + stateFile.getAbsolutePath(), ex);
+            retVal = null;
         }
         return retVal;
     }
 
     /**
-     * Attempts to serialize the given {@code State} object to file
+     * Attempts to serialize the given {@link State} object to file.
      *
-     * @param state {@code State} object to serialize
+     * @param state {@link State} object to serialize
      *
      * @return true iff serialization was successful
-     *
-     * @see rms.model.State
      */
     public static synchronized boolean storeToFile(State state) {
         boolean success = false;

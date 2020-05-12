@@ -97,12 +97,19 @@ public final class Main {
         try {
             state = Loader.attemptLoadDefaultFromFile();
         } catch (Loader.SerializedStateOutdatedException ex) {
-            Prompts.informUser("Data file not found", "The data file cannot be found. This may be the result of a recent program update. Please select a data file to load.", Prompts.PromptType.WARNING);
-            JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
-            if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
-                state = Loader.loadFromFile(chooser.getSelectedFile());
-                //Immediately write the converted state
-                Loader.storeToFile(state);
+            String msg = "The data file cannot be found. Would you like to select a data file to load?\n\n"
+                    + "If you have recently updated the program or have moved the data file, select \"yes\".\n"
+                    + "Otherwise, select \"no\" to create an empty data file.";
+            switch (Prompts.getUserResponse(msg, Prompts.PromptType.INFO)) {
+                case YES:
+                    JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+                    if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION) {
+                        state = Loader.loadFromFile(chooser.getSelectedFile());
+                    }
+                    break;
+                case NO:
+                    state = new State();
+                    break;
             }
         }
         return state != null;

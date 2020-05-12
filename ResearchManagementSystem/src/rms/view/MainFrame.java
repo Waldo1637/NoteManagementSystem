@@ -840,6 +840,7 @@ public final class MainFrame extends NotificationFrame {
                 displayNotification("Data loaded");
             } else {
                 Prompts.informUser("Error!", "Unrecoverable error: unable to load data.\nSee log file for more information.", PromptType.ERROR);
+                //Exit immediately without saving the State to ensure the data file is not overwritten if it does exist
                 System.exit(1);
             }
         }

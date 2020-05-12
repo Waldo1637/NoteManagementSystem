@@ -23,6 +23,7 @@ public final class Prompts {
     };
 
     /**
+     * Prompts the user with a yes/no dialog.
      *
      * @param prompt
      * @param type
@@ -38,6 +39,7 @@ public final class Prompts {
     }
 
     /**
+     * Prompts the user with a yes/no/cancel dialog.
      *
      * @param prompt
      * @param type
@@ -53,11 +55,12 @@ public final class Prompts {
     }
 
     /**
+     * Prompts the user with a text entry dialog.
      *
      * @param prompt
      * @param type
      *
-     * @return user entered value or null if the user Cancelled
+     * @return user entered value or null if the user canceled
      */
     public static String getUserInput(String prompt, PromptType type) {
         String title = "Response needed";
