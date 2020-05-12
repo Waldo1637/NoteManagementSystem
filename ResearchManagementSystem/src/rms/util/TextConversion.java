@@ -56,12 +56,15 @@ public final class TextConversion {
         public static final Pattern PATTERN;
 
         static {
-            HashMap<String, String> tempHtmlRepMap = new HashMap<>();
             //Specify replacements necessary for HTML to display properly
+            HashMap<String, String> tempHtmlRepMap = new HashMap<>();
             tempHtmlRepMap.put("<", "&#60;");
             tempHtmlRepMap.put(">", "&#62;");
-            tempHtmlRepMap.put(" ", "&#160;");
             tempHtmlRepMap.put("\t", "&#09;");
+            //Only replace 2 spaces with 1 space and the HTML entity for space.
+            //If instead every space were replaced, the word wrapping in the
+            //  text pane would be messy (and the String would be much longer).
+            tempHtmlRepMap.put("  ", " &#160;");
             //Build the pattern to match all of the HTML replacements needed
             String s = '(' + LINK.PATTERN.pattern();//must come first, contains <>
             for (Map.Entry<String, String> e : tempHtmlRepMap.entrySet()) {
