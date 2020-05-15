@@ -1,8 +1,10 @@
 package rms.view;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.event.*;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -805,27 +807,68 @@ public final class MainFrame extends NotificationFrame {
     //<editor-fold defaultstate="collapsed" desc=" Workers ">
     private abstract class UIBlockingWorker extends SwingWorker<Void, Void> {
 
+        private final boolean runOnEventDispatchThread;
+
+        public UIBlockingWorker() {
+            this.runOnEventDispatchThread = false;
+        }
+
+        public UIBlockingWorker(boolean runOnEventDispatchThread) {
+            this.runOnEventDispatchThread = runOnEventDispatchThread;
+        }
+
         @Override
-        protected void done() {
+        final protected void done() {
             this.updateUI();
             hideLoader();
             WORKER_LOG.log(Level.FINE, "Completed {0}", this.getClass().getName());
         }
 
         @Override
-        protected Void doInBackground() {
+        final protected Void doInBackground() {
             WORKER_LOG.log(Level.FINE, "Starting {0}", this.getClass().getName());
             showLoader();
-            try {
-                this.doWork();
-            } catch (Exception ex) {
-                WORKER_LOG.log(Level.SEVERE, "Exception caught by " + this.getClass().getName(), ex);
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        UIBlockingWorker.this.doWork();
+                    } catch (Exception ex) {
+                        WORKER_LOG.log(Level.SEVERE, "Exception caught by " + UIBlockingWorker.this.getClass().getName(), ex);
+                    }
+                }
+            };
+            if (runOnEventDispatchThread && !EventQueue.isDispatchThread()) {
+                try {
+                    EventQueue.invokeAndWait(r);
+                } catch (InterruptedException | InvocationTargetException ex) {
+                    WORKER_LOG.log(Level.SEVERE, "Exception caught by " + UIBlockingWorker.this.getClass().getName(), ex);
+                }
+            } else {
+                r.run();
             }
             return null;
         }
 
+        /**
+         * Executed on the <i>Event Dispatch Thread</i> after the
+         * {@link #doWork} method is finished but before the UI is unblocked.
+         * Note that you can query status inside the implementation of this
+         * method to determine the result of this task or whether this task has
+         * been cancelled.
+         *
+         * @see #isCancelled()
+         * @see #get()
+         */
         protected abstract void updateUI();
 
+        /**
+         * Computes a result, or throws an exception if unable to do so. Note
+         * that this method is executed only once and is executed in a
+         * background thread.
+         *
+         * @throws Exception if unable to compute a result
+         */
         protected abstract void doWork() throws Exception;
     }
 
@@ -886,6 +929,7 @@ public final class MainFrame extends NotificationFrame {
         private final ItemThread toDisplay;
 
         public WorkerRefreshThreadList(AbstractFilter filter, ItemThread toDisplay) {
+            super();
             this.filter = filter;
             this.toDisplay = toDisplay;
         }
@@ -921,6 +965,7 @@ public final class MainFrame extends NotificationFrame {
         private final ItemThread toLoad;
 
         public WorkerDisplayThreadItems(ItemThread toLoad) {
+            super(true);//use EDT for creating JPanels and add/remove
             this.toLoad = toLoad;
         }
 
@@ -962,6 +1007,7 @@ public final class MainFrame extends NotificationFrame {
         private final ItemThread toLoad;
 
         public WorkerDisplayThreadTags(ItemThread toLoad) {
+            super(true);//use EDT for creating JButtons and add/remove
             this.toLoad = toLoad;
         }
 
